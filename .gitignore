@@ -1,0 +1,76 @@
+# Node modules get installed here
+node_modules/
+
+# sass and webassets output artifacts
+scss/assets
+scss/variables.scss
+scss/variables.scss.map
+.sass-cache/
+.webassets-cache
+
+# Python virtual env
+.venv/
+
+.pytest_cache/
+__pycache__
+
+# Compiled python bytecode files
+*.pyc
+.cache/
+
+# static/fonts for now, since it is just symlink
+static/fonts
+# font files originate from a node module
+static/fonts/*
+
+static/assets
+static/assets/*
+
+# buildinfo files
+static/buildinfo.*
+
+# local log files
+log/*
+
+config/dev.ini
+.env*
+
+# CRLs
+/crl
+/crls
+/crl-tmp
+*.bk
+crl_locations.json
+
+# test CA config
+ssl/client-certs/*.srl
+
+# uploads
+/uploads
+
+# python coverage output
+.coverage
+
+# je coverage output
+coverage
+
+# BrowserStack
+browserstacklocal
+
+# decompiled CircleCI yaml
+local-ci.yml
+
+# python config
+.python-version
+
+# configuration files
+override.ini
+atst-overrides.ini
+
+# binary file created by celery beat
+celerybeat-schedule
+
+# templates created for JS tests
+js/test_templates
+
+.mypy_cache/
