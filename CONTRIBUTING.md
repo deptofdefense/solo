@@ -104,15 +104,6 @@ After review by the SOLO team, your PR will either be commented on with a reques
 
 Assuming everything checks out, the SOLO team will merge the `staging` branch into the `production` branch which will be automatically deployed to the production hosting environment.
 
-Note that if you're updating content on policy-specific pages (e.g. Getting Started, How to Open Source, Frequently Asked Questions), be sure to update the `updated_at` value in the file's YAML Front Matter (in the format `YYYY-MM-DD`):
-
-```yaml
----
-title: Getting Started
-updated_at: 2018-04-03
----
-```
-
 ### Check Your Changes
 
 Before submitting your pull request, you should run the build process locally first to ensure things are working as expected.
