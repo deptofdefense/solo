@@ -3,12 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:12.13.0
-    working_directory: ~/repo
+    working_directory: ~/solo/frontend
     steps:
       - checkout
-      - run:
-          name: 'Navigate to frontend dir'
-          command: 'cd solo/frontend'
+          path: ~/solo 
       - run:
           name: Run ci
           command: 'npm ci'
