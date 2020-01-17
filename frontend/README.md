@@ -10,3 +10,4 @@ Scripts:
   - ```npm run lint:fix``` Autofix linting
   - ```npm run typecheck``` Type-check
   - ```npm run build``` Create production build
+  - ```docker build .``` Build production app into nginx container (requires docker installed)
