@@ -18,7 +18,8 @@
     "noEmit": true,
     "jsx": "react",
     "noImplicitAny": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src"
