@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: 'Navigate to frontend dir'
-          command: 'cd frontend'
+          command: 'cd solo/frontend'
       - run:
           name: Run ci
           command: 'npm ci'
