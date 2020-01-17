@@ -37,5 +37,6 @@ The following example commands create keys in the nginx/keys directory. They sho
 #### Build and run docker container with volume binding
  1. `docker build -t solo-frontend .`
  2. ```docker run -p 443:443 -v `pwd`/nginx/keys:/etc/ssl solo-frontend```
- 3. Visit https://localhost in a browser
- 4. Authenticate with CAC
+ 3. Enable insecure SSL certificates in chrome **for localhost** here (chrome://flags/#allow-insecure-localhost)[chrome://flags/#allow-insecure-localhost]
+ 4. Visit https://localhost in a browser
+ 5. Authenticate with CAC
