@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      — image: circleci/node:12.13.0
+    working_directory: ~/repo
+    steps:
+      — checkout
+      - run: cd frontend
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+ 
+ 
