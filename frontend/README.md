@@ -9,7 +9,7 @@ This react app is the frontend to the System for Operational Logistics Orders (S
     - `nvm ls-remote`
     - `nvm install X.X.X`
 3. Install dependencies
-    - `nvm install`
+    - `npm install`
 
 
 ### Available Scripts
