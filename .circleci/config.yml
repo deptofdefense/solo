@@ -6,20 +6,20 @@ jobs:
     working_directory: ~/repo
     steps:
       — checkout
-      - run: 
-        - name: Navigate to frontend dir
-        - command: 'cd frontend'
-      - run: 
-        - name: Run ci
-        - command: 'npm ci'
-      - run:
-        - name: Run linter
-        - command: 'npm run lint'
-      - run: 
-        - name: Run typechecker
-        - command: 'npm run typecheck'
-      - run: 
-        - name: Run tests
-        - command: 'npm test'
+    - run: 
+      - name: Navigate to frontend dir
+      - command: 'cd frontend'
+    - run: 
+      - name: Run ci
+      - command: 'npm ci'
+    - run:
+      - name: Run linter
+      - command: 'npm run lint'
+    - run: 
+      - name: Run typechecker
+      - command: 'npm run typecheck'
+    - run: 
+      - name: Run tests
+      - command: 'npm test'
  
  
