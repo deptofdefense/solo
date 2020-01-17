@@ -1,5 +1,6 @@
 # Node modules get installed here
-node_modules/
+node_modules
+frontend/build
 
 # sass and webassets output artifacts
 scss/assets
