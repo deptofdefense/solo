@@ -74,3 +74,6 @@ celerybeat-schedule
 js/test_templates
 
 .mypy_cache/
+
+# jetbrains
+.idea

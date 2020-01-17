@@ -9,6 +9,7 @@
 - Copyright 2020 Garrett Haley garrett.haley@friends.dds.mil
 - Copyright 2020 Scott Pierce-Wrobel  scott.pierce@friends.dds.mil
 - Copyright 2020 Victor Castro victor.castro@friends.dds.mil
+- Copyright 2020 Litthideth Phansiri lit.phansiri@friends.dds.mil
 - _Add the copyright date, your name, and email address here. (PLEASE KEEP THIS LINE)_
 
 ## Note for U.S. Federal Employees
