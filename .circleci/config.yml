@@ -19,6 +19,7 @@ jobs:
       - run: 
           name: Run tests
           command: 'npm test'
+      - synk/scan
 orbs:
   snyk: snyk/snyk@0.0.8 
  
