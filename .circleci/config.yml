@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12.13.0
+    working_directory: ~/solo/frontend
+    steps:
+      - checkout:
+          path: ~/solo
+      - run:
+          name: Run ci
+          command: 'npm ci'
+      - run:
+          name: Run linter
+          command: 'npm run lint'
+      - run: 
+          name: Run typechecker
+          command: 'npm run typecheck'
+      - run: 
+          name: Run tests
+          command: 'npm test'
+ 
