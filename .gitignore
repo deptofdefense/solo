@@ -11,6 +11,8 @@ scss/variables.scss.map
 
 # Python virtual env
 .venv/
+.myvenv/
+/venv/
 
 .pytest_cache/
 __pycache__
@@ -78,3 +80,6 @@ js/test_templates
 
 # jetbrains
 .idea
+
+# env files
+*.env
