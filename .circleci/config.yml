@@ -8,15 +8,14 @@ jobs:
       - checkout:
           path: ~/solo
       - run:
-          name: Run ci
+          name: Run CI
           command: 'npm ci'
       - run:
-          name: Run linter
+          name: Run Linter
           command: 'npm run lint'
       - run: 
-          name: Run typechecker
+          name: Run Typechecker
           command: 'npm run typecheck'
       - run: 
-          name: Run tests
+          name: Run Tests
           command: 'npm test'
- 
