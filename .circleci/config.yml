@@ -19,3 +19,26 @@ jobs:
       - run: 
           name: Run Tests
           command: 'npm test'
+    docker:
+      - image: circleci/python:3.8
+    working_directory: ~/solo/backend
+    steps:
+      - checkout:
+          path: ~/solo
+      - restore_cache:
+          keys:
+             - v1-dependecies-{{ checksum "~/solo/backend/requirements/requirements.txt"}}
+             - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: 'pip install -r ~/solo/requirements/requirements.txt --user'
+      - save_cache:
+          paths:
+              - ~/solo/requirements/requirements.txt
+          key: v1-dependencies-{{checksum "~/solo/requirements/requirements.txt"}}
+      - run:
+          name: run tests
+          command: 'python manage.py test'
+      - run:
+          name: run linter
+          command: 'pylint app/'
