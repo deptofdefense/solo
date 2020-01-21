@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-class SimpleInitialTest(TestCase):
 
+class SimpleInitialTest(TestCase):
     def test_add_numbers(self):
         """Initial test to add two numbers"""
-        self.assertEqual((1+2), 3)
+        self.assertEqual((1 + 2), 3)
