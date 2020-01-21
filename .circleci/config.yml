@@ -28,14 +28,14 @@ jobs:
           path: ~/solo
       - restore_cache:
           keys:
-             - v1-dependecies-{{ checksum "~/solo/backend/requirements/requirements.txt"}}
+             - v1-dependecies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt"}}
              - v1-dependencies-
       - run:
           name: install dependencies
-          command: 'pip install -r ~/solo/backend/requirements/requirements.txt --user'
+          command: 'pip install -r ~/solo/backend/requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
-              - ~/solo/requirements/requirements.txt
+              - ~/solo/requirements/requirements.dev.txt
           key: v1-dependencies-{{checksum "~/solo/backend/requirements/requirements.txt"}}
       - run:
           name: run tests
@@ -43,6 +43,9 @@ jobs:
       - run:
           name: run linter
           command: 'pylint backend/'
+      - run:
+          name: run code style checks
+          command: 'black --check .'
 workflows:
   version: 2
   build_and_test:
