@@ -42,4 +42,11 @@ jobs:
           command: 'python manage.py test'
       - run:
           name: run linter
-          command: 'pylint app/'
+          command: 'pylint backend/'
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+        - build
+        - test
+  
