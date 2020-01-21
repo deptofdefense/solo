@@ -42,7 +42,7 @@ jobs:
           command: 'python manage.py test'
       - run:
           name: Run Linter
-          command: 'pylint backend/'
+          command: 'pylint backend'
       - run:
           name: Run Code Style Checks
           command: 'black --check .'
