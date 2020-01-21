@@ -32,11 +32,11 @@ jobs:
              - v1-dependencies-
       - run:
           name: install dependencies
-          command: 'pip install -r ~/solo/requirements/requirements.txt --user'
+          command: 'pip install -r ~/solo/backend/requirements/requirements.txt --user'
       - save_cache:
           paths:
               - ~/solo/requirements/requirements.txt
-          key: v1-dependencies-{{checksum "~/solo/requirements/requirements.txt"}}
+          key: v1-dependencies-{{checksum "~/solo/backend/requirements/requirements.txt"}}
       - run:
           name: run tests
           command: 'python manage.py test'
