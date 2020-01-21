@@ -7,9 +7,17 @@ jobs:
     steps:
       - checkout:
           path: ~/solo
+      - restore_cache:
+          keys:
+             - v2-dependencies-{{ checksum "~/solo/frontend/package.json"}}
+             - v2-dependencies- 
       - run:
           name: Run CI
           command: 'npm ci'
+      - save_cache:
+          paths:
+              - ~/solo/frontend/package.json
+          key: v2-dependencies{{ checksum "package.json"}} 
       - run:
           name: Run Linter
           command: 'npm run lint'
@@ -35,7 +43,7 @@ jobs:
           command: 'pip install -r ~/solo/backend/requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
-              - ~/solo/requirements/requirements.dev.txt
+              - ~/solo/backend/requirements/requirements.dev.txt
           key: v1-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
       - run:
           name: Run Tests
