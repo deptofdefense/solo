@@ -83,3 +83,6 @@ js/test_templates
 
 # env files
 *.env
+
+# databases
+*.sqlite3
