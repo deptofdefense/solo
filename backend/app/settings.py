@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "solo_rog_api", # solo receipt of goods api
+    "solo_rog_api",  # solo receipt of goods api
 ]
 
 MIDDLEWARE = [
