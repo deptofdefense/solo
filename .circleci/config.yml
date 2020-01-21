@@ -9,7 +9,7 @@ jobs:
           path: ~/solo
       - restore_cache:
           keys:
-             - frontend-dependencies-{{ checksum "~/solo/frontend/package.json"}}
+             - frontend-dependencies-{{ checksum "~/solo/frontend/package.json" }}
              - frontend-dependencies- 
       - run:
           name: Run CI
@@ -17,7 +17,7 @@ jobs:
       - save_cache:
           paths:
               - ~/solo/frontend/package.json
-          key: frontend-dependencies{{ checksum "package.json"}} 
+          key: frontend-dependencies{{ checksum "~/solo/frontend/package.json" }} 
       - run:
           name: Run Linter
           command: 'npm run lint'
