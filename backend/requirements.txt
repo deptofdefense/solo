@@ -1,4 +1,0 @@
-Django>=3.0.2,<3.1.0
-djangorestframework>=3.11.0,<3.12.0
-pylint>=2.4.4,<2.5.0
-gunicorn<=20.0.4,<20.1.0

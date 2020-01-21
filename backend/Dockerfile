@@ -3,7 +3,7 @@ FROM python:3.8-alpine
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1
 
-COPY ./requirements.txt /requirements.txt
+COPY ./requirements/requirements.txt /requirements.txt
 RUN pip install --upgrade pip && pip install -r /requirements.txt
 
 RUN mkdir /app

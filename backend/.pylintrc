@@ -1,0 +1,7 @@
+[MASTER]
+disable=
+    missing-docstring,
+    duplicate-code
+
+load-plugins=
+    pylint_django
