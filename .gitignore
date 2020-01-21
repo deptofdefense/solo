@@ -10,7 +10,7 @@ scss/variables.scss.map
 .webassets-cache
 
 # Python virtual env
-.venv/
+venv
 .myvenv/
 /venv/
 
