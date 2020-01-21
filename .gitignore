@@ -2,6 +2,19 @@
 node_modules
 frontend/build
 
+# Python virtual env
+venv
+.myvenv/
+/venv/
+*.pyc
+.cache/
+
+.pytest_cache/
+__pycache__
+
+*.sqlite3
+backend/static
+
 # sass and webassets output artifacts
 scss/assets
 scss/variables.scss
@@ -9,17 +22,8 @@ scss/variables.scss.map
 .sass-cache/
 .webassets-cache
 
-# Python virtual env
-venv
-.myvenv/
-/venv/
-
-.pytest_cache/
-__pycache__
 
 # Compiled python bytecode files
-*.pyc
-.cache/
 
 # static/fonts for now, since it is just symlink
 static/fonts
@@ -45,8 +49,6 @@ config/dev.ini
 *.bk
 crl_locations.json
 
-# test CA config
-ssl/client-certs/*.srl
 
 # uploads
 /uploads
@@ -85,4 +87,3 @@ js/test_templates
 *.env
 
 # databases
-*.sqlite3
