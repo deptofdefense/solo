@@ -41,9 +41,8 @@ jobs:
           command: 'pip install -r ~/solo/backend/requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
-              - /home/circleci/.cache/pip
+              - /home/circleci/.cache/pip/wheels/d7/de/2e/efa132238792efb6459a96e85916ef8597fcb3d2ae51590dfd
               - /usr/local/lib/python3.8/site-packages
-              - /usr/local/lib/site-python
           key: backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
       - run:
           name: Run Tests
