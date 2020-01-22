@@ -7,16 +7,23 @@ jobs:
     steps:
       - checkout:
           path: ~/solo
+      - restore_cache:
+          keys:
+             - frontend-dependencies-{{ checksum "~/solo/frontend/package.json" }}
       - run:
           name: Run CI
           command: 'npm ci'
+      - save_cache:
+          paths:
+              - ~/solo/frontend/node_modules
+          key: frontend-dependencies-{{ checksum "~/solo/frontend/package.json" }}
       - run:
           name: Run Linter
           command: 'npm run lint'
-      - run: 
+      - run:
           name: Run Typechecker
           command: 'npm run typecheck'
-      - run: 
+      - run:
           name: Run Tests
           command: 'npm test'
   backend:
@@ -28,15 +35,14 @@ jobs:
           path: ~/solo
       - restore_cache:
           keys:
-             - v1-dependecies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
-             - v1-dependencies-
+             - backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
       - run:
           name: Install Dependencies
           command: 'pip install -r ~/solo/backend/requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
-              - ~/solo/requirements/requirements.dev.txt
-          key: v1-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
+              - /usr/local/lib/python3.8/site-packages
+          key: backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
       - run:
           name: Run Tests
           command: 'python manage.py test'
@@ -52,4 +58,5 @@ workflows:
     jobs:
         - build
         - backend
-  
+
+
