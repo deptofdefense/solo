@@ -10,7 +10,6 @@ jobs:
       - restore_cache:
           keys:
              - frontend-dependencies-{{ checksum "~/solo/frontend/package.json" }}
-             - frontend-dependencies-
       - run:
           name: Run CI
           command: 'npm ci'
@@ -37,13 +36,14 @@ jobs:
       - restore_cache:
           keys:
              - backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
-             - backend-dependencies-
       - run:
           name: Install Dependencies
           command: 'pip install -r ~/solo/backend/requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
+              - /home/circleci/.cache/pip
               - /usr/local/lib/python3.8/site-packages
+              - /usr/local/lib/site-python
           key: backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
       - run:
           name: Run Tests
