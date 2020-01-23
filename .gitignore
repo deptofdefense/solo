@@ -80,8 +80,9 @@ js/test_templates
 
 .mypy_cache/
 
-# jetbrains
+# ide
 .idea
+.vscode
 
 # env files
 *.env

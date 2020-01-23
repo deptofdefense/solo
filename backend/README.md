@@ -14,6 +14,9 @@ This django app is the backend to the System for Operational Logistics Orders (S
 
 ### Usage
   1. `python manage.py test` run tests
+      - `coverage run` run tests and collect code coverage
+      - `coverage report` show code coverage
+      - `coverage report --fail-under=80` fail with less than 80% coverage
   2. `python manage.py collectstatic` generate static files if required
   3. `python manage.py makemigrations` create files for migrations
   4. `python manage.py migrate` build database based on makemigrations
