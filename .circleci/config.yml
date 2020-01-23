@@ -28,7 +28,9 @@ jobs:
       - run:
           name: Run Tests
           command: 'npm test'
-      - snyk/scan
+      - snyk/scan:
+          monitor-on-build: true
+          severity-threshold: low
       
 
   backend_tests:
@@ -60,6 +62,8 @@ jobs:
       - snyk/scan: 
           additional-arguments: --packageManager=pip
           target-file: requirements/requirements.dev.txt
+          monitor-on-build: true
+          severity-threshold: low
           
       
       
