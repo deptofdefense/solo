@@ -28,8 +28,7 @@ jobs:
       - run:
           name: Run Tests
           command: 'npm test'
-      - snyk/scan:
-         monitor-on-build: false
+      - snyk/scan
       
 
   backend_tests:
@@ -58,8 +57,7 @@ jobs:
       - run:
           name: Run Tests
           command: 'python manage.py test'
-      - snyk/scan:
-          monitor-on-build: false 
+      - snyk/scan: 
           additional-arguments: --packageManager=pip
           target-file: requirements/requirements.dev.txt
           
