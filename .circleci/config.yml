@@ -1,6 +1,8 @@
-version: 2
+version: 2.1
+orbs:
+  snyk: snyk/snyk@0.0.8
 jobs:
-  build:
+  frontend_tests:
     docker:
       - image: circleci/node:12.13.0
     working_directory: ~/solo/frontend
@@ -26,7 +28,11 @@ jobs:
       - run:
           name: Run Tests
           command: 'npm test'
-  backend:
+      - snyk/scan:
+         monitor-on-build: false
+      
+
+  backend_tests:
     docker:
       - image: circleci/python:3.8
     working_directory: ~/solo/backend
@@ -44,19 +50,26 @@ jobs:
               - /usr/local/lib/python3.8/site-packages
           key: backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
       - run:
-          name: Run Tests
-          command: 'python manage.py test'
-      - run:
           name: Run Linter
           command: 'pylint backend'
       - run:
           name: Run Code Style Checks
           command: 'black --check .'
+      - run:
+          name: Run Tests
+          command: 'python manage.py test'
+      - snyk/scan:
+          monitor-on-build: false 
+          additional-arguments: --packageManager=pip
+          target-file: requirements/requirements.dev.txt
+          
+      
+      
+
 workflows:
-  version: 2
   build_and_test:
     jobs:
-        - build
-        - backend
+        - frontend_tests
+        - backend_tests
 
 
