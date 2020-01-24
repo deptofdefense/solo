@@ -114,3 +114,7 @@ Before submitting your pull request, you should run the build process locally fi
 A hook is included in the repository that should be configured prior to making any commits to help with this process. It ensures that any changes to be committed comply with the acceptance criteria within the CI/CD pipeline. At minimum, the hook will run unit tests, fix and check code-style, and lint. To use this hook, run the following command from the root of the repository.
 
 `ln -s -f ../../hooks/precommit.sh .git/hooks/pre-commit`
+
+In order to prevent the pre-commit verification from running, add the --no-verify flag.
+
+`git commit --no-verify -m "..."`
