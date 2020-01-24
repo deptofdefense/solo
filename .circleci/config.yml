@@ -29,8 +29,8 @@ jobs:
           name: Running Frontend Typechecking
           command: 'npm run typecheck'
       - run:
-          name: Running Unit Tests
-          command: 'npm test'
+          name: Running Unit Tests and Validating Coverage
+          command: 'npm test:ci'
       - snyk/scan:
           monitor-on-build: false
           severity-threshold: low
@@ -61,8 +61,8 @@ jobs:
           name: Running Backend Style Checking
           command: 'black --check .'
       - run:
-          name: Running Unit Tests
-          command: 'python manage.py test'
+          name: Running Unit Tests and Validating Coverage
+          command: 'coverage run && coverage report --fail-under=80'
       - snyk/scan: 
           additional-arguments: --packageManager=pip
           target-file: requirements/requirements.dev.txt
