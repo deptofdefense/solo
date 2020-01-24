@@ -14,14 +14,14 @@ jobs:
           path: ~/solo
       - restore_cache:
           keys:
-             - frontend-dependencies-{{ checksum "package.json" }}
+             - frontend-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Installing Frontend Dependencies
           command: 'npm ci'
       - save_cache:
           paths:
               - /node_modules
-          key: frontend-dependencies-{{ checksum "package.json" }}
+          key: frontend-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: Running Frontend Linting and Style Checking
           command: 'npm run lint'
@@ -43,6 +43,7 @@ jobs:
     steps:
       - checkout:
           path: ~/solo
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
       - restore_cache:
           keys:
              - backend-dependencies-{{ checksum "requirements/requirements.dev.txt" }}

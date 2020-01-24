@@ -1,0 +1,9 @@
+[run]
+branch = True
+command_line = manage.py test
+source = .
+omit =
+    *wsgi.py
+    */migrations/*
+    */test/*
+    *manage.py

@@ -18,9 +18,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "typecheck": "tsc --noEmit",
+    "test": "react-scripts test --watchAll=false",
+    "test:watch": "react-scripts test --watch",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "react-scripts test --coverage --b --ci --watchAll=false",
     "lint": "eslint 'src/**/*.{ts,tsx,json,js,jsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx,json,js,jsx}' --fix"
   },
@@ -43,5 +46,22 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.0",
     "prettier": "1.19.1"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "lines": 80
+      }
+    },
+    "collectCoverageFrom": [
+      "./src/**/*.{ts,js,tsx,jsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "serviceWorker.ts",
+      "react-app-env.d.ts",
+      "src/index.tsx"
+    ]
   }
 }
