@@ -15,7 +15,6 @@ __pycache__
 # Django
 *.sqlite3
 backend/static
-migrations/
 
 # sass and webassets output artifacts
 scss/assets
