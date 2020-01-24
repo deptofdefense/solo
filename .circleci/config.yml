@@ -30,7 +30,7 @@ jobs:
           command: 'npm run typecheck'
       - run:
           name: Running Unit Tests and Validating Coverage
-          command: 'npm test:ci'
+          command: 'npm run test:ci'
       - snyk/scan:
           monitor-on-build: false
           severity-threshold: low
