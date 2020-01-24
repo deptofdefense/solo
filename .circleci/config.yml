@@ -1,7 +1,10 @@
 version: 2.1
+
 orbs:
   snyk: snyk/snyk@0.0.8
+
 jobs:
+
   frontend_tests:
     docker:
       - image: circleci/node:12.13.0
@@ -11,25 +14,26 @@ jobs:
           path: ~/solo
       - restore_cache:
           keys:
-             - frontend-dependencies-{{ checksum "~/solo/frontend/package.json" }}
+             - frontend-dependencies-{{ checksum "package-lock.json" }}
       - run:
-          name: Run CI
+          name: Installing Frontend Dependencies
           command: 'npm ci'
       - save_cache:
           paths:
-              - ~/solo/frontend/node_modules
-          key: frontend-dependencies-{{ checksum "~/solo/frontend/package.json" }}
+              - /node_modules
+          key: frontend-dependencies-{{ checksum "package-lock.json" }}
       - run:
-          name: Run Linter
+          name: Running Frontend Linting and Style Checking
           command: 'npm run lint'
       - run:
-          name: Run Typechecker
+          name: Running Frontend Typechecking
           command: 'npm run typecheck'
       - run:
-          name: Run Tests
+          name: Running Unit Tests
           command: 'npm test'
       - snyk/scan:
-         monitor-on-build: false
+          monitor-on-build: false
+          severity-threshold: low
       
 
   backend_tests:
@@ -39,33 +43,32 @@ jobs:
     steps:
       - checkout:
           path: ~/solo
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
       - restore_cache:
           keys:
-             - backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
+             - backend-dependencies-{{ checksum "requirements/requirements.dev.txt" }}
       - run:
-          name: Install Dependencies
-          command: 'pip install -r ~/solo/backend/requirements/requirements.dev.txt --user'
+          name: Installing Backend Dependencies
+          command: 'pip install -r requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
               - /usr/local/lib/python3.8/site-packages
-          key: backend-dependencies-{{ checksum "~/solo/backend/requirements/requirements.dev.txt" }}
+          key: backend-dependencies-{{ checksum "requirements/requirements.dev.txt" }}
       - run:
-          name: Run Linter
+          name: Running Backend Linting
           command: 'pylint backend'
       - run:
-          name: Run Code Style Checks
+          name: Running Backend Style Checking
           command: 'black --check .'
       - run:
-          name: Run Tests
+          name: Running Unit Tests
           command: 'python manage.py test'
-      - snyk/scan:
-          monitor-on-build: false 
+      - snyk/scan: 
           additional-arguments: --packageManager=pip
           target-file: requirements/requirements.dev.txt
+          monitor-on-build: false
+          severity-threshold: low
           
-      
-      
-
 workflows:
   build_and_test:
     jobs:
