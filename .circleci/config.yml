@@ -68,6 +68,9 @@ jobs:
           target-file: requirements/requirements.dev.txt
           monitor-on-build: false
           severity-threshold: low
+      -  run:
+          name: Running Backend Static Code Security Analysis 
+          command: 'bandit -r ./'
           
 workflows:
   build_and_test:
