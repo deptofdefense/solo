@@ -1,3 +1,9 @@
-# from django.db import models
+from django.db import models
 
-# Create your models here.
+
+class Log(models.Model):
+    aac = models.CharField(max_length=20)
+    request_number = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.request_number)

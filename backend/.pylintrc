@@ -1,7 +1,8 @@
 [MASTER]
 disable=
     missing-docstring,
-    duplicate-code
+    duplicate-code,
+    too-many-ancestors
 
 load-plugins=
     pylint_django
