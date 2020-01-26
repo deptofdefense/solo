@@ -49,7 +49,7 @@ jobs:
              - backend-dependencies-{{ checksum "requirements/requirements.dev.txt" }}
       - run:
           name: Installing Backend Dependencies
-          command: 'pip install -r requirements/requirements.dev.txt --user'
+          command: 'pip install -U "pip>20.0.1" && pip install -r requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
               - /usr/local/lib/python3.8/site-packages
