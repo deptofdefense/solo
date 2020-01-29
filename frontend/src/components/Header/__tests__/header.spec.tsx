@@ -37,7 +37,7 @@ describe("HeaderNavComponent", () => {
   });
 
   it("adds visible class when open", () => {
-    const { container } = render(<HeaderNav {...props} />);
+    const { container } = render(<HeaderNav {...props} isOpen />);
     expect(container.firstChild).toHaveClass("is-visible");
   });
 
