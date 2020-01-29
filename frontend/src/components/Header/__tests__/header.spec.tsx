@@ -6,7 +6,7 @@ import HeaderNavLink from "../HeaderNavLink";
 import HeaderNav from "../HeaderNav";
 
 describe("HeaderLogo component", () => {
-  it("matches snapshot @snapshot", () => {
+  it("matches snapshot", () => {
     const { asFragment } = render(<HeaderLogo text="test" />);
     expect(asFragment()).toMatchSnapshot();
   });
@@ -31,8 +31,13 @@ describe("HeaderNavComponent", () => {
     props.onClose.mockReset();
   });
 
-  it("matches snapshot @snapshot", () => {
-    const { asFragment } = render(<HeaderNav {...props} />);
+  it("matches snapshot when open", () => {
+    const { asFragment } = render(<HeaderNav {...props} isOpen />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it("matches snapshot when closed", () => {
+    const { asFragment } = render(<HeaderNav {...props} isOpen={false} />);
     expect(asFragment()).toMatchSnapshot();
   });
 
@@ -64,7 +69,7 @@ describe("HeaderNavLink component", () => {
 });
 
 describe("Header component", () => {
-  it("matches snapshot @snapshot", () => {
+  it("matches snapshot", () => {
     const { asFragment } = render(<Header />);
     expect(asFragment()).toMatchSnapshot();
   });

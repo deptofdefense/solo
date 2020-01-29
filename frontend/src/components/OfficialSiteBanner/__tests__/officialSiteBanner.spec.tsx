@@ -3,9 +3,9 @@ import OfficialSiteBanner from "../OfficialSiteBanner";
 import { render, fireEvent, wait } from "@testing-library/react";
 
 describe("Official site banner component", () => {
-  it("matches snapshot @snapshot", () => {
+  it("matches snapshot", () => {
     const { asFragment } = render(<OfficialSiteBanner />);
-    expect(asFragment).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it("starts off closed", async () => {

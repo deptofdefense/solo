@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Header component matches snapshot @snapshot 1`] = `
+exports[`Header component matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="usa-overlay"
@@ -69,7 +69,7 @@ exports[`Header component matches snapshot @snapshot 1`] = `
 </DocumentFragment>
 `;
 
-exports[`HeaderLogo component matches snapshot @snapshot 1`] = `
+exports[`HeaderLogo component matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="usa-logo"
@@ -89,7 +89,29 @@ exports[`HeaderLogo component matches snapshot @snapshot 1`] = `
 </DocumentFragment>
 `;
 
-exports[`HeaderNavComponent matches snapshot @snapshot 1`] = `
+exports[`HeaderNavComponent matches snapshot when closed 1`] = `
+<DocumentFragment>
+  <nav
+    aria-label="Primary navigation"
+    class="usa-nav"
+  >
+    <ul
+      class="usa-nav__primary usa-accordion"
+    >
+      <button
+        class="usa-nav__close"
+      >
+        <img
+          alt="close"
+          src="close.svg"
+        />
+      </button>
+    </ul>
+  </nav>
+</DocumentFragment>
+`;
+
+exports[`HeaderNavComponent matches snapshot when open 1`] = `
 <DocumentFragment>
   <nav
     aria-label="Primary navigation"
