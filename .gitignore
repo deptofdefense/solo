@@ -6,7 +6,6 @@
 frontend/**/node_modules
 frontend/build
 frontend/coverage
-frontend/**/react-app-env.d.ts
 
 # Python virtual env
 venv
