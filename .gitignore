@@ -12,6 +12,7 @@ venv
 .pytest_cache/
 __pycache__
 
+# Django
 *.sqlite3
 backend/static
 
