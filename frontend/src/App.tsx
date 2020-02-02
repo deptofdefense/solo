@@ -1,10 +1,13 @@
 import React from "react";
-import Banner from "./components/Banner";
+import { BrowserRouter } from "react-router-dom";
+
+import "./styles.scss";
+import Layout from "./components/Layout";
 
 const App: React.FC = () => (
-  <div>
-    <Banner />
-  </div>
+  <BrowserRouter>
+    <Layout />
+  </BrowserRouter>
 );
 
 export default App;

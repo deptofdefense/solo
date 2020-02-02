@@ -19,7 +19,8 @@
     "jsx": "react",
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src"
   },
   "include": [
     "src"
