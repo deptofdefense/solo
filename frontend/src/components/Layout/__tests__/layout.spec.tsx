@@ -8,13 +8,14 @@ describe("test layout component", () => {
       initialHistory: [""]
     });
     expect(queryByText("About Page")).not.toBeInTheDocument();
-    expect(queryByText("Home Page")).toBeInTheDocument();
+    expect(queryByText("SOLO Home Page")).toBeInTheDocument();
   });
+
   it("Shows about page on /about route", () => {
     const { queryByText } = render(<Layout />, {
       initialHistory: ["/about"]
     });
-    expect(queryByText("Home Page")).not.toBeInTheDocument();
+    expect(queryByText("SOLO Home Page")).not.toBeInTheDocument();
     expect(queryByText("About Page")).toBeInTheDocument();
   });
 });
