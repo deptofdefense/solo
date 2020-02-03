@@ -11,9 +11,10 @@ server {
 
     # ssl
     include /etc/nginx/snippets/ssh-params.conf;
-    ssl_certificate /etc/ssl/${CERT_FILE_NAME};
-    ssl_certificate_key /etc/ssl/${KEY_FILE_NAME};
-    ssl_dhparam /etc/ssl/dhparam.pem;
+
+    ssl_certificate ${CERT_FILE_NAME};
+    ssl_certificate_key ${KEY_FILE_NAME};
+    ssl_dhparam ${DHPARAM_FILE_NAME};
 
     charset     utf-8;
     client_max_body_size 75M;
@@ -35,9 +36,9 @@ server {
     # ssl
     include /etc/nginx/snippets/ssh-params.conf;
 
-    ssl_certificate /etc/ssl/nginx-selfsigned.crt;
-    ssl_certificate_key /etc/ssl/nginx-selfsigned.key;
-    ssl_dhparam /etc/ssl/dhparam.pem;
+    ssl_certificate ${CERT_FILE_NAME};
+    ssl_certificate_key ${KEY_FILE_NAME};
+    ssl_dhparam ${DHPARAM_FILE_NAME};
 
     charset     utf-8;
     client_max_body_size 75M;
