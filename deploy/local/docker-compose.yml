@@ -9,7 +9,7 @@ services:
   migrate:
     build: ../../backend
     env_file: 
-      - ./.env
+      - ../.env
     command: "python manage.py migrate"
     depends_on: 
       - db
