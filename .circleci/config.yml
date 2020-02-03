@@ -31,9 +31,6 @@ jobs:
       - run:
           name: Running Unit Tests and Validating Coverage
           command: 'npm run test:ci'
-      - snyk/scan:
-          monitor-on-build: false
-          severity-threshold: low
       
 
   backend_tests:
@@ -63,11 +60,6 @@ jobs:
       - run:
           name: Running Unit Tests and Validating Coverage
           command: 'coverage run && coverage report --fail-under=80'
-      - snyk/scan: 
-          additional-arguments: --packageManager=pip
-          target-file: requirements/requirements.dev.txt
-          monitor-on-build: false
-          severity-threshold: low
       -  run:
           name: Running Backend Static Code Security Analysis 
           command: 'bandit -r ./'
