@@ -1,0 +1,53 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres
+    env_file: 
+      - ./.env
+
+  migrate:
+    build: ../../backend
+    env_file: 
+      - ./.env
+    command: "python manage.py migrate"
+    depends_on: 
+      - db
+
+  backend:
+    build: ../../backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../backend:/app/
+    env_file: 
+      - ./.env
+
+  nginx:
+    build:
+      context: ../../frontend
+      args: 
+        - API_URL=$API_DOMAIN
+    ports:
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - ../keys:/etc/ssl/
+    env_file: 
+      - ./.env
+  
+  frontend:
+    build:
+      context: ../../frontend
+      args:
+        - API_URL=$API_DOMAIN
+      target: build_stage
+    command: "npm run start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../frontend/src:/app/src
+    env_file: 
+      - ./.env
+    
