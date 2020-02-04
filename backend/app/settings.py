@@ -80,11 +80,11 @@ MIDDLEWARE = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-        "PORT": os.environ.get("POSTGRES_PORT", 5432),
-        "NAME": os.environ.get("POSTGRES_DB", "solo"),
-        "USER": os.environ.get("POSTGRES_USER", "solo"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "solo"),
+        "HOST": os.environ.get("POSTGRES_HOST", default="localhost"),
+        "PORT": os.environ.get("POSTGRES_PORT", default=5432),
+        "NAME": os.environ.get("POSTGRES_DB", default="solo"),
+        "USER": os.environ.get("POSTGRES_USER", default="solo"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", default="solo"),
     }
 }
 

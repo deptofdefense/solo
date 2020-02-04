@@ -9,15 +9,15 @@ const authMocked = auth as jest.Mocked<typeof auth>;
 
 describe("HomePage componenet", () => {
   beforeAll(() => {
-    authMocked.login = jest.fn();
+    authMocked.apiConnectivityTest = jest.fn();
   });
 
   afterEach(() => {
-    authMocked.login.mockReset();
+    authMocked.apiConnectivityTest.mockReset();
   });
 
   afterAll(() => {
-    authMocked.login.mockRestore();
+    authMocked.apiConnectivityTest.mockRestore();
   });
 
   it("matches snapshot", () => {
@@ -26,7 +26,7 @@ describe("HomePage componenet", () => {
   });
 
   it("displays success on api call success", async () => {
-    authMocked.login.mockResolvedValue("test login return");
+    authMocked.apiConnectivityTest.mockResolvedValue("test login return");
     const { getByText, queryByText } = render(<HomePage />);
     const loginButton = getByText("API Test");
     fireEvent.click(loginButton);
@@ -37,7 +37,7 @@ describe("HomePage componenet", () => {
 
   it("displays error on api call failure", async () => {
     const err = new Error("some error message");
-    authMocked.login.mockRejectedValue(err);
+    authMocked.apiConnectivityTest.mockRejectedValue(err);
     const { getByText, queryByText } = render(<HomePage />);
     const loginButton = getByText("API Test");
     fireEvent.click(loginButton);

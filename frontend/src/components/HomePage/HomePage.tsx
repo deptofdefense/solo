@@ -6,10 +6,10 @@ import classes from "./HomePage.module.css";
 const HomePage: React.FC = props => {
   const [data, setData] = useState("");
 
-  const login = useCallback(async () => {
+  const checkConnectivity = useCallback(async () => {
     setData("");
     try {
-      await api.auth.login();
+      await api.auth.apiConnectivityTest();
       setData("success");
     } catch (e) {
       setData(e.toString());
@@ -19,7 +19,7 @@ const HomePage: React.FC = props => {
   return (
     <div className={classes.root}>
       <h1 className={classes.title}>SOLO Home Page</h1>
-      <LoginButton onClick={login} />
+      <LoginButton onClick={checkConnectivity} />
       <div>{data}</div>
     </div>
   );
