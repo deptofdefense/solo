@@ -85,7 +85,7 @@ A docker-compose.yml file is included in the repository that quickly and easily 
   1. Copy the example environment file to a new file called `.env`
       -  `cp example.env .env`
  
-  2. Edit the `.env` file and create a username and password for the database connection
+  2. Edit the `.env` file and create a username and password for the database connection, and set your secret key to be a random value.
       - Note these values will only apply to your local environment
   3. Execute `docker-compose up --build`
   4. After the build process, navigate to `http://localhost:3000` in a browswer
