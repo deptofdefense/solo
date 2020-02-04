@@ -9,7 +9,7 @@ frontend/coverage
 
 # deployment config
 deploy/**/.env
-deploy/**/keys
+deploy/**/keys/*
 
 # Python virtual env
 venv

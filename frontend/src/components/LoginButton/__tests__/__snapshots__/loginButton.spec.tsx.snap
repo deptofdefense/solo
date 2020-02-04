@@ -8,7 +8,7 @@ exports[`Login Button matches snapshot 1`] = `
     <button
       class="usa-button usa-button--big"
     >
-      CAC Login
+      API Test
     </button>
   </div>
 </DocumentFragment>

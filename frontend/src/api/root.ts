@@ -1,5 +1,6 @@
 export default class RootAPI {
-  private static apiBaseUrl = process.env.REACT_APP_API_DOMAIN;
+  private static apiProtocol = process.env.REACT_APP_API_PROTOCOL || "https";
+  private static apiDomain = process.env.REACT_APP_API_DOMAIN;
 
   private static baseOptions: Partial<RequestInit> = {
     headers: {
@@ -10,7 +11,10 @@ export default class RootAPI {
   };
 
   private static async wrapFetch(url: string, options: Partial<RequestInit>) {
-    const res = await fetch(`https://${this.apiBaseUrl}${url}`, options);
+    const res = await fetch(
+      `${this.apiProtocol}://${this.apiDomain}${url}`,
+      options
+    );
     if (!res.ok) {
       throw new Error(res.statusText);
     }

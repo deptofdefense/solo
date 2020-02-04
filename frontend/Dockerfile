@@ -1,8 +1,10 @@
 # build stage - build production react app
 FROM node:latest AS build_stage
 
-ARG API_URL
-ENV REACT_APP_API_DOMAIN=${API_URL}
+ARG API_DOMAIN
+ARG API_PROTOCOL
+ENV REACT_APP_API_DOMAIN=${API_DOMAIN}
+ENV REACT_APP_API_PROTOCOL=${API_PROTOCOL}
 
 WORKDIR /app
 
@@ -24,6 +26,6 @@ COPY nginx/snippets/ /etc/nginx/snippets/
 
 COPY nginx/entrypoint.sh /app/entrypoint.sh
 
-COPY nginx/nginx.template /app/nginx.template
+COPY nginx/*.template /app/
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]

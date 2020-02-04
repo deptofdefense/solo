@@ -28,7 +28,7 @@ describe("HomePage componenet", () => {
   it("displays success on api call success", async () => {
     authMocked.login.mockResolvedValue("test login return");
     const { getByText, queryByText } = render(<HomePage />);
-    const loginButton = getByText("CAC Login");
+    const loginButton = getByText("API Test");
     fireEvent.click(loginButton);
     await wait(() => {
       expect(queryByText("success")).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe("HomePage componenet", () => {
     const err = new Error("some error message");
     authMocked.login.mockRejectedValue(err);
     const { getByText, queryByText } = render(<HomePage />);
-    const loginButton = getByText("CAC Login");
+    const loginButton = getByText("API Test");
     fireEvent.click(loginButton);
     await wait(() => {
       expect(queryByText(err.toString())).toBeInTheDocument();

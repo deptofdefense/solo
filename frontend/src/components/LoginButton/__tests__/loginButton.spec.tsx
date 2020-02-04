@@ -16,7 +16,7 @@ describe("Login Button", () => {
 
   it("calls click handler when clicked", async () => {
     const { getByText } = render(<LoginButton onClick={clickHandler} />);
-    const button = getByText("CAC Login");
+    const button = getByText("API Test");
     fireEvent.click(button);
     expect(clickHandler).toHaveBeenCalledTimes(1);
   });

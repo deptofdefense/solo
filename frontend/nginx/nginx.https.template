@@ -1,0 +1,92 @@
+upstream backend_proxy {
+    server ${BACKEND_PROXY} fail_timeout=0;
+}
+
+## REACT APP ## 
+server {
+    server_name     ${MAIN_DOMAIN};
+    listen          443 ssl;
+
+    # ssl
+    include /etc/nginx/snippets/ssh-params.conf;
+    ssl_certificate /etc/ssl/${CERT_FILE_NAME};
+    ssl_certificate_key /etc/ssl/${KEY_FILE_NAME};
+    ssl_dhparam /etc/ssl/${DHPARAM_FILE_NAME};
+
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    # React app production build
+    location /  {
+        root /usr/share/nginx/html;
+        try_files $uri $uri/ /index.html;
+    }
+}
+
+## DJANGO API ## 
+server {
+    server_name     ${API_DOMAIN};
+    listen          443 ssl;
+
+    # ssl
+    include /etc/nginx/snippets/ssh-params.conf;
+    ssl_certificate /etc/ssl/${CERT_FILE_NAME};
+    ssl_certificate_key /etc/ssl/${KEY_FILE_NAME};
+    ssl_dhparam /etc/ssl/${DHPARAM_FILE_NAME};
+
+    charset     utf-8;
+    client_max_body_size 75M;
+
+    location / {
+        try_files $uri @app;
+    }
+    location @app {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass http://backend_proxy;
+    }
+}
+
+### AUTHENTICATION ##
+#server {
+#    server_name     ${AUTH_DOMAIN};
+#    listen          443 ssl;
+#
+#    # ssl
+#    include /etc/nginx/snippets/ssh-params.conf;
+#    ssl_certificate /etc/ssl/nginx-selfsigned.crt;
+#    ssl_certificate_key /etc/ssl/nginx-selfsigned.key;
+#    ssl_dhparam /etc/ssl/dhparam.pem;
+#
+#    # Request and validate client certificate
+#    ssl_verify_client on;
+#    ssl_verify_depth 10;
+#    ssl_client_certificate /etc/nginx/snippets/client-ca-bundle.pem;
+#
+#    charset     utf-8;
+#    client_max_body_size 75M;
+#
+#    location / {
+#        return 301 https://${MAIN_DOMAIN}$request_uri;
+#    }
+#    location /login {
+#        try_files $uri @app;
+#    }
+#    location @app {
+#        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#        proxy_set_header X-Forwarded-Proto $scheme;
+#        proxy_set_header Host $http_host;
+#        proxy_set_header HTTP_X_SSL_CLIENT_VERIFY $ssl_client_verify;
+#        proxy_set_header HTTP_X_SSL_CLIENT_CERT $ssl_client_raw_cert;
+#        proxy_set_header HTTP_X_SSL_CLIENT_S_DN $ssl_client_s_dn;
+#        proxy_set_header HTTP_X_SSL_CLIENT_S_DN_LEGACY $ssl_client_s_dn_legacy;
+#        proxy_set_header HTTP_X_SSL_CLIENT_I_DN $ssl_client_i_dn;
+#        proxy_set_header HTTP_X_SSL_CLIENT_I_DN_LEGACY $ssl_client_i_dn_legacy;
+#        proxy_set_header HTTP_X_REQUEST_ID $request_id;
+#        proxy_redirect off;
+#        proxy_pass http://backend_proxy;
+#    }
+#}
+

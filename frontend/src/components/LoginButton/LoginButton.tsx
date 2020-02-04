@@ -8,7 +8,7 @@ interface LoginButtonProps {
 const LoginButton: React.FC<LoginButtonProps> = ({ onClick }) => (
   <div className={classes.root}>
     <button className="usa-button usa-button--big" onClick={onClick}>
-      CAC Login
+      API Test
     </button>
   </div>
 );
