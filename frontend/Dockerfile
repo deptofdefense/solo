@@ -1,11 +1,6 @@
 # build stage - build production react app
 FROM node:latest AS build_stage
 
-ARG API_DOMAIN
-ARG API_PROTOCOL
-ENV REACT_APP_API_DOMAIN=${API_DOMAIN}
-ENV REACT_APP_API_PROTOCOL=${API_PROTOCOL}
-
 WORKDIR /app
 
 COPY package*.json /app/
@@ -13,6 +8,12 @@ COPY package*.json /app/
 RUN npm ci
 
 COPY . .
+
+
+ARG API_DOMAIN
+ARG API_PROTOCOL
+ENV REACT_APP_API_DOMAIN=${API_DOMAIN}
+ENV REACT_APP_API_PROTOCOL=${API_PROTOCOL}
 
 RUN npm run build
 

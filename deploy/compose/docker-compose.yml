@@ -16,12 +16,12 @@ services:
 
   backend:
     build: ../../backend
-    ports:
-      - "8000:8000"
     env_file: 
       - ./.env
+    depends_on: 
+      - migrate
 
-  nginx:
+  frontend:
     build:
       context: ../../frontend
       args: 
@@ -36,5 +36,4 @@ services:
       - $SSL_KEYS_VOLUME_ROOT:/etc/ssl/
     env_file: 
       - ./.env
-    environment: 
-      - NGINX_TEMPLATE=https
+

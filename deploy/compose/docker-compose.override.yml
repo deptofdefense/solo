@@ -4,14 +4,11 @@ services:
   backend:
     volumes:
       - ../../backend:/app/
-  
-  nginx:
-    environment: 
-      - NGINX_TEMPLATE=http
-  
+    ports:
+      - "8000:8000"
+
   frontend:
     build:
-      context: ../../frontend
       target: build_stage
     command: "npm run start"
     ports:
@@ -21,5 +18,5 @@ services:
     env_file: 
       - ./.env
     environment: 
-      - REACT_APP_API_DOMAIN=$API_DOMAIN
+      - REACT_APP_API_DOMAIN=$DEV_API_DOMAIN
       - REACT_APP_API_PROTOCOL=http
