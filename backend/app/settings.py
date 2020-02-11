@@ -7,9 +7,8 @@ from django.utils.crypto import get_random_string
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY", default=get_random_string(50, string.printable)
-)
+SECRET_KEY = os.environ.get("SECRET_KEY") or get_random_string(50, string.printable)
+
 
 # don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", default=False)
