@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  backend:
+    volumes:
+      - ../../backend:/app/
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      target: build_stage
+    command: "npm run start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../frontend/src:/app/src
+    env_file: 
+      - ./.env
+    environment: 
+      - REACT_APP_API_DOMAIN=$DEV_API_DOMAIN
+      - REACT_APP_API_PROTOCOL=http

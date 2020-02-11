@@ -3,6 +3,9 @@ FROM python:3.8-alpine
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1
 
+# build dependencies for psycopg2 postgres driver
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+
 COPY ./requirements/requirements.txt /requirements.txt
 RUN pip install --upgrade pip && pip install -r /requirements.txt
 

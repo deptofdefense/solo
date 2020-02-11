@@ -7,6 +7,10 @@ frontend/**/node_modules
 frontend/build
 frontend/coverage
 
+# deployment config
+deploy/**/.env
+deploy/**/keys/*
+
 # Python virtual env
 venv
 .myvenv/
@@ -21,11 +25,6 @@ __pycache__
 *.sqlite3
 backend/static
 
-# Compiled python bytecode files
-
-
-# local log files
-.env*
 
 # CRLs
 /crl
@@ -52,7 +51,3 @@ local-ci.yml
 celerybeat-schedule
 
 .mypy_cache/
-
-
-# env files
-*.env
