@@ -2,7 +2,10 @@
 disable=
     missing-docstring,
     duplicate-code,
-    too-many-ancestors
+    too-many-ancestors,
+    invalid-name,
+    fixme,
+    abstract-method
 
 load-plugins=
     pylint_django

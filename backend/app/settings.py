@@ -9,7 +9,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY") or get_random_string(50, string.printable)
 
-
 # don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", default=False)
 
@@ -28,27 +27,24 @@ INSTALLED_APPS = [
 ROOT_URLCONF = "app.urls"
 WSGI_APPLICATION = "app.wsgi.application"
 
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
-        },
-    },
-]
+AUTH_USER_MODEL = "solo_rog_api.User"
+
+AUTHENTICATION_BACKENDS = ["solo_rog_api.authentication.CACAuthenticationBackend"]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
+    ]
+}
 
 # setup the domain to serve from based on environment
 API_DOMAIN = os.environ.get("API_DOMAIN")
+AUTH_DOMAIN = os.environ.get("AUTH_DOMAIN")
 ALLOWED_HOSTS = []
 if API_DOMAIN:
     ALLOWED_HOSTS.append(API_DOMAIN)
+if AUTH_DOMAIN:
+    ALLOWED_HOSTS.append(AUTH_DOMAIN)
 if DEBUG:
     ALLOWED_HOSTS.extend(["localhost", "127.0.0.1", "0.0.0.0"])
 
@@ -63,14 +59,13 @@ if DEBUG:
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 
@@ -92,6 +87,22 @@ DATABASES = {
 if "test" in sys.argv:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
 
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

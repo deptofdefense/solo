@@ -18,3 +18,4 @@ typed-ast==1.4.1
 wrapt==1.11.2
 coverage==5.0.3
 bandit==1.6.2
+PyJWT==1.7.1
