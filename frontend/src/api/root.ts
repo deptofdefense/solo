@@ -1,6 +1,6 @@
 export default class RootAPI {
-  private static apiProtocol = process.env.REACT_APP_API_PROTOCOL || "https";
-  private static apiDomain = process.env.REACT_APP_API_DOMAIN;
+  protected static apiProtocol = process.env.REACT_APP_API_PROTOCOL || "https";
+  protected static apiDomain = process.env.REACT_APP_API_DOMAIN;
 
   private static baseOptions: Partial<RequestInit> = {
     headers: {
@@ -10,7 +10,7 @@ export default class RootAPI {
     redirect: "follow"
   };
 
-  private static async wrapFetch(url: string, options: Partial<RequestInit>) {
+  protected static async wrapFetch(url: string, options: Partial<RequestInit>) {
     const res = await fetch(
       `${this.apiProtocol}://${this.apiDomain}${url}`,
       options
@@ -44,4 +44,9 @@ export default class RootAPI {
       method: "POST"
     });
   }
+}
+
+export class AuthAPI extends RootAPI {
+  protected static apiProtocol = process.env.REACT_APP_API_PROTOCOL || "https";
+  protected static apiDomain = process.env.REACT_APP_AUTH_DOMAIN;
 }

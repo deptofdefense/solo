@@ -9,15 +9,15 @@ const authMocked = auth as jest.Mocked<typeof auth>;
 
 describe("HomePage componenet", () => {
   beforeAll(() => {
-    authMocked.apiConnectivityTest = jest.fn();
+    authMocked.login = jest.fn();
   });
 
   afterEach(() => {
-    authMocked.apiConnectivityTest.mockReset();
+    authMocked.login.mockReset();
   });
 
   afterAll(() => {
-    authMocked.apiConnectivityTest.mockRestore();
+    authMocked.login.mockRestore();
   });
 
   it("matches snapshot", () => {
@@ -26,18 +26,21 @@ describe("HomePage componenet", () => {
   });
 
   it("displays success on api call success", async () => {
-    authMocked.apiConnectivityTest.mockResolvedValue("test login return");
+    authMocked.login.mockResolvedValue({
+      access: "access token",
+      refresh: "refresh token"
+    });
     const { getByText, queryByText } = render(<HomePage />);
     const loginButton = getByText("API Test");
     fireEvent.click(loginButton);
     await wait(() => {
-      expect(queryByText("success")).toBeInTheDocument();
+      expect(queryByText(/access token/)).toBeInTheDocument();
     });
   });
 
   it("displays error on api call failure", async () => {
     const err = new Error("some error message");
-    authMocked.apiConnectivityTest.mockRejectedValue(err);
+    authMocked.login.mockRejectedValue(err);
     const { getByText, queryByText } = render(<HomePage />);
     const loginButton = getByText("API Test");
     fireEvent.click(loginButton);
