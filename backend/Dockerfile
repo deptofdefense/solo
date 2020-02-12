@@ -1,7 +1,5 @@
 FROM python:3.8-alpine
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONBUFFERED 1
 
 # build dependencies for psycopg2 postgres driver
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
@@ -13,8 +11,6 @@ RUN mkdir /app
 WORKDIR /app
 COPY . /app
 
-RUN adduser -D user
-USER user
 
 EXPOSE 8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "app.wsgi:application"]

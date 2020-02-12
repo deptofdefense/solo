@@ -19,4 +19,5 @@ services:
       - ./.env
     environment: 
       - REACT_APP_API_DOMAIN=$DEV_API_DOMAIN
+      - REACT_APP_AUTH_DOMAIN=$DEV_API_DOMAIN
       - REACT_APP_API_PROTOCOL=http
