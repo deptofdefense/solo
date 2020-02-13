@@ -7,3 +7,4 @@ omit =
     */migrations/*
     */test/*
     *manage.py
+    *settings.py

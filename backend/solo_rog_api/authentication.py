@@ -1,24 +1,26 @@
 import re
-from rest_framework.authentication import BaseAuthentication
+from typing import Optional
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.models import AbstractUser
 
 
 User = get_user_model()
 
 
-class CACAuthenticationBackend(BaseAuthentication):
+class CACAuthenticationBackend(BaseBackend):
     DODID_RE = re.compile(r"CN=(?:\w+\.){2,3}(?P<dodid>\d{10})")
 
-    def get_dodid_from_dn(self, dn):
-        match = self.DODID_RE.search(dn)
-        if match is None:
+    def get_dodid_from_dn(self, dn: Optional[str]) -> str:
+        if dn is None or (match := self.DODID_RE.search(dn)) is None:
             raise AuthenticationFailed()
-        dodid = match.groupdict().get("dodid")
+
+        dodid = match.groupdict()["dodid"]  # type: ignore
         return dodid
 
-    def authenticate(self, request):
-        if not request.META.get("HTTP_X_SSL_CLIENT_VERIFY") == "SUCCESS":
+    def authenticate(self, request) -> AbstractUser:  # type: ignore # pylint: disable=arguments-differ
+        if request.META.get("HTTP_X_SSL_CLIENT_VERIFY") != "SUCCESS":
             raise AuthenticationFailed()
 
         client_dn = request.META.get("HTTP_X_SSL_CLIENT_S_DN")

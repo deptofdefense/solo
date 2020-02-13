@@ -30,6 +30,9 @@ black -q .
 echo "+ lint backend"
 pylint -sn backend
 
+echo "+ check python types"
+mypy
+
 echo "+ unit test backend"
 coverage run
 coverage report --fail-under 80
