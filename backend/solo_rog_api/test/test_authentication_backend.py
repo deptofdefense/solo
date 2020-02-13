@@ -12,11 +12,6 @@ class CACAuthenticationBackendDNParserTestCase(TestCase):
     auth_backend = CACAuthenticationBackend()
     request_factory = APIRequestFactory()
 
-    # @classmethod
-    # def setUpTestData(cls) -> None:
-    #     cls.auth_backend = CACAuthenticationBackend()
-    #     cls.request_factory = APIRequestFactory()
-
     def test_parses_dod_id_for_standard_dn(self) -> None:
         result = self.auth_backend.get_dodid_from_dn(
             "CN=fmame.mname.lname.0123456789,OU=USMC,OU=GOV"
