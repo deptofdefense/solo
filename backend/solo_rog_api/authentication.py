@@ -16,7 +16,9 @@ class CACAuthenticationBackend(BaseBackend):
         if dn is None or (match := self.DODID_RE.search(dn)) is None:
             raise AuthenticationFailed()
 
-        dodid = match.groupdict()["dodid"]  # type: ignore
+        # this assertion can be removed with mypy release >= 0.762
+        assert isinstance(match, re.Match)
+        dodid = match.groupdict()["dodid"]
         return dodid
 
     def authenticate(self, request) -> AbstractUser:  # type: ignore # pylint: disable=arguments-differ
@@ -26,10 +28,11 @@ class CACAuthenticationBackend(BaseBackend):
         client_dn = request.META.get("HTTP_X_SSL_CLIENT_S_DN")
 
         # client_cert = request.META.get('HTTP_X_SSL_CLIENT_CERT')
-        # TODO: implement CRL check using client_cert
+        # TODO: implement CRL check using client_cert (see issues #93 and #79)
 
         dodid = self.get_dodid_from_dn(client_dn)
 
-        # TODO: implement authorization check
+        # TODO: implement authorization check (see issue #97)
         user, _ = User.objects.get_or_create(username=dodid)
+
         return user
