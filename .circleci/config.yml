@@ -4,7 +4,6 @@ orbs:
   snyk: snyk/snyk@0.0.8
 
 jobs:
-
   frontend_tests:
     docker:
       - image: circleci/node:12.13.0
@@ -62,12 +61,34 @@ jobs:
           command: 'coverage run && coverage report --fail-under=80'
       -  run:
           name: Running Backend Static Code Security Analysis 
-          command: 'bandit -s B101 -r ./'
+          command: 'bandit -r ./'
+
+  deploy_to_staging:
+    docker:
+        - image: circleci/python:3.8
+    working_directory: ~/solo/deploy/staging
+    steps:
+       - setup_remote_docker
+       - checkout:
+            path: ~/solo
+       - run: 
+            name: Installing AWS CLI
+            command: 'pip install -U "pip>20.0.1" && pip install -r requirements.txt --user'
+       - run: 
+            name: Making deploy script executable
+            command: 'sudo chmod +x deploy.sh'
+       - run:
+            name: Installing Terraform and Running AWS Deployment Script
+            command:  './deploy.sh'
           
 workflows:
   build_and_test:
     jobs:
         - frontend_tests
         - backend_tests
+        - deploy_to_staging:
+            filters:
+                branches:
+                    only: master
 
 
