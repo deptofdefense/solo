@@ -61,7 +61,7 @@ jobs:
           command: 'coverage run && coverage report --fail-under=80'
       -  run:
           name: Running Backend Static Code Security Analysis 
-          command: 'bandit -r ./'
+          command: 'bandit -s B101 -r ./'
 
   deploy_to_staging:
     docker:
