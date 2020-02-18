@@ -4,7 +4,7 @@ import os
 import sys
 
 
-def main():
+def main() -> None:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
     try:
         # pylint: disable=C0415
