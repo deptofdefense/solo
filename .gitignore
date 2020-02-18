@@ -1,6 +1,7 @@
 # ide
 .idea
 .vscode
+.DS_Store
 
 # frontend artifacts
 frontend/**/node_modules
@@ -51,3 +52,6 @@ local-ci.yml
 celerybeat-schedule
 
 .mypy_cache/
+
+# Terraform
+.terraform
