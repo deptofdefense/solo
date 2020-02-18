@@ -1,4 +1,6 @@
 import root from "../root";
+import { ACCESS_TOKEN_LOCAL_STORAGE_KEY, 
+         REFRESH_TOKEN_LOCAL_STORAGE_KEY } from "../../constants";
 import {} from "test-utils";
 
 const makeResponse = (
@@ -11,7 +13,7 @@ const makeResponse = (
   statusText: "test status text"
 });
 
-describe("test fetch mock", () => {
+describe("test root api", () => {
   let fakeFetch: jest.Mock;
   let originalFetch: any;
 
@@ -23,6 +25,7 @@ describe("test fetch mock", () => {
 
   afterEach(() => {
     fakeFetch.mockReset();
+    localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
   });
 
   afterAll(() => {
@@ -36,7 +39,7 @@ describe("test fetch mock", () => {
       root.get("/test", {
         cache: "no-cache"
       })
-    ).resolves;
+    ).resolves.toMatchObject({});
     expect(fakeFetch).toHaveBeenCalledTimes(1);
     expect(fakeFetch.mock.calls[0][0]).toEqual(
       expect.stringMatching(/\/test$/)
@@ -68,12 +71,12 @@ describe("test fetch mock", () => {
     await expect(root.get("/test")).rejects.toMatchObject(networkErrorTest);
   });
 
-  it("throws an error on bad statusCode", async () => {
+  it("rejects promise on bad status code", async () => {
     const mockResponse = makeResponse(400);
     fakeFetch.mockResolvedValue(mockResponse);
-    await expect(root.get("/test")).rejects.toMatchObject(
-      new Error("test status text")
-    );
+    await expect(root.get("/test")).rejects.toMatchObject({
+      status: 400
+    });
   });
 
   it("post stringifies data and adds headers before calling fetch", async () => {
@@ -93,4 +96,42 @@ describe("test fetch mock", () => {
       }
     });
   });
+
+  it("get() adds authorization header if access token is in localstorage", async () => {
+    localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, "testauthtoken")
+    const mockResponse = makeResponse();
+    fakeFetch.mockResolvedValue(mockResponse);
+    await expect(root.get("/")).resolves.toMatchObject({});
+    expect(fakeFetch).toHaveBeenCalledTimes(1);
+    expect(fakeFetch.mock.calls[0][1]).toMatchObject({
+      headers: {
+        Authorization: `Bearer testauthtoken`
+      }
+    })
+  })
+
+  it("post() adds authorization header if access token is in localstorage", async () => {
+    localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, "testauthtoken")
+    const mockResponse = makeResponse();
+    fakeFetch.mockResolvedValue(mockResponse);
+    await expect(root.post("/", {})).resolves.toMatchObject({});
+    expect(fakeFetch).toHaveBeenCalledTimes(1);
+    expect(fakeFetch.mock.calls[0][1]).toMatchObject({
+      headers: {
+        Authorization: `Bearer testauthtoken`
+      }
+    })
+  })
+
+  it("clears access token and refresh token if 401 response is received", async () => {
+    localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, "testexpiredaccesstoken");
+    localStorage.setItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY, "testexpiredrefreshtoken");
+    const mockResponse = makeResponse(401);
+    fakeFetch.mockResolvedValue(mockResponse);
+    await expect(root.get("/")).rejects.toMatchObject({
+      status: 401
+    })
+    expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+    expect(localStorage.getItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+  })
 });
