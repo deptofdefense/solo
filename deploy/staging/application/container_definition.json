@@ -1,0 +1,21 @@
+[{
+  "name": "${frontend_container_name}",
+  "image": "${docker_image_url}",
+  "essential": true,
+  "dockerLabels": {
+    "Project": "SOLO"
+  },
+  "logConfiguration": {
+    "logDriver": "awslogs",
+    "options": {
+      "awslogs-group": "${ecs_service_name}_logGroup",
+      "awslogs-region": "${region}",
+      "awslogs-stream-prefix": "${ecs_service_name}_logGroup_stream"
+    }
+  },
+  "portMappings": [{
+    "hostPort": 80,
+    "protocol": "tcp",
+    "containerPort": ${docker_container_port}
+  }]
+}]
