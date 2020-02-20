@@ -4,3 +4,8 @@
   flex-direction: column;
   align-items: center;
 }
+
+.btnRoot {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}

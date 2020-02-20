@@ -1,0 +1,25 @@
+import React from "react";
+import useAuthContext from "../../context/AuthContext";
+import { RouteProps, Redirect, Route } from "react-router-dom";
+
+interface AuthRouteProps extends RouteProps {
+  redirectUrl: string;
+  component: React.ComponentType;
+}
+
+const AuthRoute: React.FC<AuthRouteProps> = ({
+  redirectUrl,
+  component,
+  ...options
+}) => {
+  const RedirectComponent = () => <Redirect to={redirectUrl} />;
+  const { authenticated } = useAuthContext();
+  return (
+    <Route
+      {...options}
+      component={authenticated ? component : RedirectComponent}
+    />
+  );
+};
+
+export default AuthRoute;

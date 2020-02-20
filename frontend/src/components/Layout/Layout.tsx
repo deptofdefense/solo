@@ -1,15 +1,22 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import OfficialSiteBanner from "../OfficialSiteBanner";
+import { HomeRoute } from "../AuthRoute";
 import Header from "../Header";
-import HomePage from "components/HomePage";
+import LoginPage from "../LoginPage";
+import HomePage from "../HomePage";
 
 const Layout: React.FC = () => (
   <>
     <OfficialSiteBanner />
     <Header />
     <Switch>
-      <Route exact path="/" component={HomePage} />
+      <HomeRoute
+        exact
+        path="/"
+        unAuthComponent={LoginPage}
+        authComponent={HomePage}
+      />
       <Route exact path="/about" render={() => <div>About Page</div>} />
     </Switch>
   </>
