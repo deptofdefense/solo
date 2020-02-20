@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
+    "jwt-decode": "^2.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
@@ -16,6 +17,7 @@
     "@testing-library/user-event": "^7.2.1",
     "@types/classnames": "^2.2.9",
     "@types/jest": "^24.9.0",
+    "@types/jwt-decode": "^2.2.1",
     "@types/node": "^12.12.24",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
@@ -69,7 +71,8 @@
       "react-app-env.d.ts",
       "src/index.tsx",
       "src/test-utils.tsx",
-      "src/App.tsx"
+      "src/App.tsx",
+      "src/components/.*index.ts"
     ]
   }
 }
