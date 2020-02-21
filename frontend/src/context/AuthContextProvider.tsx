@@ -89,7 +89,8 @@ const AuthContextProvider: React.FC = ({ children }) => {
     const res = await fetch(`${API_PROTOCOL}://${AUTH_DOMAIN}/login/`, {
       headers: baseHeaders,
       method: "POST",
-      body: "{}"
+      body: "{}",
+      cache: "no-store"
     });
     const { access, refresh } = await res.json();
     setCurrentUser(userFromTokens(access, refresh));

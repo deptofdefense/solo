@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`post logout page componenent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="root"
+  >
+    <h2>
+      You have been logged out.
+    </h2>
+    <div>
+      Close your browswer window
+    </div>
+  </div>
+</DocumentFragment>
+`;

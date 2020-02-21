@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./LoginPage.module.css";
+import classes from "./LoginPage.module.scss";
 
 interface LoginButtonProps {
   onClick: React.MouseEventHandler;

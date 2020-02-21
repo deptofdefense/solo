@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home page component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="root"
+  >
+    <h1
+      class="title"
+    >
+      Welcome to the System for Operational Logistics Ordering (SOLO)
+    </h1>
+    <div>
+      <div
+        class="btnRoot"
+      >
+        <button
+          class="usa-button usa-button--big"
+        >
+          CAC Login
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

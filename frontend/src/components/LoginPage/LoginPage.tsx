@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LoginButton from "./LoginButton";
 import useAuthContext from "../../context/AuthContext";
-import classes from "./LoginPage.module.css";
+import classes from "./LoginPage.module.scss";
 
 const LoginPage: React.FC = props => {
   const [loginError, setLoginError] = useState("");
@@ -11,7 +11,9 @@ const LoginPage: React.FC = props => {
     try {
       await apiLogin();
     } catch (e) {
-      setLoginError(e.toString());
+      setLoginError(
+        "Hey Marine. Having trouble logging in? Try closing your browser window."
+      );
     }
   };
 
@@ -22,8 +24,12 @@ const LoginPage: React.FC = props => {
       </h1>
       <div>
         <LoginButton onClick={login} />
-        {loginError && <span className="error-dark">{loginError}</span>}
       </div>
+      {loginError && (
+        <div>
+          <span className="text-red">{loginError}</span>
+        </div>
+      )}
     </div>
   );
 };

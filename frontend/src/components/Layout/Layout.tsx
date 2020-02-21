@@ -5,6 +5,7 @@ import { HomeRoute } from "../AuthRoute";
 import Header from "../Header";
 import LoginPage from "../LoginPage";
 import HomePage from "../HomePage";
+import PostLogoutPage from "../PostLogoutPage";
 
 const Layout: React.FC = () => (
   <>
@@ -18,6 +19,7 @@ const Layout: React.FC = () => (
         authComponent={HomePage}
       />
       <Route exact path="/about" render={() => <div>About Page</div>} />
+      <Route exact path="/postlogout" component={PostLogoutPage} />
     </Switch>
   </>
 );

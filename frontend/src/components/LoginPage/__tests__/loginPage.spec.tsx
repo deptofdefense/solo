@@ -14,6 +14,11 @@ describe("Home page component", () => {
     fakeLogin.mockReset();
   });
 
+  it("matches snapshot", async () => {
+    const { asFragment } = render(<LoginPage />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+
   it("calls login on button click", async () => {
     const { getByText } = render(<LoginPage />, renderOpts);
     const loginBtn = getByText("CAC Login");
@@ -28,7 +33,7 @@ describe("Home page component", () => {
     fireEvent.click(loginBtn);
     await wait(() => {
       expect(fakeLogin).toHaveBeenCalled();
-      expect(queryByText(/test error message/)).toBeInTheDocument();
+      expect(queryByText(/Having trouble/)).toBeInTheDocument();
     });
   });
 });

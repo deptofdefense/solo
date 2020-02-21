@@ -5,9 +5,9 @@ exports[`home page protected route component matches snapshot 1`] = `
   <div
     class="root"
   >
-    <div>
+    <h2>
       Protected Route
-    </div>
+    </h2>
     <div>
       username: 
     </div>
