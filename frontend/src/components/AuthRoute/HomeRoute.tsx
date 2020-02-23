@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, RouteProps } from "react-router-dom";
-import useAuthContext from "../../context/AuthContext";
+import useAuthContext from "context/AuthContext";
 
 interface HomeRouteProps extends RouteProps {
   authComponent: React.ComponentType;

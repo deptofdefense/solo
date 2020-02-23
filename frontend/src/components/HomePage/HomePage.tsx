@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import useAuthContext from "../../context/AuthContext";
+import useAuthContext from "context/AuthContext";
 import classes from "./HomePage.module.css";
 
 const HomePage: React.FC = () => {

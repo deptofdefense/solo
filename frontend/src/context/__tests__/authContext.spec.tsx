@@ -4,7 +4,7 @@ import { AuthContext } from "../AuthContext";
 import {
   REFRESH_TOKEN_LOCAL_STORAGE_KEY,
   ACCESS_TOKEN_LOCAL_STORAGE_KEY
-} from "../../constants";
+} from "const";
 import { render, fireEvent, wait } from "test-utils";
 
 interface TestConsumerProps {

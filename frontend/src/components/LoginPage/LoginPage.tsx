@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import useAuthContext from "context/AuthContext";
 import LoginButton from "./LoginButton";
-import useAuthContext from "../../context/AuthContext";
 import classes from "./LoginPage.module.scss";
 
 const LoginPage: React.FC = props => {

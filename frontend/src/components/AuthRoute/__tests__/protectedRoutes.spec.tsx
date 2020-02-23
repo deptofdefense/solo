@@ -1,7 +1,7 @@
 import React from "react";
+import { render } from "test-utils";
 import AuthRoute from "../AuthRoute";
 import HomeRoute from "../HomeRoute";
-import { render } from "test-utils";
 
 const testAuthComponent = () => <div>auth component</div>;
 const testUnauthComponent = () => <div>unauth component</div>;

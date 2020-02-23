@@ -1,11 +1,11 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import OfficialSiteBanner from "../OfficialSiteBanner";
-import { HomeRoute } from "../AuthRoute";
-import Header from "../Header";
-import LoginPage from "../LoginPage";
-import HomePage from "../HomePage";
-import PostLogoutPage from "../PostLogoutPage";
+import OfficialSiteBanner from "components/OfficialSiteBanner";
+import { HomeRoute } from "components/AuthRoute";
+import Header from "components/Header";
+import LoginPage from "components/LoginPage";
+import HomePage from "components/HomePage";
+import PostLogoutPage from "components/PostLogoutPage";
 
 const Layout: React.FC = () => (
   <>

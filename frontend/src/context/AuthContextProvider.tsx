@@ -5,7 +5,7 @@ import {
   API_PROTOCOL,
   API_DOMAIN,
   AUTH_DOMAIN
-} from "../constants";
+} from "const";
 import {
   AuthContext,
   User,
