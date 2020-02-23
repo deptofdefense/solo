@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("SECRET_KEY") or get_random_string(50, string.printable)
 
 # don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", default=False)
+DEBUG = os.environ.get("DEBUG") or False
 
 # Application definition
 INSTALLED_APPS = [
@@ -29,8 +29,11 @@ WSGI_APPLICATION = "app.wsgi.application"
 
 AUTH_USER_MODEL = "solo_rog_api.User"
 
+# use client SSL certificate (CAC) authentication by default,
+# but replace with a development backend if DEBUG
 AUTHENTICATION_BACKENDS = ["solo_rog_api.authentication.CACAuthenticationBackend"]
-
+if DEBUG:
+    AUTHENTICATION_BACKENDS = ["solo_rog_api.authentication.DevAuthenticationBackend"]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication"

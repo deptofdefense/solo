@@ -36,3 +36,14 @@ class CACAuthenticationBackend(BaseBackend):
         user, _ = User.objects.get_or_create(username=dodid)
 
         return user
+
+
+class DevAuthenticationBackend(BaseBackend):
+    def authenticate(self, request) -> AbstractUser:  # type: ignore # pylint: disable=arguments-differ
+        # in development, with DEBUG turned on, authenticate
+        # as the user specified in the Authorization header
+        username = request.META.get("HTTP_AUTHORIZATION")
+        if not username:
+            raise AuthenticationFailed()
+        user, _ = User.objects.get_or_create(username=username.strip())
+        return user
