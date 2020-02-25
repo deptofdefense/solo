@@ -1,25 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HomePage componenet matches snapshot 1`] = `
+exports[`home page protected route component matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="root"
   >
-    <h1
-      class="title"
-    >
-      SOLO Home Page
-    </h1>
-    <div
-      class="root"
-    >
-      <button
-        class="usa-button usa-button--big"
-      >
-        API Test
-      </button>
+    <h2>
+      Protected Route
+    </h2>
+    <div>
+      username: 
     </div>
-    <div />
+    <button
+      class="usa-button"
+    >
+      Logout
+    </button>
   </div>
 </DocumentFragment>
 `;

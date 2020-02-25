@@ -1,4 +1,3 @@
-// Override theme information
 $theme-font-path: '~uswds/dist/fonts';
 $theme-image-path: '~uswds/dist/img';
 $theme-show-notifications: false;
@@ -7,6 +6,6 @@ $theme-show-notifications: false;
 @import '~uswds/dist/scss/packages/required';
 @import '~uswds/dist/scss/packages/global';
 
-// Import any packages used
+@import "~uswds/dist/scss/packages/uswds-utilities";
 @import "~uswds/dist/scss/packages/usa-banner";
 @import "~uswds/dist/scss/packages/usa-header";

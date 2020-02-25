@@ -1,51 +1,31 @@
 import React from "react";
-import { render, fireEvent, wait } from "test-utils";
 import HomePage from "../HomePage";
-import { auth } from "../../../api";
+import { render, fireEvent } from "test-utils";
 
-jest.mock("../../../api/auth");
-
-const authMocked = auth as jest.Mocked<typeof auth>;
-
-describe("HomePage componenet", () => {
-  beforeAll(() => {
-    authMocked.login = jest.fn();
-  });
-
-  afterEach(() => {
-    authMocked.login.mockReset();
-  });
-
-  afterAll(() => {
-    authMocked.login.mockRestore();
-  });
-
+describe("home page protected route component", () => {
   it("matches snapshot", () => {
     const { asFragment } = render(<HomePage />);
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it("displays success on api call success", async () => {
-    authMocked.login.mockResolvedValue({
-      access: "access token",
-      refresh: "refresh token"
+  it("includes username in the body", () => {
+    const { queryByText } = render(<HomePage />, {
+      authContext: {
+        username: "testuser"
+      }
     });
-    const { getByText, queryByText } = render(<HomePage />);
-    const loginButton = getByText("API Test");
-    fireEvent.click(loginButton);
-    await wait(() => {
-      expect(queryByText(/access token/)).toBeInTheDocument();
-    });
+    expect(queryByText(/testuser/)).toBeInTheDocument();
   });
 
-  it("displays error on api call failure", async () => {
-    const err = new Error("some error message");
-    authMocked.login.mockRejectedValue(err);
-    const { getByText, queryByText } = render(<HomePage />);
-    const loginButton = getByText("API Test");
-    fireEvent.click(loginButton);
-    await wait(() => {
-      expect(queryByText(err.toString())).toBeInTheDocument();
+  it("calls logout on button click", () => {
+    const fakeLogout = jest.fn();
+    const { getByText } = render(<HomePage />, {
+      authContext: {
+        apiLogout: fakeLogout
+      }
     });
+    const logoutBtn = getByText("Logout");
+    fireEvent.click(logoutBtn);
+    expect(fakeLogout).toHaveBeenCalled();
   });
 });
