@@ -1,13 +1,16 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
+import UserContextProvider from "context/AuthContextProvider";
+import Layout from "components/Layout";
 import "./styles.scss";
-import Layout from "./components/Layout";
 
 const App: React.FC = () => (
-  <BrowserRouter>
-    <Layout />
-  </BrowserRouter>
+  <UserContextProvider>
+    <BrowserRouter>
+      <Layout />
+    </BrowserRouter>
+  </UserContextProvider>
 );
 
 export default App;

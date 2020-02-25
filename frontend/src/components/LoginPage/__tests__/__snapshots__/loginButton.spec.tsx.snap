@@ -3,12 +3,12 @@
 exports[`Login Button matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="root"
+    class="btnRoot"
   >
     <button
       class="usa-button usa-button--big"
     >
-      API Test
+      CAC Login
     </button>
   </div>
 </DocumentFragment>
