@@ -1,0 +1,58 @@
+# ide
+.idea
+.vscode
+.DS_Store
+
+# frontend artifacts
+frontend/**/node_modules
+frontend/build
+frontend/coverage
+
+# deployment config
+deploy/**/.env
+deploy/**/keys/*
+
+# Python virtual env
+venv
+.myvenv/
+/venv/
+*.pyc
+.cache/
+
+.pytest_cache/
+__pycache__
+
+# Django
+*.sqlite3
+backend/static
+
+
+# CRLs
+/crl
+/crls
+/crl-tmp
+*.bk
+crl_locations.json
+
+
+# python coverage output
+.coverage
+
+
+# BrowserStack
+browserstacklocal
+
+# decompiled CircleCI yaml
+local-ci.yml
+
+# python config
+.python-version
+
+# binary file created by celery beat
+celerybeat-schedule
+
+.mypy_cache/
+
+# Terraform
+.terraform
+

@@ -86,9 +86,6 @@ workflows:
     jobs:
         - frontend_tests
         - backend_tests
-        - deploy_to_staging:
-            filters:
-                branches:
-                    only: master
+        - deploy_to_staging
 
 
