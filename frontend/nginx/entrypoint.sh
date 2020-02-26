@@ -8,8 +8,6 @@ ALLOWED_VARS+='$AUTH_DOMAIN'
 
 echo -e "$NGINX_SSL_CERT" > /etc/nginx/Certificate.pem;
 echo -e "$NGINX_SSL_KEY" > /etc/nginx/Key.pem;
-cat /etc/nginx/Key.pem;
-cat /etc/nginx/Certificate.pem;
 
 # rewrite nginx config based on environment
 # variables before starting
