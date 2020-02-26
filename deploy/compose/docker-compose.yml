@@ -3,7 +3,7 @@ version: '3.4'
 services:
   db:
     image: postgres
-    env_file: 
+    env_file:
       - ./.env
 
   migrate:
@@ -11,20 +11,22 @@ services:
     env_file: 
       - ./.env
     command: "python manage.py migrate"
-    depends_on: 
+    depends_on:
       - db
 
   backend:
     build: ../../backend
-    env_file: 
+    env_file:
       - ./.env
-    depends_on: 
+    depends_on:
       - migrate
+    environment:
+      - DEBUG=
 
   frontend:
     build:
       context: ../../frontend
-      args: 
+      args:
         - API_DOMAIN=$API_DOMAIN
         - API_PROTOCOL=https
         - AUTH_DOMAIN=$AUTH_DOMAIN
@@ -35,4 +37,3 @@ services:
       - backend
     env_file: 
       - ./.env
-

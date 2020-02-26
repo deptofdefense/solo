@@ -14,7 +14,7 @@ import {
 } from "./AuthContext";
 
 // to be added to every request
-const baseHeaders = {
+const baseHeaders: HeadersInit = {
   "Content-Type": "application/json",
   Accept: "application/json"
 };
@@ -82,16 +82,30 @@ const AuthContextProvider: React.FC = ({ children }) => {
     [makeOptions, setCurrentUser]
   );
 
+  // during development, prompt for a username to authenticate as
+  const apiLoginHeaders = (): HeadersInit => {
+    const headers = baseHeaders;
+    if (process.env.NODE_ENV === "development") {
+      const username = prompt("authenticate as");
+      headers["Authorization"] = username || "";
+    }
+    return headers;
+  };
+
   // request new tokens from the authentication domain. The authentication domain
   // will authenticate via client SSL certificates (CAC) that are automatically
   // included by the browser if available
   const apiLogin = async () => {
     const res = await fetch(`${API_PROTOCOL}://${AUTH_DOMAIN}/login/`, {
-      headers: baseHeaders,
+      headers: apiLoginHeaders(),
       method: "POST",
       body: "{}",
       cache: "no-store"
     });
+    if (!res.ok) {
+      setCurrentUser(unauthenticatedUser);
+      return Promise.reject(res);
+    }
     const { access, refresh } = await res.json();
     setCurrentUser(userFromTokens(access, refresh));
   };

@@ -4,8 +4,11 @@ services:
   backend:
     volumes:
       - ../../backend:/app/
+    command: "python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
+    environment:
+      - DEBUG=True
 
   frontend:
     build:
@@ -15,9 +18,9 @@ services:
       - "3000:3000"
     volumes:
       - ../../frontend/src:/app/src
-    env_file: 
+    env_file:
       - ./.env
-    environment: 
+    environment:
       - REACT_APP_API_DOMAIN=$DEV_API_DOMAIN
       - REACT_APP_AUTH_DOMAIN=$DEV_API_DOMAIN
       - REACT_APP_API_PROTOCOL=http

@@ -19,7 +19,10 @@ const AuthContextTestConsumer: React.FC<TestConsumerProps> = ({
     <AuthContext.Consumer>
       {value => (
         <div>
-          <button onClick={value.apiLogin} data-testid="login" />
+          <button
+            onClick={() => value.apiLogin().catch(() => {})}
+            data-testid="login"
+          />
           <button onClick={value.apiLogout} data-testid="logout" />
           <button
             onClick={() => apiCallCb(value.apiCall)}
@@ -268,6 +271,67 @@ describe("authentication context provider", () => {
       expect(
         localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)
       ).not.toBeNull();
+    });
+  });
+
+  describe("authentication context provider development login", () => {
+    let fakePrompt: jest.Mock;
+    let originalPrompt: any;
+    let originalEnv = process.env;
+
+    beforeAll(() => {
+      fakePrompt = jest.fn();
+      originalPrompt = window.prompt;
+      window.prompt = fakePrompt;
+    });
+
+    afterEach(() => {
+      fakePrompt.mockReset();
+    });
+
+    afterAll(() => {
+      window.prompt = originalPrompt;
+      process.env = originalEnv;
+    });
+
+    it("login prompts for username and adds headers in development", async () => {
+      process.env = {
+        ...originalEnv,
+        NODE_ENV: "development"
+      };
+      fakePrompt.mockReturnValue("scott");
+      const { getByTestId } = render(<AuthContextTestConsumer />);
+      const loginButton = getByTestId("login");
+      fireEvent.click(loginButton);
+      await wait(() => {
+        expect(fakePrompt).toHaveBeenCalledTimes(1);
+        expect(fakeFetch).toHaveBeenCalledTimes(1);
+        expect(fakeFetch.mock.calls[0][1]).toMatchObject({
+          headers: {
+            Authorization: "scott"
+          }
+        });
+      });
+    });
+
+    it("login defaults to empty string Authorization header in development", async () => {
+      process.env = {
+        ...originalEnv,
+        NODE_ENV: "development"
+      };
+      fakePrompt.mockReturnValue(null);
+      const { getByTestId } = render(<AuthContextTestConsumer />);
+      const loginButton = getByTestId("login");
+      fireEvent.click(loginButton);
+      await wait(() => {
+        expect(fakePrompt).toHaveBeenCalledTimes(1);
+        expect(fakeFetch).toHaveBeenCalledTimes(1);
+        expect(fakeFetch.mock.calls[0][1]).toMatchObject({
+          headers: {
+            Authorization: ""
+          }
+        });
+      });
     });
   });
 });
