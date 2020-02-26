@@ -9,9 +9,8 @@ server {
 
     # ssl
     include /etc/nginx/snippets/ssh-params.conf;
-    ssl_certificate /etc/ssl/${CERT_FILE_NAME};
-    ssl_certificate_key /etc/ssl/${KEY_FILE_NAME};
-    ssl_dhparam /etc/ssl/${DHPARAM_FILE_NAME};
+    ssl_certificate /etc/nginx/Certificate.pem;
+    ssl_certificate_key /etc/nginx/Key.pem;
 
     charset     utf-8;
     client_max_body_size 75M;
@@ -30,9 +29,8 @@ server {
 
     # ssl
     include /etc/nginx/snippets/ssh-params.conf;
-    ssl_certificate /etc/ssl/${CERT_FILE_NAME};
-    ssl_certificate_key /etc/ssl/${KEY_FILE_NAME};
-    ssl_dhparam /etc/ssl/${DHPARAM_FILE_NAME};
+    ssl_certificate /etc/nginx/Certificate.pem;
+    ssl_certificate_key /etc/nginx/Key.pem;
 
     charset     utf-8;
     client_max_body_size 75M;
@@ -60,9 +58,9 @@ server {
 
     # ssl
     include /etc/nginx/snippets/ssh-params.conf;
-    ssl_certificate /etc/ssl/${CERT_FILE_NAME};
-    ssl_certificate_key /etc/ssl/${KEY_FILE_NAME};
-    ssl_dhparam /etc/ssl/${DHPARAM_FILE_NAME};
+    ssl_certificate /etc/nginx/Certificate.pem;
+    ssl_certificate_key /etc/nginx/Key.pem;
+
 
     # Request and validate client certificate
     ssl_verify_client on;
