@@ -28,8 +28,6 @@ services:
         - API_DOMAIN=$API_DOMAIN
         - API_PROTOCOL=https
         - AUTH_DOMAIN=$AUTH_DOMAIN
-        - NGINX_SSL_KEY=$NGINX_SSL_KEY
-        - NGINX_SSL_CERT=$NGINX_SSL_CERT
     ports:
       - "443:443"
       - "80:80"
