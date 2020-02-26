@@ -11,11 +11,18 @@ exports[`home page protected route component matches snapshot 1`] = `
     <div>
       username: 
     </div>
-    <button
-      class="usa-button"
-    >
-      Logout
-    </button>
+    <div>
+      <button
+        class="usa-button"
+      >
+        Logout
+      </button>
+      <button
+        class="usa-button"
+      >
+        Create worker debug message
+      </button>
+    </div>
   </div>
 </DocumentFragment>
 `;
