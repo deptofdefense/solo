@@ -6,16 +6,27 @@ output "ecs_cluter" {
   value = aws_ecs_cluster.solo_stage_tf_ecs_cluster.id
 }
 
-output "security_group" {
-  value = aws_security_group.solo_stage_tf_sg.id
+output "security_group_nlb" {
+  value = aws_security_group.solo_stage_tf_nlb_sg.id
 }
 
-output "public_subnet" {
-  value = data.terraform_remote_state.infrastructure_stage.outputs.public_subnet_id
+output "security_group_app" {
+  value = aws_security_group.solo_stage_tf_app_sg.id
 }
 
-output "private_subnet" {
-  value = data.terraform_remote_state.infrastructure_stage.outputs.private_subnet_id
+output "public_subnet_1a" {
+  value = data.terraform_remote_state.infrastructure_stage.outputs.public_subnet_id_1a
+}
+output "public_subnet_1b" {
+  value = data.terraform_remote_state.infrastructure_stage.outputs.public_subnet_id_1b
+}
+
+output "private_subnet_1a" {
+  value = data.terraform_remote_state.infrastructure_stage.outputs.private_subnet_id_1a
+}
+
+output "private_subnet_1b" {
+  value = data.terraform_remote_state.infrastructure_stage.outputs.private_subnet_id_1b
 }
 
 output "network_load_balancer" {
@@ -29,3 +40,4 @@ output "target_group_arn" {
 output "vpc_cidr_block" {
   value = data.terraform_remote_state.infrastructure_stage.outputs.vpc_cidr_block
 }
+

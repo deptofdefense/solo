@@ -1,8 +1,15 @@
 # Terraform - Infrastructure
+The Infrastructure is based on layers of stages in order to loosely couple the
+architecture. This way, only a particular layer is updated vice the entire stack
+which will save time. 
 
-## Create infrastructure
+## Create infrastructure foundation layer
 1. `terraform init -backend-config=infrastructure-stage.config`
     * Initializes the backend to the s3 bucket
+    
+1.  `terraform diff`
+    * Formatting command rewrites Terraform files in a canonical format and style by
+    applying the "Terraform language style conventions"
 1. `terraform validate`
     * Syntactically valid and internally consistent,
     regardless of any provided variables or existing state
