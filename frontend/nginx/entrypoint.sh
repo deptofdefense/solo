@@ -5,9 +5,11 @@ ALLOWED_VARS='$BACKEND_PROXY'
 ALLOWED_VARS+='$MAIN_DOMAIN'
 ALLOWED_VARS+='$API_DOMAIN'
 ALLOWED_VARS+='$AUTH_DOMAIN'
-ALLOWED_VARS+='$CERT_FILE_NAME'
-ALLOWED_VARS+='$KEY_FILE_NAME'
-ALLOWED_VARS+='$DHPARAM_FILE_NAME'
+
+echo -e "$NGINX_SSL_CERT" > /etc/nginx/Certificate.pem;
+echo -e "$NGINX_SSL_KEY" > /etc/nginx/Key.pem;
+cat /etc/nginx/Key.pem;
+cat /etc/nginx/Certificate.pem;
 
 # rewrite nginx config based on environment
 # variables before starting

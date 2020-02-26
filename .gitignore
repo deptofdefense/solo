@@ -3,6 +3,10 @@
 .vscode
 .DS_Store
 
+# local deployment certs
+/deploy/compose/*.crt 
+/deploy/compose/*.key
+
 # frontend artifacts
 frontend/**/node_modules
 frontend/build
