@@ -9,7 +9,9 @@ configureAWS(){
     aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID};
     aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY};
     $(aws ecr get-login --no-include-email --region us-gov-west-1);
+
 }
+
 pushFrontendToECR(){
     cd ../../frontend;
     docker build -t solo-stage-frontend --build-arg API_DOMAIN=api.stage.solo.code.mil --build-arg AUTH_DOMAIN=auth.stage.solo.code.mil --build-arg API_PROTOCOL=https .;
@@ -29,8 +31,14 @@ runTerraform(){
     cd $dir_name;
     terraform init -backend-config=$dir_name-stage.config;
     terraform validate;
-    terraform plan -var-file=$dir_name-stage.tfvars -out=plan;
-    terraform apply "plan";
+    if [ $dir_name == "application" ]
+    then
+      terraform plan -var-file=$dir_name-stage.tfvars -out=plan;
+      terraform apply "plan";
+    else
+      terraform plan -var-file=$dir_name-stage.tfvars -out=plan;
+      terraform apply "plan";
+    fi
     cd ..;
 }
 createInfrastructure(){

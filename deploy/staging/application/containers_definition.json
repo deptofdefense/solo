@@ -1,7 +1,7 @@
 [
   {
     "name": "${backend_container_name}-migrate",
-    "image": "${backend_image_url}:latest",
+    "image": "${backend_image_url}@${backend_digest}",
     "essential": false,
     "dockerLabels": {
       "Project": "SOLO"
@@ -45,7 +45,7 @@
   },
   {
     "name": "${backend_container_name}",
-    "image": "${backend_image_url}:latest",
+    "image": "${backend_image_url}@${backend_digest}",
     "essential": true,
     "dockerLabels": {
       "Project": "SOLO"
@@ -108,7 +108,7 @@
   },
   {
     "name": "${frontend_container_name}",
-    "image": "${frontend_image_url}:latest",
+    "image": "${frontend_image_url}@${frontend_digest}",
     "essential": true,
     "dockerLabels": {
       "Project": "SOLO"

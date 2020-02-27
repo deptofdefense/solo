@@ -8,7 +8,7 @@
 
 */
 
-variable "region" { description = "AWS Region" }
+variable "region" { description = "AWS Region us-gov-west" }
 variable "project" { description = "Name of the project" }
 variable "remote_state_bucket" { description = "Remote State Bucket for s3" }
 variable "remote_state_key" { description = "Remote State Key for s3" }
@@ -23,6 +23,8 @@ variable "frontend_repo_name" { description = "ECR backend repo name" }
 variable "memory" { description = "memory" }
 variable "cpu" { description = "cpu" }
 variable "docker_container_port" { description = "docker container port name" }
+//variable "backendTag" {}
+//variable "frontendTag" {}
 
 // Pulling secret varibales from aws for creating the task definition
 data "aws_ssm_parameter" "MAIN_DOMAIN" { name = "/solo/stage/MAIN_DOMAIN" }
@@ -40,6 +42,15 @@ data "aws_ecr_repository" "solo_stage_tf_ecr_backend_repo" { name = var.backend_
 data "aws_ecr_repository" "solo_stage_tf_ecr_frontend_repo" { name = var.frontend_repo_name }
 data "aws_iam_role" "ecs_task_role" { name = var.solo_iam_role_name }
 data "aws_iam_role" "ecs_task_exe_role" { name = var.solo_iam_task_exe_role }
+
+data "aws_ecr_image" "frontend_digest" {
+  repository_name = var.frontend_repo_name
+  image_tag = "latest"
+}
+data "aws_ecr_image" "backend_digest" {
+  repository_name = var.backend_repo_name
+    image_tag = "latest"
+}
 
 provider "aws" {
   region = var.region
@@ -74,8 +85,11 @@ data "template_file" "solo_stage_tf_ecs_task_def_template_for_application" {
     backend_container_name    = var.backend_container_name
     frontend_container_name   = var.frontend_container_name
     ecs_task_def_service_name = var.ecs_task_def_service_name
+
     backend_image_url         = data.aws_ecr_repository.solo_stage_tf_ecr_backend_repo.repository_url
     frontend_image_url        = data.aws_ecr_repository.solo_stage_tf_ecr_frontend_repo.repository_url
+    backend_digest            = data.aws_ecr_image.backend_digest.image_digest
+    frontend_digest           = data.aws_ecr_image.frontend_digest.image_digest
     memory                    = var.memory
     docker_container_port     = var.docker_container_port
     region                    = var.region
