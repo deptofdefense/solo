@@ -23,8 +23,6 @@ variable "frontend_repo_name" { description = "ECR backend repo name" }
 variable "memory" { description = "memory" }
 variable "cpu" { description = "cpu" }
 variable "docker_container_port" { description = "docker container port name" }
-//variable "backendTag" {}
-//variable "frontendTag" {}
 
 // Pulling secret varibales from aws for creating the task definition
 data "aws_ssm_parameter" "MAIN_DOMAIN" { name = "/solo/stage/MAIN_DOMAIN" }
