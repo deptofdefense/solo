@@ -80,28 +80,12 @@ Now you're ready to [clone the repository](https://github.com/deptofdefense/solo
 
 ### Running the development environment
 
-#### HTTP only for development
-A docker-compose.yml file is included in the repository that quickly and easily allows the execution of the entire system for rapid local development. (all commands are specified from the `deploy/compose` directory):
-  1. Copy the example environment file to a new file called `.env`
-      -  `cp .env.example .env`
- 
-  2. Edit the `.env` file and create a username and password for the database connection.
-      - Note these values will only apply to your local environment
-  3. Execute `docker-compose up --build`
-  4. After the build process, navigate to `http://localhost:3000` in a browswer
-      - Note that hot reloading is enabled for changes to front and backend source files
-
-#### Local HTTPS environment
-  1. After setting up the http environment, Navigate to solo/deploy/compose, make configureLocalEnv.sh executable, and run the script, set the Country name to US when prompted, skip the rest.
-      - `chmod +x configureLocalEnv.sh`
-      - `sudo sh configureLocalEnv.sh`
-      - `US` -> `ENTER` x6
-  2. Execute docker-compose
-      - `docker-compose -f docker-compose.yml up --build`
-  3. Tell Chrome to allow self-signed certificates on localhost
+#### Setting up Local HTTP/S environments
+  1. Navigate to solo/deploy/compose and run configure-local-environment.sh.
+      - `sh configure-local-environment.sh`
+  2. Tell Chrome to allow self-signed certificates on localhost
       - Navigate to `chrome://flags/#allow-insecure-localhost` and enable that setting
-  4. After the build process, navigate to `https://stage.solo.localhost` in a browser
-      - Note that hot reloading is disabled
+  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally after configuration.
 
 ### Code Style
 
