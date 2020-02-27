@@ -31,14 +31,8 @@ runTerraform(){
     cd $dir_name;
     terraform init -backend-config=$dir_name-stage.config;
     terraform validate;
-    if [ $dir_name == "application" ]
-    then
-      terraform plan -var-file=$dir_name-stage.tfvars -out=plan;
-      terraform apply "plan";
-    else
-      terraform plan -var-file=$dir_name-stage.tfvars -out=plan;
-      terraform apply "plan";
-    fi
+    terraform plan -var-file=$dir_name-stage.tfvars -out=plan;
+    terraform apply "plan";
     cd ..;
 }
 createInfrastructure(){
