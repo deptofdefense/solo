@@ -61,7 +61,6 @@ server {
     ssl_certificate /etc/nginx/Certificate.pem;
     ssl_certificate_key /etc/nginx/Key.pem;
 
-
     # Request and validate client certificate
     ssl_verify_client on;
     ssl_verify_depth 10;
