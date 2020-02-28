@@ -7,7 +7,7 @@ which will save time.
 1. `terraform init -backend-config=infrastructure-stage.config`
     * Initializes the backend to the s3 bucket
     
-1.  `terraform diff`
+1.  `terraform fmt`
     * Formatting command rewrites Terraform files in a canonical format and style by
     applying the "Terraform language style conventions"
 1. `terraform validate`
