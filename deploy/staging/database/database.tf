@@ -14,7 +14,7 @@ This file will create or modify:
 
 // Used to create a timestamp with correct
 locals {
-  timestamp = "${timestamp()}"
+  timestamp           = "${timestamp()}"
   timestamp_sanitized = "${replace("${local.timestamp}", "/[- TZ:]/", "")}"
 }
 
