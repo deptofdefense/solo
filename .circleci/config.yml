@@ -88,7 +88,7 @@ workflows:
         - backend_tests
         - deploy_to_staging:
             filters:
-                branches:
-                    only: master
+              branches:
+                only: master
 
 

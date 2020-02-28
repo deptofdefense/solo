@@ -80,35 +80,12 @@ Now you're ready to [clone the repository](https://github.com/deptofdefense/solo
 
 ### Running the development environment
 
-#### HTTP only for development
-A docker-compose.yml file is included in the repository that quickly and easily allows the execution of the entire system for rapid local development. (all commands are specified from the `deploy/compose` directory):
-  1. Copy the example environment file to a new file called `.env`
-      -  `cp .env.example .env`
- 
-  2. Edit the `.env` file and create a username and password for the database connection.
-      - Note these values will only apply to your local environment
-  3. Execute `docker-compose up --build`
-  4. After the build process, navigate to `http://localhost:3000` in a browswer
-      - Note that hot reloading is enabled for changes to front and backend source files
-
-#### Local HTTPS environment
-To develop and test with client certificate (CAC) authentication locally, SSL keys need to be generated locally.
-  1. navigate to /etc/hosts and add the following lines:
-      - `127.0.0.1	stage.solo.localhost`
-      - `127.0.0.1	api.stage.solo.localhost`
-      - `127.0.0.1	auth.stage.solo.localhost`
-  2. Create and change to a directory on your local system that will contain your keys. Here, the environment assumes they will be at the path referenced below, but can be changed via the `SSL_KEYS_VOLUME_ROOT` configuration setting.
-      - `mkdir -p ~/.ssh/solo`
-      - `cd ~/.ssh/solo`
-  3. Generate self-signed public and private keys
-      - `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx-selfsigned.key -out ./nginx-selfsigned.crt`
-      - `openssl dhparam -out ./dhparam.pem 1024`
-  4. Tell Chrome to allow self-signed certificates on localhost
+#### Setting up Local HTTP/S environments
+  1. Navigate to solo/deploy/compose and run configure-local-environment.sh.
+      - `sh configure-local-environment.sh`
+  2. Tell Chrome to allow self-signed certificates on localhost
       - Navigate to `chrome://flags/#allow-insecure-localhost` and enable that setting
-  5. Execute docker-compose
-      - `docker-compose -f docker-compose.yml up --build`
-  6. After the build process, navigate to `https://stage.solo.localhost` in a browser
-      - Note that hot reloading is disabled
+  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally after configuration.
 
 ### Code Style
 

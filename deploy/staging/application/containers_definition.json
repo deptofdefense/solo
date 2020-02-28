@@ -1,0 +1,158 @@
+[
+  {
+    "name": "${backend_container}-migrate",
+    "image": "${backend_image_url}@${backend_digest}",
+    "essential": false,
+    "dockerLabels": {
+      "Project": "SOLO"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${ecs_task_def_service}_backend_logGroup",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${ecs_task_def_service}_backend_logGroup_stream"
+      }
+    },
+    "command": [
+      "python",
+      "manage.py",
+      "migrate"
+    ],
+    "workingDirectory": "/app",
+    "secrets": [
+      {
+        "name": "POSTGRES_DB",
+        "valueFrom": "${POSTGRES_DB}"
+      },
+      {
+        "name": "POSTGRES_USER",
+        "valueFrom": "${POSTGRES_USER}"
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "valueFrom": "${POSTGRES_PASSWORD}"
+      },
+      {
+        "name": "POSTGRES_HOST",
+        "valueFrom": "${POSTGRES_HOST}"
+      },
+      {
+        "name": "SECRET_KEY",
+        "valueFrom": "${SECRET_KEY}"
+      }
+    ]
+  },
+  {
+    "name": "${backend_container}",
+    "image": "${backend_image_url}@${backend_digest}",
+    "essential": true,
+    "dockerLabels": {
+      "Project": "SOLO"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${ecs_task_def_service}_backend_logGroup",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${ecs_task_def_service}_backend_logGroup_stream"
+      }
+    },
+    "portMappings": [
+      {
+        "hostPort": 8000,
+        "protocol": "tcp",
+        "containerPort": 8000
+      }
+    ],
+    "dependsOn": [
+      {
+        "containerName": "${backend_container}-migrate",
+        "condition": "SUCCESS"
+      }
+    ],
+    "secrets": [
+      {
+        "name": "POSTGRES_DB",
+        "valueFrom": "${POSTGRES_DB}"
+      },
+      {
+        "name": "POSTGRES_USER",
+        "valueFrom": "${POSTGRES_USER}"
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "valueFrom": "${POSTGRES_PASSWORD}"
+      },
+      {
+        "name": "POSTGRES_HOST",
+        "valueFrom": "${POSTGRES_HOST}"
+      },
+      {
+        "name": "MAIN_DOMAIN",
+        "valueFrom": "${MAIN_DOMAIN}"
+      },
+      {
+        "name": "API_DOMAIN",
+        "valueFrom": "${API_DOMAIN}"
+      },
+      {
+        "name": "AUTH_DOMAIN",
+        "valueFrom": "${AUTH_DOMAIN}"
+      },
+      {
+        "name": "SECRET_KEY",
+        "valueFrom": "${SECRET_KEY}"
+      }
+    ]
+  },
+  {
+    "name": "${frontend_container}",
+    "image": "${frontend_image_url}@${frontend_digest}",
+    "essential": true,
+    "dockerLabels": {
+      "Project": "SOLO"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${ecs_task_def_service}_frontend_logGroup",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${ecs_task_def_service}_frontend_logGroup_stream"
+      }
+    },
+    "secrets": [
+      {
+        "name": "MAIN_DOMAIN",
+        "valueFrom": "${MAIN_DOMAIN}"
+      },
+      {
+        "name": "NGINX_SSL_CERT",
+        "valueFrom": "${NGINX_SSL_CERT}"
+      },
+      {
+        "name": "NGINX_SSL_KEY",
+        "valueFrom": "${NGINX_SSL_KEY}"
+      },
+      {
+        "name": "API_DOMAIN",
+        "valueFrom": "${API_DOMAIN}"
+      },
+      {
+        "name": "AUTH_DOMAIN",
+        "valueFrom": "${AUTH_DOMAIN}"
+      },
+      {
+        "name": "BACKEND_PROXY",
+        "valueFrom": "${BACKEND_PROXY}"
+      }
+    ],
+    "portMappings": [
+      {
+        "hostPort": 443,
+        "protocol": "tcp",
+        "containerPort": 443
+      }
+    ]
+  }
+]

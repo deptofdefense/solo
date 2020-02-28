@@ -3,7 +3,7 @@ version: '3.4'
 services:
   db:
     image: postgres
-    env_file:
+    env_file: 
       - ./.env
 
   migrate:
@@ -16,9 +16,9 @@ services:
 
   backend:
     build: ../../backend
-    env_file:
+    env_file: 
       - ./.env
-    depends_on:
+    depends_on: 
       - migrate
     environment:
       - DEBUG=
@@ -36,7 +36,7 @@ services:
   frontend:
     build:
       context: ../../frontend
-      args:
+      args: 
         - API_DOMAIN=$API_DOMAIN
         - API_PROTOCOL=https
         - AUTH_DOMAIN=$AUTH_DOMAIN
@@ -45,7 +45,6 @@ services:
       - "80:80"
     depends_on:
       - backend
-    volumes:
-      - $SSL_KEYS_VOLUME_ROOT:/etc/ssl/
-    env_file:
+    env_file: 
       - ./.env
+

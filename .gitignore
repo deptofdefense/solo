@@ -11,6 +11,8 @@ frontend/coverage
 # deployment config
 deploy/**/.env
 deploy/**/keys/*
+deploy/**/*.crt 
+deploy/**/*.key
 
 # Python virtual env
 venv
@@ -55,3 +57,4 @@ celerybeat-schedule
 
 # Terraform
 .terraform
+

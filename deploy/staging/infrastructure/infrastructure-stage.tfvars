@@ -1,7 +1,7 @@
-// Variables that will be passed through CLI
-
-solo_stage_tf_vpc_cidr = "10.0.0.0/16"
-
-// CIDR /20 gives 4,094 usable hosts
-solo_stage_tf_public_subnet = "10.0.16.0/20"
-solo_stage_tf_private_subnet = "10.0.32.0/20"
+project           = "SOLO"
+public_subnet     = "10.0.5.0/24"
+private_subnet_1a = "10.0.6.0/24"
+private_subnet_1b = "10.0.8.0/27"
+eip_nat_gw        = "eipalloc-1dd95820"
+az_1a             = "us-gov-west-1a"
+az_1b             = "us-gov-west-1b"

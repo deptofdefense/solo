@@ -1,5 +1,12 @@
-// Remote State
-remote_state_bucket = "solo-stage-ecs-fargate-terraform-remote-state"
-remote_state_key    = "STAGE/platform-stage.tfstate"
-
-internet_cidr_block = "0.0.0.0/0"
+remote_state_bucket  = "solo-stage-ecs-fargate-terraform-remote-state"
+remote_state_key     = "STAGE/platform-stage.tfstate"
+project              = "SOLO"
+region               = "us-gov-west-1"
+ecs_task_role        = "solo-fargate"
+ecs_task_exe_role    = "soloStageTaskExeRole"
+ecs_task_def_service = "solo_stage_tf_service_application"
+task_definition      = "solo_stage_tf_task"
+backend_container    = "solo-stage-tf-backend-container"
+frontend_container   = "solo-stage-tf-frontend-container"
+backend_repo         = "solo-stage-backend"
+frontend_repo        = "solo-stage-frontend"
