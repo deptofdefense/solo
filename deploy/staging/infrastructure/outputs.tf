@@ -1,23 +1,15 @@
-// vpc id
 output "vpc_id" {
-  value = aws_vpc.solo_stage_tf_vpc.id
+  value = aws_vpc.vpc.id
 }
-
-output "aws_eip" {
-  value = aws_nat_gateway.solo_stage_tf_nat_gw.allocation_id
+output "eip_nat_gw" {
+  value = aws_nat_gateway.nat.allocation_id
 }
-
-// use to create security groups
-output "vpc_cidr_block" {
-  value = aws_vpc.solo_stage_tf_vpc.cidr_block
-}
-
-// use to create the autoscaling group
 output "public_subnet_id" {
-  value = aws_subnet.solo_stage_tf_public_subnet.id
+  value = aws_subnet.public.id
 }
-
-// use to create the autoscaling group
-output "private_subnet_id" {
-  value = aws_subnet.solo_stage_tf_private_subnet.id
+output "private_subnet_1a_id" {
+  value = aws_subnet.private_1a.id
+}
+output "private_subnet_1b_id" {
+  value = aws_subnet.private_1b.id
 }
