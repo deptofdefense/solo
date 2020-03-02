@@ -4,11 +4,15 @@ Variables are inputs that are served as parameters.
 The actual values are centrally stored in the tfvars.
 This file will create or modify:
 
-0. Template File for the Task Definition
-1. Task Definition
-2. ECS service
-3. Cloudwatch for backend
-4. Cloudwatch for frontend
+0. Template File for the Application Task Definition
+1. Template File for the Worker Task Definition
+2. Application Task Definition
+3. Worker Task Definition
+4. Application ECS service
+5. Worker ECS service
+6. Cloudwatch for backend
+7. Cloudwatch for frontend
+8. Cloudwatch for worker
 
 */
 
@@ -20,6 +24,7 @@ variable "task_definition" { description = "Task Def name" }
 variable "backend_container" { description = "Backend container name" }
 variable "frontend_container" { description = "Frontend container name" }
 variable "ecs_task_def_service" { description = "ECS task def service name" }
+variable "ecs_worker_service" { description = "ECS task def worker service name" }
 variable "ecs_task_role" { description = "ECS task role" }
 variable "ecs_task_exe_role" { description = "ECS task execution role" }
 variable "backend_repo" { description = "ECR backend repo name" }
@@ -73,8 +78,8 @@ This holds the fronend (nginx) and backend container so it can be served up to t
 the home page.
 */
 
-// 0. Template File that will feed into the Task Definition
-data "template_file" "task_def_template" {
+// 0. Application template file that will feed into the Task Definition
+data "template_file" "app_task_def_template" {
   template = "${file("containers_definition.json")}"
   vars = {
     region               = var.region
@@ -103,9 +108,27 @@ data "template_file" "task_def_template" {
   }
 }
 
-//1. Task Definition
+// 1. Worker container definition template
+data "template_file" "worker_task_def_template" {
+  template = "${file("worker_container_definition.json")}"
+  vars = {
+    region             = var.region
+    backend_container  = var.backend_container
+    ecs_worker_service = var.ecs_worker_service
+    backend_image_url  = data.aws_ecr_repository.solo_stage_tf_ecr_backend_repo.repository_url
+    backend_digest     = data.aws_ecr_image.backend_digest.image_digest
+
+    POSTGRES_DB       = data.aws_ssm_parameter.POSTGRES_DB.arn
+    POSTGRES_USER     = data.aws_ssm_parameter.POSTGRES_USER.arn
+    POSTGRES_PASSWORD = data.aws_ssm_parameter.POSTGRES_PASSWORD.arn
+    POSTGRES_HOST     = data.aws_ssm_parameter.POSTGRES_HOST.arn
+    SECRET_KEY        = data.aws_ssm_parameter.SECRET_KEY.arn
+  }
+}
+
+// 2. Application Task Definition
 resource "aws_ecs_task_definition" "ecs_td_application" {
-  container_definitions = data.template_file.task_def_template.rendered
+  container_definitions = data.template_file.app_task_def_template.rendered
   family                = var.ecs_task_def_service
   network_mode          = "awsvpc"
 
@@ -122,7 +145,25 @@ resource "aws_ecs_task_definition" "ecs_td_application" {
   }
 }
 
-// 2. Elastic Container Service
+// 3. Worker Task Definition
+resource "aws_ecs_task_definition" "ecs_td_worker" {
+  container_definitions = data.template_file.worker_task_def_template.rendered
+  family                = var.ecs_worker_service
+  network_mode          = "awsvpc"
+
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = 512
+  memory                   = 2048
+  task_role_arn            = data.aws_iam_role.ecs_task_role.arn
+  execution_role_arn       = data.aws_iam_role.ecs_task_exe_role.arn
+
+  tags = {
+    Name    = "solo_stage_tf_td_worker"
+    Project = var.project
+  }
+}
+
+// 4. Application Elastic Container Service
 resource "aws_ecs_service" "ecs_service" {
   name            = var.ecs_task_def_service
   task_definition = aws_ecs_task_definition.ecs_td_application.arn
@@ -143,7 +184,22 @@ resource "aws_ecs_service" "ecs_service" {
 
 }
 
-// 3. Cloudwatch for backend
+// 5. Worker Elastic Container Service
+resource "aws_ecs_service" "ecs_worker_service" {
+  name            = var.ecs_worker_service
+  task_definition = aws_ecs_task_definition.ecs_td_worker.arn
+  cluster         = data.terraform_remote_state.platform_stage.outputs.ecs_cluter
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets         = [data.terraform_remote_state.platform_stage.outputs.private_subnet_1a_id]
+    security_groups = [data.terraform_remote_state.platform_stage.outputs.security_group_app]
+  }
+
+}
+
+// 6. Cloudwatch for backend
 resource "aws_cloudwatch_log_group" "backend_cw_lg" {
   name = "${var.ecs_task_def_service}_backend_logGroup"
 
@@ -153,12 +209,22 @@ resource "aws_cloudwatch_log_group" "backend_cw_lg" {
   }
 }
 
-// 4. Cloudwatch for frontend
+// 7. Cloudwatch for frontend
 resource "aws_cloudwatch_log_group" "frontend_cw_lg" {
   name = "${var.ecs_task_def_service}_frontend_logGroup"
 
   tags = {
     Name    = "solo_stage_tf_frontend_cw_lg"
+    Project = var.project
+  }
+}
+
+// 8. Cloudwatch for worker
+resource "aws_cloudwatch_log_group" "worker_cw_lg" {
+  name = "${var.ecs_worker_service}_worker_logGroup"
+
+  tags = {
+    Name    = "solo_stage_tf_worker_cw_lg"
     Project = var.project
   }
 }
