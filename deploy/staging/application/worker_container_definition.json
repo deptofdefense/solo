@@ -1,0 +1,49 @@
+[
+  {
+    "name": "${backend_container}-worker",
+    "image": "${backend_image_url}@${backend_digest}",
+    "essential": true,
+    "dockerLabels": {
+      "Project": "SOLO"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${ecs_worker_service}_worker_logGroup",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${ecs_worker_service}_worker_logGroup_stream"
+      }
+    },
+    "command": [
+      "celery",
+      "-A",
+      "app",
+      "worker",
+      "-l",
+      "info"
+    ],
+    "workingDirectory": "/app",
+    "secrets": [
+      {
+        "name": "POSTGRES_DB",
+        "valueFrom": "${POSTGRES_DB}"
+      },
+      {
+        "name": "POSTGRES_USER",
+        "valueFrom": "${POSTGRES_USER}"
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "valueFrom": "${POSTGRES_PASSWORD}"
+      },
+      {
+        "name": "POSTGRES_HOST",
+        "valueFrom": "${POSTGRES_HOST}"
+      },
+      {
+        "name": "SECRET_KEY",
+        "valueFrom": "${SECRET_KEY}"
+      }
+    ]
+  }
+]

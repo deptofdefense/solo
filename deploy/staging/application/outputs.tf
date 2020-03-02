@@ -13,3 +13,7 @@ output "cloudwatch_backend_id" {
 output "cloudwatch_frontend_id" {
   value = aws_cloudwatch_log_group.frontend_cw_lg.id
 }
+
+output "cloudwatch_worker_id" {
+  value = aws_cloudwatch_log_group.worker_cw_lg.id
+}
