@@ -11,25 +11,41 @@ Thanks for thinking about using or contributing to this software ("Project") and
 
 ### 1. Introduction
 
-The project maintainer for this Project will only accept contributions using the Developer's Certificate of Origin 1.1 located at [developercertificate.org](https://developercertificate.org) ("DCO"). The DCO is a legally binding statement asserting that you are the creator of your contribution, or that you otherwise have the authority to distribute the contribution, and that you are intentionally making the contribution available under the license associated with the Project ("License").
+The project maintainer for this Project will only accept contributions using the Developer's Certificate of Origin 1.1 
+located at [developercertificate.org](https://developercertificate.org) ("DCO"). The DCO is a legally binding statement 
+asserting that you are the creator of your contribution, or that you otherwise have the authority to distribute the 
+contribution, and that you are intentionally making the contribution available under the license associated with the 
+Project ("License").
 
 ### 2. Developer Certificate of Origin Process
 
-Before submitting contributing code to this repository for the first time, you'll need to sign a Developer Certificate of Origin (DCO) (see below). To agree to the DCO, add your name and email address to the [CONTRIBUTORS.md](https://github.com/Code-dot-mil/code.mil/blob/master/CONTRIBUTORS.md) file. At a high level, adding your information to this file tells us that you have the right to submit the work you're contributing and indicates that you consent to our treating the contribution in a way consistent with the license associated with this software (as described in [LICENSE.md](https://github.com/Code-dot-mil/code.mil/blob/master/LICENSE.md)) and its documentation ("Project").
+Before submitting contributing code to this repository for the first time, you'll need to sign a Developer Certificate
+ of Origin (DCO) (see below). To agree to the DCO, add your name and email address to the
+  [CONTRIBUTORS.md](https://github.com/Code-dot-mil/code.mil/blob/master/CONTRIBUTORS.md) file. At a high level,
+   adding your information to this file tells us that you have the right to submit the work you're contributing and 
+   indicates that you consent to our treating the contribution in a way consistent with the license associated with 
+   this software (as described in [LICENSE.md](https://github.com/Code-dot-mil/code.mil/blob/master/LICENSE.md)) 
+   and its documentation ("Project").
 
 ### 3. Important Points
 
-Pseudonymous or anonymous contributions are permissible, but you must be reachable at the email address provided in the Signed-off-by line.
+Pseudonymous or anonymous contributions are permissible, but you must be reachable at the email address provided in 
+the Signed-off-by line.
 
 If your contribution is significant, you are also welcome to add your name and copyright date to the source file header.
 
-U.S. Federal law prevents the government from accepting gratuitous services unless certain conditions are met. By submitting a pull request, you acknowledge that your services are offered without expectation of payment and that you expressly waive any future pay claims against the U.S. Federal government related to your contribution.
+U.S. Federal law prevents the government from accepting gratuitous services unless certain conditions are met. By 
+submitting a pull request, you acknowledge that your services are offered without expectation of payment and that 
+you expressly waive any future pay claims against the U.S. Federal government related to your contribution.
 
-If you are a U.S. Federal government employee and use a `*.mil` or `*.gov` email address, we interpret your Signed-off-by to mean that the contribution was created in whole or in part by you and that your contribution is not subject to copyright protections.
+If you are a U.S. Federal government employee and use a `*.mil` or `*.gov` email address, we interpret your 
+Signed-off-by to mean that the contribution was created in whole or in part by you and that your contribution is not 
+subject to copyright protections.
 
 ### 4. DCO Text
 
-The full text of the DCO is included below and is available online at [developercertificate.org](https://developercertificate.org):
+The full text of the DCO is included below and is available online at
+ [developercertificate.org](https://developercertificate.org):
 
 ```txt
 Developer Certificate of Origin
@@ -72,11 +88,17 @@ By making a contribution to this project, I certify that:
 
 ## Getting Started
 
-System for Operational Logistics Ordering (SOLO) is a companion software application for the Receipt of Goods workflow inside of the Global Combat Support System - Marine Corps (GCSS-MC). SOLO uses the [Django](https://www.djangoproject.com/) web framework written primarily in the [Python 3](https://www.python.org/download/releases/3.0/) programming language for backend services and [React](https://reactjs.org/) using [TypeScript](https://www.typescriptlang.org/) for frontend services.
+System for Operational Logistics Ordering (SOLO) is a companion software application for the Receipt of Goods workflow
+inside of the Global Combat Support System - Marine Corps (GCSS-MC). SOLO uses the 
+[Django](https://www.djangoproject.com/) web framework written primarily in the 
+[Python 3](https://www.python.org/download/releases/3.0/) programming language for backend services 
+and [React](https://reactjs.org/) using [TypeScript](https://www.typescriptlang.org/) for frontend services.
 
 ### Making Changes
 
-Now you're ready to [clone the repository](https://github.com/deptofdefense/solo) locally and start making changes. The website's source code is in the `root` folder which contains content pages authored in the [Markdown text format](https://www.markdownguide.org/).
+Now you're ready to [clone the repository](https://github.com/deptofdefense/solo) locally and start making changes. 
+The website's source code is in the `root` folder which contains content pages authored in the
+ [Markdown text format](https://www.markdownguide.org/).
 
 ### Running the development environment
 
@@ -85,19 +107,36 @@ Now you're ready to [clone the repository](https://github.com/deptofdefense/solo
       - `sh configure-local-environment.sh`
   2. Tell Chrome to allow self-signed certificates on localhost
       - Navigate to `chrome://flags/#allow-insecure-localhost` and enable that setting
-  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally after configuration.
+  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally 
+  after configuration.
+  
+##### Possible Error(s) and Troubleshooting recommendation(s)
+1. Error with worker when running. Fix is to `docker-compose down -v` - this will delete the persistent volume, 
+`docker volume prune` - delete the actual volume, and `docker-compose -f docker-compose.yml up --build` 
+(possibly will have to run it two times to ensure database connection is established)
+
+1. CORs policy block error:
+`Access to fetch at 'https://auth.stage.solo.localhost/login/' from origin 'https://stage.solo.localhost' 
+has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 
+'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your
+ needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.` Possible troubleshooting 
+ step to disable and enable - [Chrome Disable Web Security](https://www.codeworkshop.com.au/chrome-disable-web-security/)
 
 ### Code Style
 
-Your bug fix or feature addition won't be rejected if it runs afoul of any (or all) of these guidelines, but following the guidelines will definitely make everyone's lives a little easier.
+Your bug fix or feature addition won't be rejected if it runs afoul of any (or all) of these guidelines,
+ but following the guidelines will definitely make everyone's lives a little easier.
 
 ## Submitting an Issue
 
-You should feel free to [submit an issue](https://github.com/deptofdefense/solo/issues) on our GitHub repository for anything you find that needs attention on the website. That includes content, functionality, design, or anything else!
+You should feel free to [submit an issue](https://github.com/deptofdefense/solo/issues) on our GitHub repository 
+for anything you find that needs attention on the website. That includes content, functionality, design, or
+ anything else!
 
 ### Submitting a Bug Report
 
-When submitting a bug report on the website, please be sure to include accurate and thorough information about the problem you're observing. Be sure to include:
+When submitting a bug report on the website, please be sure to include accurate and thorough information about the 
+problem you're observing. Be sure to include:
 
 * Steps to reproduce the problem,
 * The URL of the page where you observed the problem,
@@ -107,19 +146,27 @@ When submitting a bug report on the website, please be sure to include accurate 
 
 ## Submitting Code
 
-When making your changes, it is highly encouraged that you use a [branch in Git](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging), then submit a [pull request](https://github.com/deptofdefense/solo/pulls) (PR) on GitHub.
+When making your changes, it is highly encouraged that you use a
+ [branch in Git](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging), then submit a 
+ [pull request](https://github.com/deptofdefense/solo/pulls) (PR) on GitHub.
 
-After review by the SOLO team, your PR will either be commented on with a request for more information or changes, or it will be merged into the `master` branch and deployed to a URL for testing purposes.
+After review by the SOLO team, your PR will either be commented on with a request for more information or changes, or 
+it will be merged into the `master` branch and deployed to a URL for testing purposes.
 
-Assuming everything checks out, the SOLO team will merge the `staging` branch into the `production` branch which will be automatically deployed to the production hosting environment.
+Assuming everything checks out, the SOLO team will merge the `staging` branch into the `production` branch which will
+ be automatically deployed to the production hosting environment.
 
 ### Check Your Changes
 
-Before submitting your pull request, you should run the build process locally first to ensure things are working as expected.
+Before submitting your pull request, you should run the build process locally first to ensure things are working 
+as expected.
 
 #### pre-commit hook
 
-A hook is included in the repository that should be configured prior to making any commits to help with this process. It ensures that any changes to be committed comply with the acceptance criteria within the CI/CD pipeline. At minimum, the hook will run unit tests, fix and check code-style, and lint. To use this hook, run the following command from the root of the repository.
+A hook is included in the repository that should be configured prior to making any commits to help with this process. 
+It ensures that any changes to be committed comply with the acceptance criteria within the CI/CD pipeline. At minimum,
+ the hook will run unit tests, fix and check code-style, and lint. To use this hook, run the following command from 
+ the root of the repository.
 
 `ln -s -f ../../hooks/precommit.sh .git/hooks/pre-commit`
 
