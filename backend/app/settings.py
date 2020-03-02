@@ -1,6 +1,7 @@
 import os
 import sys
 import string
+from urllib.parse import quote
 from django.utils.crypto import get_random_string
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -96,13 +97,15 @@ if "test" in sys.argv:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
 
 # Celery worker
+ESCAPED_POSTGRES_HOST = quote(POSTGRES_HOST.encode())
+ESCAPED_POSTGRES_USER = quote(POSTGRES_USER.encode())
+ESCAPED_POSTGRES_PASSWORD = POSTGRES_PASSWORD and quote(POSTGRES_PASSWORD.encode())
 CELERY_BROKER_URL = (
-    f"sqla+postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
-    f"{POSTGRES_HOST}/{POSTGRES_DB_NAME}"
+    f"sqla+postgresql://{ESCAPED_POSTGRES_USER}:{ESCAPED_POSTGRES_PASSWORD}@"
+    f"{ESCAPED_POSTGRES_PASSWORD}/{POSTGRES_DB_NAME}"
 )
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
-
 
 TEMPLATES = [
     {
