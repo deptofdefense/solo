@@ -5,7 +5,8 @@ disable=
     too-many-ancestors,
     invalid-name,
     fixme,
-    abstract-method
+    abstract-method,
+    no-member
 
 load-plugins=
     pylint_django

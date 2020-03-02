@@ -8,10 +8,10 @@ services:
 
   migrate:
     build: ../../backend
+    command: "python manage.py migrate"
     env_file: 
       - ./.env
-    command: "python manage.py migrate"
-    depends_on: 
+    depends_on:
       - db
 
   backend:
@@ -21,6 +21,16 @@ services:
     depends_on: 
       - migrate
     environment:
+      - DEBUG=
+
+  worker:
+    build: ../../backend
+    command: "celery -A app worker -l info"
+    env_file: 
+      - ./.env
+    depends_on: 
+      - backend
+    environment: 
       - DEBUG=
 
   frontend:

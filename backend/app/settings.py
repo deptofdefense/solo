@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("SECRET_KEY") or get_random_string(50, string.printable)
 
 # don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") or False
+DEBUG = bool(os.environ.get("DEBUG")) or False
 
 # Application definition
 INSTALLED_APPS = [
@@ -74,14 +74,19 @@ MIDDLEWARE = [
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+POSTGRES_HOST = os.environ.get("POSTGRES_HOST", default="localhost")
+POSTGRES_PORT = os.environ.get("POSTGRES_PORT", default=5432)
+POSTGRES_DB_NAME = os.environ.get("POSTGRES_DB", default="solo")
+POSTGRES_USER = os.environ.get("POSTGRES_USER", default="solo")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get("POSTGRES_HOST", default="localhost"),
-        "PORT": os.environ.get("POSTGRES_PORT", default=5432),
-        "NAME": os.environ.get("POSTGRES_DB", default="solo"),
-        "USER": os.environ.get("POSTGRES_USER", default="solo"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", default="solo"),
+        "HOST": POSTGRES_HOST,
+        "PORT": POSTGRES_PORT,
+        "NAME": POSTGRES_DB_NAME,
+        "USER": POSTGRES_USER,
+        "PASSWORD": POSTGRES_PASSWORD,
     }
 }
 
@@ -89,6 +94,14 @@ DATABASES = {
 # that postgres is neccessary for unit testing
 if "test" in sys.argv:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+
+# Celery worker
+CELERY_BROKER_URL = (
+    f"sqla+postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@"
+    f"{POSTGRES_HOST}/{POSTGRES_DB_NAME}"
+)
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
 
 
 TEMPLATES = [

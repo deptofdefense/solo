@@ -10,6 +10,12 @@ services:
     environment:
       - DEBUG=True
 
+  worker:
+    volumes:
+      - ../../backend:/app/
+    environment: 
+      - DEBUG=True
+
   frontend:
     build:
       target: build_stage
