@@ -120,7 +120,7 @@ The website's source code is in the `root` folder which contains content pages a
 has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 
 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your
  needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.` Possible troubleshooting 
- step to disable and then enable the [Chrome Disable Web Security](https://www.codeworkshop.com.au/chrome-disable-web-security/)
+ step to disable and enable - [Chrome Disable Web Security](https://www.codeworkshop.com.au/chrome-disable-web-security/)
 
 ### Code Style
 
