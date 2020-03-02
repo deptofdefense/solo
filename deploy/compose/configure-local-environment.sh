@@ -4,12 +4,13 @@ cp .env.example .env
 # Generate local self signed certs,db username/password, append them to the .env file
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=DC/L=Pentagon/O=DDS/CN=stage.solo.code.mil" -keyout ./nginx-selfsigned.key  -out ./nginx-selfsigned.crt >/dev/null 2>&1;
 
+SECRET_KEY="SECRET_KEY="$(openssl rand -base64 12);
 NGINX_SSL_CERT="NGINX_SSL_CERT="$(cat nginx-selfsigned.crt);
 NGINX_SSL_KEY="NGINX_SSL_KEY="$(cat nginx-selfsigned.key);
-POSTGRES_USER="POSTGRES_USER="$(openssl rand -base64 12);
 POSTGRES_PASSWORD="POSTGRES_PASSWORD="$(openssl rand -base64 12);
 
-echo $POSTGRES_USER >> .env;
+echo "\n" >> .env;
+echo $SECRET_KEY >> .env;
 echo $POSTGRES_PASSWORD >> .env;
 echo "\n" >> .env;
 printf %s "$NGINX_SSL_CERT" | awk -v ORS='\\n' 1 >> .env;
