@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useAuthContext from "context/AuthContext";
-import LoginButton from "./LoginButton";
+import { Button } from "solo-uswds";
 import classes from "./LoginPage.module.scss";
 
 const LoginPage: React.FC = props => {
@@ -23,7 +23,9 @@ const LoginPage: React.FC = props => {
         Welcome to the System for Operational Logistics Ordering (SOLO)
       </h1>
       <div>
-        <LoginButton onClick={login} />
+        <Button big onClick={login}>
+          CAC Login
+        </Button>
       </div>
       {loginError && (
         <div>

@@ -1,5 +1,5 @@
 import React from "react";
-import OfficialSiteBanner from "../OfficialSiteBanner";
+import { OfficialSiteBanner } from "solo-uswds";
 import { render, fireEvent, wait } from "@testing-library/react";
 
 describe("Official site banner component", () => {

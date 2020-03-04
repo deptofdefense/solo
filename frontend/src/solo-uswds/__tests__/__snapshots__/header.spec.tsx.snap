@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`uswds Header component matches snapshot 1`] = `
+<DocumentFragment>
+  <header
+    class="usa-header usa-header--basic"
+  >
+    <div
+      class="usa-nav-container"
+    />
+  </header>
+</DocumentFragment>
+`;
+
+exports[`uswds HeaderLogo component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-logo"
+  >
+    <em
+      class="usa-logo__text"
+    >
+      <a
+        aria-current="page"
+        class="active"
+        href="/"
+      >
+        test
+      </a>
+    </em>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`uswds HeaderNavComponent matches snapshot when closed 1`] = `
+<DocumentFragment>
+  <nav
+    aria-label="Primary navigation"
+    class="usa-nav"
+  >
+    <ul
+      class="usa-nav__primary usa-accordion"
+    >
+      <button
+        class="usa-nav__close"
+      >
+        <img
+          alt="close"
+          src="close.svg"
+        />
+      </button>
+    </ul>
+  </nav>
+</DocumentFragment>
+`;
+
+exports[`uswds HeaderNavComponent matches snapshot when open 1`] = `
+<DocumentFragment>
+  <nav
+    aria-label="Primary navigation"
+    class="usa-nav is-visible"
+  >
+    <ul
+      class="usa-nav__primary usa-accordion"
+    >
+      <button
+        class="usa-nav__close"
+      >
+        <img
+          alt="close"
+          src="close.svg"
+        />
+      </button>
+    </ul>
+  </nav>
+</DocumentFragment>
+`;
+
+exports[`uswds HeaderNavLink component matches snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="usa-nav__primary-item"
+  >
+    <a
+      aria-current="page"
+      class="usa-nav__link active"
+      href="/"
+    >
+      <span>
+        test
+      </span>
+    </a>
+  </li>
+</DocumentFragment>
+`;
+
+exports[`uswds HeaderNavbar component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="usa-navbar"
+  />
+</DocumentFragment>
+`;

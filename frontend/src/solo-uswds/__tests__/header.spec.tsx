@@ -1,11 +1,28 @@
 import React from "react";
 import { render, fireEvent, wait } from "test-utils";
-import Header from "../Header";
-import HeaderLogo from "../HeaderLogo";
-import HeaderNavLink from "../HeaderNavLink";
-import HeaderNav from "../HeaderNav";
+import {
+  Header,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNavLink,
+  HeaderNavbar
+} from "solo-uswds";
 
-describe("HeaderLogo component", () => {
+describe("uswds Header component", () => {
+  it("matches snapshot", () => {
+    const { asFragment } = render(<Header />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+});
+
+describe("uswds HeaderNavbar component", () => {
+  it("matches snapshot", () => {
+    const { asFragment } = render(<HeaderNavbar />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+});
+
+describe("uswds HeaderLogo component", () => {
   it("matches snapshot", () => {
     const { asFragment } = render(<HeaderLogo text="test" />);
     expect(asFragment()).toMatchSnapshot();
@@ -21,7 +38,7 @@ describe("HeaderLogo component", () => {
   });
 });
 
-describe("HeaderNavComponent", () => {
+describe("uswds HeaderNavComponent", () => {
   let props = {
     isOpen: true,
     onClose: jest.fn()
@@ -61,50 +78,9 @@ describe("HeaderNavComponent", () => {
   });
 });
 
-describe("HeaderNavLink component", () => {
+describe("uswds HeaderNavLink component", () => {
   it("matches snapshot", () => {
     const { asFragment } = render(<HeaderNavLink to="#">test</HeaderNavLink>);
     expect(asFragment()).toMatchSnapshot();
-  });
-});
-
-describe("Header component", () => {
-  it("matches snapshot", () => {
-    const { asFragment } = render(<Header />);
-    expect(asFragment()).toMatchSnapshot();
-  });
-
-  it("clicking menu adds visibility class", async () => {
-    const { container, getByText } = render(<Header />);
-    const primaryNavSelector = '[aria-label="Primary navigation"]';
-    expect(container.querySelector(primaryNavSelector)).not.toHaveClass(
-      "is-visible"
-    );
-    const menuButton = getByText("Menu");
-    fireEvent.click(menuButton);
-    await wait(() => {
-      expect(container.querySelector(primaryNavSelector)).toHaveClass(
-        "is-visible"
-      );
-    });
-  });
-
-  it("clicking a link closes the menu", async () => {
-    const { container, getByText } = render(<Header />);
-    const primaryNavSelector = '[aria-label="Primary navigation"]';
-    const menuButton = getByText("Menu");
-    fireEvent.click(menuButton);
-    await wait(() => {
-      expect(container.querySelector(primaryNavSelector)).toHaveClass(
-        "is-visible"
-      );
-    });
-    const aboutLink = getByText("About");
-    fireEvent.click(aboutLink);
-    await wait(() => {
-      expect(container.querySelector(primaryNavSelector)).not.toHaveClass(
-        "is-visible"
-      );
-    });
   });
 });

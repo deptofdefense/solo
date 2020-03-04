@@ -5,7 +5,7 @@ interface HeaderNavLinkProps extends NavLinkProps {
   children: string;
 }
 
-const HeaderNavLink: React.FC<HeaderNavLinkProps> = ({
+export const HeaderNavLink: React.FC<HeaderNavLinkProps> = ({
   children,
   ...props
 }) => {
@@ -17,5 +17,3 @@ const HeaderNavLink: React.FC<HeaderNavLinkProps> = ({
     </li>
   );
 };
-
-export default HeaderNavLink;

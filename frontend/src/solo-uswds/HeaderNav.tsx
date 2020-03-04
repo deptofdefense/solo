@@ -7,11 +7,14 @@ interface HeaderNavProps {
   onClose: React.MouseEventHandler;
 }
 
-const HeaderNav: React.FC<HeaderNavProps> = ({ children, isOpen, onClose }) => (
+export const HeaderNav: React.FC<HeaderNavProps> = ({
+  children,
+  isOpen,
+  onClose
+}) => (
   <nav
     aria-label="Primary navigation"
-    className={classNames({
-      "usa-nav": true,
+    className={classNames("usa-nav", {
       "is-visible": isOpen
     })}
   >
@@ -23,5 +26,3 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ children, isOpen, onClose }) => (
     </ul>
   </nav>
 );
-
-export default HeaderNav;

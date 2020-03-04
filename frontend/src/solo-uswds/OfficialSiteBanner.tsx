@@ -3,7 +3,7 @@ import iconFlag from "uswds/dist/img/us_flag_small.png";
 import iconDotGov from "uswds/dist/img/icon-dot-gov.svg";
 import iconHttps from "uswds/dist/img/icon-https.svg";
 
-const OfficialSiteBanner: React.FC = () => {
+export const OfficialSiteBanner: React.FC = () => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = useCallback(() => {
@@ -79,5 +79,3 @@ const OfficialSiteBanner: React.FC = () => {
     </div>
   );
 };
-
-export default OfficialSiteBanner;
