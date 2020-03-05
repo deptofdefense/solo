@@ -7,11 +7,16 @@ interface HeaderNavLinkProps extends NavLinkProps {
 
 export const HeaderNavLink: React.FC<HeaderNavLinkProps> = ({
   children,
+  activeClassName,
   ...props
 }) => {
   return (
     <li className="usa-nav__primary-item">
-      <NavLink className="usa-nav__link" {...props}>
+      <NavLink
+        className="usa-nav__link"
+        activeClassName={activeClassName || "usa-current"}
+        {...props}
+      >
         <span>{children}</span>
       </NavLink>
     </li>

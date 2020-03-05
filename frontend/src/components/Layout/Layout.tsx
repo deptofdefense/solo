@@ -6,7 +6,8 @@ import {
   PostLogoutPage,
   Navbar,
   LoginPage,
-  HomeRoute
+  HomeRoute,
+  StatusPage
 } from "components";
 
 const Layout: React.FC = () => (
@@ -18,9 +19,9 @@ const Layout: React.FC = () => (
         exact
         path="/"
         unAuthComponent={LoginPage}
-        authComponent={HomePage}
+        authComponent={StatusPage}
       />
-      <Route exact path="/about" render={() => <div>About Page</div>} />
+      <Route exact path="/testpage" component={HomePage} />
       <Route exact path="/postlogout" component={PostLogoutPage} />
     </Switch>
   </>
