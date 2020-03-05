@@ -72,7 +72,8 @@
       "src/index.tsx",
       "src/test-utils.tsx",
       "src/App.tsx",
-      "src/components/.*index.ts"
+      "src/components/.*index.ts",
+      "src/solo-uswds/.*index.ts"
     ]
   }
 }

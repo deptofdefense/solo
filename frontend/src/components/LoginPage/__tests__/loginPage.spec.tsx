@@ -2,7 +2,7 @@ import React from "react";
 import { render, fireEvent, wait } from "test-utils";
 import LoginPage from "../LoginPage";
 
-describe("Home page component", () => {
+describe("Login page component", () => {
   const fakeLogin = jest.fn();
   const renderOpts = {
     authContext: {

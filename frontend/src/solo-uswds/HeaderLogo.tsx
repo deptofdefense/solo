@@ -5,7 +5,7 @@ interface HeaderLogoProps {
   text?: string;
 }
 
-const HeaderLogo: React.FC<HeaderLogoProps> = ({ text }) => (
+export const HeaderLogo: React.FC<HeaderLogoProps> = ({ text }) => (
   <div className="usa-logo">
     {text && (
       <em className="usa-logo__text">
@@ -14,5 +14,3 @@ const HeaderLogo: React.FC<HeaderLogoProps> = ({ text }) => (
     )}
   </div>
 );
-
-export default HeaderLogo;

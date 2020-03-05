@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import useAuthContext from "context/AuthContext";
+import { Button } from "solo-uswds";
 import classes from "./HomePage.module.css";
 
 const HomePage: React.FC = () => {
@@ -35,12 +36,10 @@ const HomePage: React.FC = () => {
       <div>username: {username}</div>
       {taskId && <div>last task id: {taskId}</div>}
       <div>
-        <button onClick={logoutUser} className="usa-button">
-          Logout
-        </button>
-        <button onClick={createWorkerDebugMsg} className="usa-button">
+        <Button onClick={logoutUser}>Logout</Button>
+        <Button onClick={createWorkerDebugMsg}>
           Create worker debug message
-        </button>
+        </Button>
       </div>
     </div>
   );
