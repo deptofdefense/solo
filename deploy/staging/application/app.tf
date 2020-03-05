@@ -4,15 +4,17 @@ Variables are inputs that are served as parameters.
 The actual values are centrally stored in the tfvars.
 This file will create or modify:
 
-0. Template File for the Application Task Definition
-1. Template File for the Worker Task Definition
-2. Application Task Definition
-3. Worker Task Definition
-4. Application ECS service
-5. Worker ECS service
-6. Cloudwatch for backend
-7. Cloudwatch for frontend
-8. Cloudwatch for worker
+0.  Template File for the Application Task Definition
+1.  Template File for the Worker Task Definition
+2.  Application Task Definition
+3.  Worker Task Definition
+4.  Application ECS service
+5.  Worker ECS service
+6.  Cloudwatch for backend
+7.  Cloudwatch for frontend
+8.  Cloudwatch for worker
+9.  Autoscaling policy for frontend
+10. Autoscaling policy for worker
 
 */
 
@@ -226,5 +228,59 @@ resource "aws_cloudwatch_log_group" "worker_cw_lg" {
   tags = {
     Name    = "solo_stage_tf_worker_cw_lg"
     Project = var.project
+  }
+}
+
+// 9. Autoscaling frontend policy
+resource "aws_appautoscaling_target" "frontend_autoscale_target" {
+  max_capacity       = 8 // max amount of tasks running
+  min_capacity       = 1 // min amount of tasks running
+  resource_id        = "service/${data.terraform_remote_state.platform_stage.outputs.ecs_cluster_name}/${aws_ecs_service.ecs_service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "frontend_scale_policy" {
+  name               = "frontend_scale_policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.frontend_autoscale_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.frontend_autoscale_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.frontend_autoscale_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    target_value       = 55 //this is the target CPU Utilization where a scale-up event will occur
+    scale_out_cooldown = 60 //this is the amount of seconds before another scale up period begins
+    scale_in_cooldown  = 60 //this is the amount of seconds before scaling down occurs
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+  }
+}
+
+// 10. Autoscaling Worker Policy
+resource "aws_appautoscaling_target" "worker_autoscale_target" {
+  max_capacity       = 8
+  min_capacity       = 1
+  resource_id        = "service/${data.terraform_remote_state.platform_stage.outputs.ecs_cluster_name}/${aws_ecs_service.ecs_worker_service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+
+resource "aws_appautoscaling_policy" "worker_scale_policy" {
+  name               = "worker_scale_policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.worker_autoscale_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.worker_autoscale_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.worker_autoscale_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    target_value       = 55
+    scale_out_cooldown = 60
+    scale_in_cooldown  = 60
+
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
   }
 }
