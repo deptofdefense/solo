@@ -56,9 +56,9 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 
 // 2. Network Load Balancer reside in the public subnet
 resource "aws_lb" "nlb" {
-  name                             = "solo-stage-tf-nlb"
-  internal                         = false
-  load_balancer_type               = "network"
+  name               = "solo-stage-tf-nlb"
+  internal           = false
+  load_balancer_type = "network"
 
   subnet_mapping {
     subnet_id     = data.terraform_remote_state.infrastructure_stage.outputs.public_subnet_id

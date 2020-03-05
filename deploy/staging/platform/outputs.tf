@@ -4,6 +4,9 @@ output "vpc_id" {
 output "ecs_cluter" {
   value = aws_ecs_cluster.ecs_cluster.id
 }
+output "ecs_cluster_name" {
+  value = aws_ecs_cluster.ecs_cluster.name
+}
 output "security_group_nlb" {
   value = aws_security_group.nlb_sg.id
 }
