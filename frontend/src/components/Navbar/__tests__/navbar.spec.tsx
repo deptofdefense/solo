@@ -33,7 +33,7 @@ describe("Navbar component", () => {
         "is-visible"
       );
     });
-    const aboutLink = getByText("About");
+    const aboutLink = getByText("Status");
     fireEvent.click(aboutLink);
     await wait(() => {
       expect(container.querySelector(primaryNavSelector)).not.toHaveClass(

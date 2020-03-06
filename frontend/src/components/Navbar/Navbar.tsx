@@ -14,6 +14,8 @@ const Navbar: React.FC = () => {
     setIsOpen(!isOpen);
   }, [isOpen, setIsOpen]);
 
+  const close = () => setIsOpen(false);
+
   return (
     <Header>
       <HeaderNavbar>
@@ -23,12 +25,8 @@ const Navbar: React.FC = () => {
         </button>
       </HeaderNavbar>
       <HeaderNav isOpen={isOpen} onClose={toggleOpen}>
-        <HeaderNavLink
-          to="/about"
-          activeClassName="usa-current"
-          onClick={() => setIsOpen(false)}
-        >
-          About
+        <HeaderNavLink to="/" exact onClick={close}>
+          Status
         </HeaderNavLink>
       </HeaderNav>
     </Header>

@@ -4,3 +4,4 @@ export { default as LoginPage } from "./LoginPage";
 export { default as Layout } from "./Layout";
 export { default as HomePage } from "./HomePage";
 export { default as AuthRoute, HomeRoute } from "./AuthRoute";
+export { default as StatusPage } from "./StatusPage";

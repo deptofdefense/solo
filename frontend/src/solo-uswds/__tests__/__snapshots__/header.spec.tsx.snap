@@ -83,7 +83,7 @@ exports[`uswds HeaderNavLink component matches snapshot 1`] = `
   >
     <a
       aria-current="page"
-      class="usa-nav__link active"
+      class="usa-nav__link usa-current"
       href="/"
     >
       <span>

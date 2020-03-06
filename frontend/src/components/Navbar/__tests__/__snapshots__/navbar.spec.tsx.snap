@@ -51,11 +51,12 @@ exports[`Navbar component matches snapshot 1`] = `
             class="usa-nav__primary-item"
           >
             <a
-              class="usa-nav__link"
-              href="/about"
+              aria-current="page"
+              class="usa-nav__link usa-current"
+              href="/"
             >
               <span>
-                About
+                Status
               </span>
             </a>
           </li>
