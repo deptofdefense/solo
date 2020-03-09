@@ -37,7 +37,7 @@ describe("Table component", () => {
       <Table<TestDoc>
         columns={columns}
         data={data}
-        initialSortBy={{ id: "value" }}
+        initialSortBy={[]}
         onSort={onSortMock}
         renderSubComponent={onRenderSubMock}
       />
@@ -50,7 +50,7 @@ describe("Table component", () => {
       <Table<TestDoc>
         columns={columns}
         data={data}
-        initialSortBy={{ id: "value" }}
+        initialSortBy={[{ id: "value" }]}
         onSort={onSortMock}
         renderSubComponent={onRenderSubMock}
       />
@@ -62,14 +62,16 @@ describe("Table component", () => {
     fireEvent.click(sortHeader);
     await wait(() => {
       expect(onSortMock).toHaveBeenCalledTimes(2);
-      expect(onSortMock.mock.calls[1][0]).toMatchObject({
-        id: "value"
-      });
+      expect(onSortMock.mock.calls[1][0]).toMatchObject([
+        {
+          id: "value"
+        }
+      ]);
     });
     fireEvent.click(sortHeader);
     await wait(() => {
       expect(onSortMock).toHaveBeenCalledTimes(3);
-      expect(onSortMock.mock.calls[2][0]).toBeUndefined();
+      expect(onSortMock.mock.calls[2][0]).toEqual([]);
     });
   });
 
@@ -78,7 +80,7 @@ describe("Table component", () => {
       <Table<TestDoc>
         columns={columns}
         data={data}
-        initialSortBy={{ id: "value" }}
+        initialSortBy={[]}
         onSort={onSortMock}
         renderSubComponent={onRenderSubMock}
       />

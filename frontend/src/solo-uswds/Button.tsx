@@ -23,7 +23,8 @@ export const Button: React.FC<ButtonProps> = ({
   inverse = false,
   big = false,
   disabled = false,
-  className = ""
+  className = "",
+  ...rest
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -44,6 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
         "usa-button--base": color === "base",
         "usa-button--big": big
       })}
+      {...rest}
     >
       {children}
     </button>
