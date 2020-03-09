@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-interface ButtonProps {
+interface ButtonProps extends Partial<JSX.IntrinsicElements["button"]> {
   focused?: boolean;
   active?: boolean;
   disabled?: boolean;

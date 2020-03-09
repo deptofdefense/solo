@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`USWDS Table component matches snapshot 1`] = `
+<DocumentFragment>
+  <table
+    class="usa-table grid-col-12 usa-table--borderless"
+  />
+</DocumentFragment>
+`;
