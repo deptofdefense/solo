@@ -53,7 +53,7 @@ exports[`Table component matches snapshot 1`] = `
               data-prefix="fas"
               focusable="false"
               role="img"
-              style="visibility: visible;"
+              style="visibility: hidden;"
               viewBox="0 0 448 512"
               xmlns="http://www.w3.org/2000/svg"
             >

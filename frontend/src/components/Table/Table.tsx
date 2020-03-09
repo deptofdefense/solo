@@ -14,8 +14,8 @@ import TableBody from "./TableBody";
 interface TableProps<T extends object> {
   columns: Column<T>[];
   data: T[];
-  initialSortBy: SortingRule<T>;
-  onSort: (sortBy: SortingRule<T>) => void;
+  initialSortBy: SortingRule<T>[];
+  onSort: (sortBy: SortingRule<T>[]) => void;
   renderSubComponent?: (row: Row<T>) => JSX.Element;
 }
 
@@ -39,14 +39,14 @@ const Table = <T extends object>({
       columns,
       data,
       manualSortBy: true,
-      initialState: { sortBy: [initialSortBy] }
+      initialState: { sortBy: initialSortBy }
     },
     useSortBy,
     useExpanded
   );
 
   useEffect(() => {
-    onSort(sortBy[0]);
+    onSort(sortBy);
   }, [sortBy, onSort]);
 
   return (
