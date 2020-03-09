@@ -7,9 +7,9 @@ import {
   useSortBy,
   SortingRule
 } from "react-table";
-import { Table as USWDSTable, TableData } from "solo-uswds";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { Table as USWDSTable } from "solo-uswds";
+import TableHead from "./TableHead";
+import TableBody from "./TableBody";
 
 interface TableProps<T extends object> {
   columns: Column<T>[];
@@ -19,13 +19,13 @@ interface TableProps<T extends object> {
   renderSubComponent?: (row: Row<T>) => JSX.Element;
 }
 
-function Table<T extends object>({
+const Table = <T extends object>({
   columns,
   data,
   initialSortBy,
   onSort,
   renderSubComponent
-}: TableProps<T>) {
+}: TableProps<T>) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -52,54 +52,17 @@ function Table<T extends object>({
   return (
     <>
       <USWDSTable {...getTableProps()}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  <div className="display-flex flex-justify flex-align-center flex-no-wrap text-no-wrap">
-                    {column.render("Header")}
-                    <FontAwesomeIcon
-                      icon={column.isSortedDesc ? faChevronDown : faChevronUp}
-                      style={{
-                        visibility: column.isSorted ? "visible" : "hidden"
-                      }}
-                      className="margin-left-05"
-                    />
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            const { key, ...rest } = row.getRowProps();
-            return (
-              <React.Fragment key={key}>
-                <tr {...rest}>
-                  {row.cells.map(cell => (
-                    <TableData {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </TableData>
-                  ))}
-                </tr>
-
-                {row.isExpanded && renderSubComponent ? (
-                  <tr>
-                    <TableData colSpan={visibleColumns.length} details>
-                      {renderSubComponent(row)}
-                    </TableData>
-                  </tr>
-                ) : null}
-              </React.Fragment>
-            );
-          })}
-        </tbody>
+        <TableHead headerGroups={headerGroups} />
+        <TableBody
+          rows={rows}
+          renderSubComponent={renderSubComponent}
+          prepareRow={prepareRow}
+          numColumns={visibleColumns.length}
+          {...getTableBodyProps()}
+        />
       </USWDSTable>
     </>
   );
-}
+};
 
 export default Table;

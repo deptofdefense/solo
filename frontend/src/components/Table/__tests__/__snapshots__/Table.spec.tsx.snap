@@ -73,8 +73,8 @@ exports[`Table component matches snapshot 1`] = `
         role="row"
       >
         <td
+          class="td"
           role="cell"
-          style="background-color: rgb(240, 240, 240); border-color: white;"
         >
           <span
             data-testid="testexpand"
@@ -85,8 +85,8 @@ exports[`Table component matches snapshot 1`] = `
           </span>
         </td>
         <td
+          class="td"
           role="cell"
-          style="background-color: rgb(240, 240, 240); border-color: white;"
         >
           2
         </td>

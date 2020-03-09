@@ -25,7 +25,6 @@
   "rules": {
     "prettier/prettier": "error",
     "react/prop-types": 0,
-    "react/jsx-key": 0,
     "react/display-name": 0
   },
   "settings": {
