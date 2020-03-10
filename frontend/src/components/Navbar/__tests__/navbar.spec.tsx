@@ -24,7 +24,11 @@ describe("Navbar component", () => {
   });
 
   it("clicking a link closes the menu", async () => {
-    const { container, getByText } = render(<Navbar />);
+    const { container, getByText } = render(<Navbar />, {
+      authContext: {
+        authenticated: true
+      }
+    });
     const primaryNavSelector = '[aria-label="Primary navigation"]';
     const menuButton = getByText("Menu");
     fireEvent.click(menuButton);

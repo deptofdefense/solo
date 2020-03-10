@@ -47,19 +47,6 @@ exports[`Navbar component matches snapshot 1`] = `
               src="close.svg"
             />
           </button>
-          <li
-            class="usa-nav__primary-item"
-          >
-            <a
-              aria-current="page"
-              class="usa-nav__link usa-current"
-              href="/"
-            >
-              <span>
-                Status
-              </span>
-            </a>
-          </li>
         </ul>
       </nav>
     </div>
