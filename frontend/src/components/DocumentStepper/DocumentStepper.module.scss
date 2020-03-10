@@ -1,0 +1,49 @@
+.stepRoot {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: space-around;
+  margin-top: 1.8rem;
+}
+
+.step {
+  width: 100%;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepIcon {
+  z-index: 20;
+  background-color: white;
+  padding-left: 2px;
+  padding-right: 2px;
+  font-size: 1.8rem;
+}
+
+.stepComplete {
+  color: green;
+}
+
+.stepIncomplete {
+  color: lightgray;
+}
+
+.stepRight {
+  position: absolute;
+  height: 2px;
+  background-color: lightgray;
+  width: 50%;
+  left: 50%;
+  top: 0.9rem;
+}
+
+.stepLeft {
+  position: absolute;
+  height: 2px;
+  background-color: lightgray;
+  width: 50%;
+  right: 50%;
+  top: 0.9rem;
+}

@@ -5,7 +5,7 @@ exports[`title component matches snapshot 1`] = `
   <h1
     class="usa-prose"
   >
-    Title
+    Test Title
   </h1>
 </DocumentFragment>
 `;
