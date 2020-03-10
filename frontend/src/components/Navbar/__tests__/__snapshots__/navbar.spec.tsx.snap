@@ -7,6 +7,7 @@ exports[`Navbar component matches snapshot 1`] = `
   >
     <div
       class="usa-nav-container"
+      style="max-width: none;"
     >
       <div
         class="usa-navbar"

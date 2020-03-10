@@ -2,7 +2,9 @@ import React from "react";
 
 export const Header: React.FC = ({ children }) => (
   <header className="usa-header usa-header--basic">
-    <div className="usa-nav-container">{children}</div>
+    <div className="usa-nav-container" style={{ maxWidth: "none" }}>
+      {children}
+    </div>
   </header>
 );
 

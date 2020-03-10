@@ -7,6 +7,7 @@ exports[`uswds Header component matches snapshot 1`] = `
   >
     <div
       class="usa-nav-container"
+      style="max-width: none;"
     />
   </header>
 </DocumentFragment>

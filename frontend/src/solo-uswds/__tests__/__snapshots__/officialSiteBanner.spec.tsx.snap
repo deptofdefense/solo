@@ -10,6 +10,7 @@ exports[`Official site banner component matches snapshot 1`] = `
     >
       <div
         class="usa-banner__inner"
+        style="margin-left: 0px;"
       >
         <div
           class="grid-col-auto"

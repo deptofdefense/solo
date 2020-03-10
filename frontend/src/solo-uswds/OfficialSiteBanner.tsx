@@ -13,7 +13,7 @@ export const OfficialSiteBanner: React.FC = () => {
   return (
     <div className="usa-banner">
       <header className="usa-banner__header">
-        <div className="usa-banner__inner">
+        <div className="usa-banner__inner" style={{ marginLeft: 0 }}>
           <div className="grid-col-auto">
             <img
               className="usa-banner__header-flag"
