@@ -9,8 +9,7 @@ exports[`Official site banner component matches snapshot 1`] = `
       class="usa-banner__header"
     >
       <div
-        class="usa-banner__inner"
-        style="margin-left: 0px;"
+        class="usa-banner__inner innerBanner"
       >
         <div
           class="grid-col-auto"

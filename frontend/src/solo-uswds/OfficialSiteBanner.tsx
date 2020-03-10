@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from "react";
+import classNames from "classnames";
 import iconFlag from "uswds/dist/img/us_flag_small.png";
 import iconDotGov from "uswds/dist/img/icon-dot-gov.svg";
 import iconHttps from "uswds/dist/img/icon-https.svg";
+import classes from "./OfficialSiteBanner.module.scss";
 
 export const OfficialSiteBanner: React.FC = () => {
   const [expanded, setExpanded] = useState(false);
@@ -13,7 +15,7 @@ export const OfficialSiteBanner: React.FC = () => {
   return (
     <div className="usa-banner">
       <header className="usa-banner__header">
-        <div className="usa-banner__inner" style={{ marginLeft: 0 }}>
+        <div className={classNames("usa-banner__inner", classes.innerBanner)}>
           <div className="grid-col-auto">
             <img
               className="usa-banner__header-flag"
