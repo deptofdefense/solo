@@ -242,35 +242,37 @@ exports[`StatusPage component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            M0000000000000
+            M3030012341234
           </td>
           <td
             class="td"
             role="cell"
           >
-            5
+            12345678
           </td>
           <td
             class="td"
             role="cell"
           >
-            Motor T
-          </td>
-          <td
-            class="td"
-            role="cell"
-          />
-          <td
-            class="td"
-            role="cell"
-          >
-            Switch, rotary, 24V dc waterproof
+            Motor Transportation
           </td>
           <td
             class="td"
             role="cell"
           >
-            4 days ago
+            received
+          </td>
+          <td
+            class="td"
+            role="cell"
+          >
+            TANK,LIQUID STORAGE
+          </td>
+          <td
+            class="td"
+            role="cell"
+          >
+            some amount of time ago
           </td>
         </tr>
       </tbody>

@@ -1,16 +1,24 @@
 import React from "react";
 import { render, wait } from "test-utils";
-import { defaultDoc } from "../fakeDoc";
+import { defaultApiDoc } from "solo-types";
 import StatusPage from "../StatusPage";
 import { fireEvent } from "@testing-library/react";
 
-jest.mock("../StatusPageDetails", () => () => <div>testdetails</div>);
+jest.mock("components/DocumentDetails", () => () => <div>testdetails</div>);
+
+// prevent snapshot tests from failing per day
+jest.mock("date-fns", () => ({
+  parseISO: () => "testiso",
+  formatDistanceToNow: () => {
+    return "some amount of time";
+  }
+}));
 
 describe("StatusPage component", () => {
   const fetchMock = jest.fn();
 
   beforeEach(() => {
-    fetchMock.mockResolvedValue([defaultDoc]);
+    fetchMock.mockResolvedValue([defaultApiDoc]);
   });
 
   afterEach(() => {
