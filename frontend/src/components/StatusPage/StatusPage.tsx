@@ -7,6 +7,7 @@ import { Document } from "solo-types";
 import { Table } from "components";
 import useAuthContext from "context/AuthContext";
 import createFakeDocs from "./fakeDoc";
+import { Title } from "components";
 
 const StatusPage: React.FC = () => {
   const { apiCall } = useAuthContext();
@@ -86,6 +87,7 @@ const StatusPage: React.FC = () => {
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
+      <Title>Status</Title>;
       <Table<Document>
         columns={columns}
         data={docs}
