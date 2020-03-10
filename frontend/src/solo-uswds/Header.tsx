@@ -1,8 +1,12 @@
 import React from "react";
+import classNames from "classnames";
+import classes from "./Header.module.scss";
 
 export const Header: React.FC = ({ children }) => (
   <header className="usa-header usa-header--basic">
-    <div className="usa-nav-container">{children}</div>
+    <div className={classNames("usa-nav-container", classes.navContainer)}>
+      {children}
+    </div>
   </header>
 );
 
