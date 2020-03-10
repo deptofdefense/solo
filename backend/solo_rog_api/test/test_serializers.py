@@ -69,11 +69,10 @@ class AddressTypeSerializerTest(TestCase):
     """ Test Address Type creation of a serializer from model """
 
     def setUp(self) -> None:
-        self.test = AddressType.objects.create(
-            type='Ship-to',
-            desc='Ship it'
-        )
+        self.test = AddressType.objects.create(type="Ship-to", desc="Ship it")
 
     def test_address_type_serializer(self):
         serial_object = AddressTypeSerializer(self.test)
-        self.assertEqual(serial_object.data, {'id': 1, 'type': 'Ship-to', 'desc': 'Ship it'})
+        self.assertEqual(
+            serial_object.data, {"id": 1, "type": "Ship-to", "desc": "Ship it"}
+        )

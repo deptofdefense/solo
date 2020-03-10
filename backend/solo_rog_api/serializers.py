@@ -28,8 +28,10 @@ class LogSerializer(serializers.ModelSerializer):
             "request_number",
         ]
 
+
 class AddressTypeSerializer(serializers.ModelSerializer):
     """ Address Type Serializer """
+
     class Meta:
         model = AddressType
         fields = "__all__"

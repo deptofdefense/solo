@@ -13,6 +13,7 @@ class Log(models.Model):
     def __str__(self) -> str:
         return str(self.request_number)
 
+
 class AddressType(models.Model):
     type = models.CharField(max_length=25)
     desc = models.CharField(max_length=50, null=True, blank=True)

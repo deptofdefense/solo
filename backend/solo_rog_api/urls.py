@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 router = routers.SimpleRouter()
-router.register('logs', views.ApiLogViewSet)
+router.register("logs", views.ApiLogViewSet)
 
 
 urlpatterns = router.urls + [
