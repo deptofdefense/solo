@@ -242,14 +242,12 @@ exports[`StatusPage component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            M0000000000000
+            M3030012341234
           </td>
           <td
             class="td"
             role="cell"
-          >
-            5
-          </td>
+          />
           <td
             class="td"
             role="cell"
@@ -264,13 +262,13 @@ exports[`StatusPage component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            Switch, rotary, 24V dc waterproof
+            TANK,LIQUID STORAGE
           </td>
           <td
             class="td"
             role="cell"
           >
-            4 days ago
+            some amount of time ago
           </td>
         </tr>
       </tbody>

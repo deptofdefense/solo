@@ -1,14 +1,8 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { OfficialSiteBanner } from "solo-uswds";
-import {
-  HomePage,
-  PostLogoutPage,
-  Navbar,
-  LoginPage,
-  HomeRoute,
-  StatusPage
-} from "components";
+import { Navbar, HomeRoute } from "components";
+import { PostLogoutPage, StatusPage, LoginPage, HomePage } from "pages";
 
 const Layout: React.FC = () => (
   <>

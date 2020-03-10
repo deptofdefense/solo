@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
 import UserContextProvider from "context/AuthContextProvider";
-import Layout from "components/Layout";
+import { Layout } from "pages";
 import "./styles.scss";
 
 const App: React.FC = () => (
