@@ -117,6 +117,9 @@ The website's source code is in the `root` folder which contains content pages a
       - ` cd ..`
   3. Build and run the container and set the hostname of the container license ex:
       - `HOST_NAME=Garretts-MacBook-Pro.local docker-compose up --build`
+  4. API endpoints:
+      - localhost:8080/exml/decompress
+      - localhost:8080/xml/compress 
 
 ##### Possible Error(s) and Troubleshooting recommendation(s)
 1. Error with worker when running. Fix is to `docker-compose down -v` - this will delete the persistent volume, 
