@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Row } from "react-table";
 import { Document } from "solo-types";
-import { Table, DocumentDetails } from "components";
+import { Table, DocumentDetails, DocumentStepper } from "components";
 import useDocuments from "./useDocuments";
 import createColumns from "./tableColumns";
 
@@ -14,12 +14,15 @@ const StatusPage: React.FC = () => {
       original: { shipper, receiver, part, statuses }
     } = row;
     return (
-      <DocumentDetails
-        shipper={shipper}
-        receiver={receiver}
-        part={part}
-        statuses={statuses}
-      />
+      <>
+        <DocumentStepper statuses={statuses} />
+        <DocumentDetails
+          shipper={shipper}
+          receiver={receiver}
+          part={part}
+          statuses={statuses}
+        />
+      </>
     );
   };
 
