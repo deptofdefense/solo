@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StatusPageDetails Component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="grid-row flex-justify flex-align-start padding-5"
+  >
+    <div
+      class="flex-col"
+    >
+      <div
+        class="text-bold"
+      >
+        DIC
+      </div>
+      <div
+        class="grid-row flex-nowrap flex-col flex-align-center"
+      >
+        <div
+          class="margin-right-2"
+        >
+          AS1
+        </div>
+        <div>
+          some amount of time ago
+        </div>
+      </div>
+      <div
+        class="grid-row flex-nowrap flex-col flex-align-center"
+      >
+        <div
+          class="margin-right-2"
+        >
+          AS2
+        </div>
+        <div>
+          some amount of time ago
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex-col"
+    >
+      <div
+        class="text-bold"
+      >
+        NIIN
+      </div>
+      <div>
+        5930015931045
+      </div>
+    </div>
+    <div
+      class="flex-col"
+    >
+      <div
+        class="text-bold"
+      >
+        Quantity
+      </div>
+      <div>
+        5
+      </div>
+    </div>
+    <div
+      class="flex-col"
+    >
+      <div
+        class="text-bold"
+      >
+        Unit of Measure
+      </div>
+      <div>
+        ea
+      </div>
+    </div>
+    <div
+      class="flex-col"
+    >
+      <div
+        class="text-bold"
+      >
+        Shipped From
+      </div>
+      <div>
+        AAC-Residence Inn Arlington Pentagon City: Rm 1103
+      </div>
+    </div>
+    <div
+      class="flex-col"
+    >
+      <div
+        class="text-bold"
+      >
+        Shipped To
+      </div>
+      <div>
+        AAC-M30300
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

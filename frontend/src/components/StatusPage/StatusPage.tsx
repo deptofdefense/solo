@@ -7,6 +7,7 @@ import { Document } from "solo-types";
 import { Table } from "components";
 import useAuthContext from "context/AuthContext";
 import createFakeDocs from "./fakeDoc";
+import StatusPageDetails from "./StatusPageDetails";
 
 const StatusPage: React.FC = () => {
   const { apiCall } = useAuthContext();
@@ -89,7 +90,9 @@ const StatusPage: React.FC = () => {
       <Table<Document>
         columns={columns}
         data={docs}
-        renderSubComponent={(row: Row<Document>) => <div>placeholder</div>}
+        renderSubComponent={(row: Row<Document>) => (
+          <StatusPageDetails document={row.original} />
+        )}
         onSort={setSortBy}
         initialSortBy={sortBy}
       />

@@ -4,7 +4,7 @@ import { defaultDoc } from "../fakeDoc";
 import StatusPage from "../StatusPage";
 import { fireEvent } from "@testing-library/react";
 
-// jest.mock("../StatusPageDetails", () => () => <div>testdetails</div>);
+jest.mock("../StatusPageDetails", () => () => <div>testdetails</div>);
 
 describe("StatusPage component", () => {
   const fetchMock = jest.fn();
@@ -61,7 +61,7 @@ describe("StatusPage component", () => {
     const toggleBtn = getByTitle("Toggle Row Expanded");
     fireEvent.click(toggleBtn);
     await wait(() => {
-      expect(queryByText("placeholder")).toBeInTheDocument();
+      expect(queryByText("testdetails")).toBeInTheDocument();
     });
   });
 
