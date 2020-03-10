@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import Log
+from .models import Log, AddressType
 from .serializers import LogSerializer, TokenObtainSerializer
 from .tasks import debug_task
 

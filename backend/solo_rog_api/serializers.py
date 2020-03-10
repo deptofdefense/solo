@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Log
+from .models import Log, AddressType
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -27,3 +27,9 @@ class LogSerializer(serializers.ModelSerializer):
             "aac",
             "request_number",
         ]
+
+class AddressTypeSerializer(serializers.ModelSerializer):
+    """ Address Type Serializer """
+    class Meta:
+        model = AddressType
+        fields = "__all__"

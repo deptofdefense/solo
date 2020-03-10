@@ -1,4 +1,3 @@
 from django.contrib import admin
-from .models import Log
+# from .models import Log, AddressType
 
-admin.site.register(Log)
