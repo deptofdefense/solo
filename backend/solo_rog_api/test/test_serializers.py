@@ -5,8 +5,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from solo_rog_api.models import AddressType
-from solo_rog_api.serializers import TokenObtainSerializer, AddressTypeSerializer
+from solo_rog_api.models import AddressType, Dic
+from solo_rog_api.serializers import TokenObtainSerializer, AddressTypeSerializer, DicSerializer
 
 User = get_user_model()
 
@@ -75,4 +75,17 @@ class AddressTypeSerializerTest(TestCase):
         serial_object = AddressTypeSerializer(self.test)
         self.assertEqual(
             serial_object.data, {"id": 1, "type": "Ship-to", "desc": "Ship it"}
+        )
+
+
+class DicSerializerTest(TestCase):
+    """ Test Dic creation of a serializer from model """
+
+    def setUp(self) -> None:
+        self.test = Dic.objects.create(code="AB1", desc="")
+
+    def test_dic_serializer(self):
+        serial_object = DicSerializer(self.test)
+        self.assertEqual(
+            serial_object.data, {"id": 1, "code": "AB1", "desc": ""}
         )

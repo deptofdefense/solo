@@ -20,3 +20,12 @@ class AddressType(models.Model):
 
     def __str__(self):
         return self.type
+
+
+class Dic(models.Model):
+    code = models.CharField(max_length=4, blank=True, unique=True)
+    desc = models.CharField(max_length=40, blank=True)
+
+    def __str__(self):
+        return self.code.upper()
+        
