@@ -6,8 +6,10 @@ import {
   HeaderNavLink,
   HeaderLogo
 } from "solo-uswds";
+import { useAuthContext } from "context";
 
 const Navbar: React.FC = () => {
+  const { authenticated } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
@@ -25,9 +27,16 @@ const Navbar: React.FC = () => {
         </button>
       </HeaderNavbar>
       <HeaderNav isOpen={isOpen} onClose={toggleOpen}>
-        <HeaderNavLink to="/" exact onClick={close}>
-          Status
-        </HeaderNavLink>
+        {authenticated && (
+          <>
+            <HeaderNavLink to="/" exact onClick={close}>
+              Status
+            </HeaderNavLink>
+            <HeaderNavLink to="/d6t" exact onClick={close}>
+              Enter Receipt (D6T)
+            </HeaderNavLink>
+          </>
+        )}
       </HeaderNav>
     </Header>
   );

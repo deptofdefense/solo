@@ -81,6 +81,7 @@
       "src/App.tsx",
       "src/components/.*index.ts",
       "src/solo-uswds/.*index.ts",
+      "src/context/.*index.ts",
       "src/pages/.*index.ts",
       "src/components/.*fakeDoc.ts",
       "src/solo-types/.*.ts"
