@@ -7,7 +7,7 @@ export const defaultApiDoc: ApiDocument = {
       id: 1,
       dic: {
         id: 1,
-        code: "AS1",
+        code: "AE1",
         desc: "in transit"
       },
       status_date: "2020-03-01T21:47:13-05:00",
@@ -21,7 +21,7 @@ export const defaultApiDoc: ApiDocument = {
       id: 2,
       dic: {
         id: 2,
-        code: "AB1",
+        code: "AS1",
         desc: "received"
       },
       status_date: "2020-03-05T21:47:56-05:00",
