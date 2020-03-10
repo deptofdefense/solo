@@ -49,6 +49,11 @@ export const defaultDoc: Document = {
     id: 1,
     service_request: "12345678"
   },
+  suppadd: {
+    id: 5,
+    code: "YMTM",
+    desc: "Motor Transportation"
+  },
   shipper: {
     id: 4,
     address_type: {

@@ -59,6 +59,13 @@ export interface ServiceRequest {
   service_request: string;
 }
 
+export interface SuppAdd {
+  id: number;
+  code: string;
+  desc: string;
+  subinventorys: any;
+}
+
 export interface ApiDocument {
   id: number;
   sdn: string;
@@ -66,7 +73,7 @@ export interface ApiDocument {
   part: Part;
   statuses: Status[];
   addresses: Address[];
-  suppadd: any;
+  suppadd: SuppAdd;
 }
 
 export interface Document {
@@ -75,6 +82,7 @@ export interface Document {
   serviceRequest: ServiceRequest;
   part: Part;
   statuses: Status[];
+  suppadd: Omit<SuppAdd, "subinventorys">;
 
   shipper?: Address;
   receiver?: Address;

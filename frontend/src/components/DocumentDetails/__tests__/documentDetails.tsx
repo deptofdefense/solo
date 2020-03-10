@@ -17,11 +17,12 @@ describe("DocumentDetails Component", () => {
     jest.restoreAllMocks();
   });
 
-  it("excludes shipper and receiver information if not available", () => {
+  it("inclides shipper and receiver headings even if details not available", () => {
     const { queryByText } = render(
       <DocumentDetails statuses={statuses} part={part} />
     );
-    expect(queryByText("Shipped From")).not.toBeInTheDocument();
+    expect(queryByText("Shipped From")).toBeInTheDocument();
+    expect(queryByText("Shipped To")).toBeInTheDocument();
   });
 
   it("includes shipper information if avaialable", () => {

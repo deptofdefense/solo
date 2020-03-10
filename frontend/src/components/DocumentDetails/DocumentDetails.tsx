@@ -44,18 +44,14 @@ const DocumentDetails: React.FC<DocumentDetailDataProps> = ({
           </div>
         </>
       )}
-      {shipper && (
-        <div className="flex-col">
-          <div className="text-bold">Shipped From</div>
-          <div>{shipper.name}</div>
-        </div>
-      )}
-      {receiver && (
-        <div className="flex-col">
-          <div className="text-bold">Shipped To</div>
-          <div>{receiver.name}</div>
-        </div>
-      )}
+      <div className="flex-col">
+        <div className="text-bold">Shipped From</div>
+        <div>{shipper?.name || "Unkown"}</div>
+      </div>
+      <div className="flex-col">
+        <div className="text-bold">Shipped To</div>
+        <div>{receiver?.name || "Unkown"}</div>
+      </div>
     </div>
   );
 };

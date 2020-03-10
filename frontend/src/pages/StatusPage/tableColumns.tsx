@@ -22,17 +22,18 @@ const createColumns: CreateColumns = () => [
   },
   {
     Header: "Service Request #",
-    accessor: "service_request"
+    accessor: "serviceRequest.service_request"
   },
   {
     Header: "Commodity",
     id: "commodity",
-    accessor: () => "Motor T"
+    accessor: ({ suppadd }) => suppadd.desc
   },
   {
     Header: "Status",
     disableSortBy: true,
-    accessor: "statuses[0].dic.desc"
+    id: "currentStatus",
+    accessor: ({ statuses }) => statuses[statuses.length - 1].dic.desc
   },
   {
     Header: "Nomenclature",

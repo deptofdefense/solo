@@ -247,17 +247,21 @@ exports[`StatusPage component matches snapshot 1`] = `
           <td
             class="td"
             role="cell"
-          />
-          <td
-            class="td"
-            role="cell"
           >
-            Motor T
+            12345678
           </td>
           <td
             class="td"
             role="cell"
-          />
+          >
+            Motor Transportation
+          </td>
+          <td
+            class="td"
+            role="cell"
+          >
+            received
+          </td>
           <td
             class="td"
             role="cell"
