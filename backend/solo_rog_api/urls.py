@@ -2,10 +2,11 @@ from rest_framework import routers
 from django.urls import path
 from . import views
 
-ROUTER = routers.SimpleRouter()
-ROUTER.register(r"logs", views.ApiLogViewSet)
+router = routers.SimpleRouter()
+router.register("logs", views.ApiLogViewSet)
 
-urlpatterns = ROUTER.urls + [
-    path(r"login/", views.ObtainTokenView.as_view(), name="login"),
-    path(r"workerlog/", views.CeleryDebugTaskView.as_view(), name="workerlog"),
+
+urlpatterns = router.urls + [
+    path("login/", views.ObtainTokenView.as_view(), name="login"),
+    path("workerlog/", views.CeleryDebugTaskView.as_view(), name="workerlog"),
 ]

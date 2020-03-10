@@ -140,7 +140,7 @@ export const defaultApiDoc: ApiDocument = {
         type: "Ship-To",
         desc: null
       },
-      name: "shit tp",
+      name: "ship to",
       ric: "SMS",
       addy1: "addy1",
       addy2: "addy2",
