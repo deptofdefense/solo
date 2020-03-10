@@ -1,16 +1,24 @@
+export { default as createFakeApiDocs, defaultApiDoc } from "./apiDoc";
+export { default as createFakeDocs, defaultDoc } from "./doc";
+
 export interface Part {
   id: number;
   nsn: string;
   nomen: string;
   uom: string;
-  document: number[];
+  price: number;
+  sac: number;
+  serial_control_flag: string;
+  lot_control_flag: string;
+  recoverability_code: string;
+  shelf_life_code: number;
+  controlled_inv_item_code: string;
 }
 
 export interface Dic {
   id: number;
   code: string;
   desc: string;
-  status: number[];
 }
 
 export interface Status {
@@ -19,14 +27,21 @@ export interface Status {
   status_date: string;
   key_and_transmit_date?: string | null;
   esd?: string | null;
-  qty: number;
+  received_qty: number | null;
+  projected_qty: number;
   document: number;
   user?: number | null;
 }
 
+export interface AddressType {
+  id: number;
+  type: string;
+  desc?: string | null;
+}
+
 export interface Address {
   id: number;
-  address_type: string;
+  address_type: AddressType;
   name: string;
   ric: string;
   addy1: string;
@@ -39,11 +54,36 @@ export interface Address {
   document: number[];
 }
 
+export interface ServiceRequest {
+  id: number;
+  service_request: string;
+}
+
+export interface SuppAdd {
+  id: number;
+  code: string;
+  desc: string;
+  subinventorys: any;
+}
+
+export interface ApiDocument {
+  id: number;
+  sdn: string;
+  service_request: ServiceRequest;
+  part: Part;
+  statuses: Status[];
+  addresses: Address[];
+  suppadd: SuppAdd;
+}
+
 export interface Document {
   id: number;
   sdn: string;
-  service_request: number;
-  part: Part[];
-  status: Status[];
-  address: Address[];
+  serviceRequest: ServiceRequest;
+  part: Part;
+  statuses: Status[];
+  suppadd: Omit<SuppAdd, "subinventorys">;
+
+  shipper?: Address;
+  receiver?: Address;
 }
