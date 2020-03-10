@@ -7,9 +7,9 @@ RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 COPY ./requirements/requirements.txt /requirements.txt
 RUN pip install --upgrade pip && pip install -r /requirements.txt
 
-RUN mkdir /app
-WORKDIR /app
-COPY . /app
+RUN mkdir /backend
+WORKDIR /backend
+COPY . /backend
 
 
 EXPOSE 8000
