@@ -5,8 +5,13 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from solo_rog_api.models import AddressType, Dic
-from solo_rog_api.serializers import TokenObtainSerializer, AddressTypeSerializer, DicSerializer
+from solo_rog_api.models import AddressType, Dic, Part
+from solo_rog_api.serializers import (
+    TokenObtainSerializer,
+    AddressTypeSerializer,
+    DicSerializer,
+    PartSerializer,
+)
 
 User = get_user_model()
 
@@ -86,6 +91,41 @@ class DicSerializerTest(TestCase):
 
     def test_dic_serializer(self):
         serial_object = DicSerializer(self.test)
+        self.assertEqual(serial_object.data, {"id": 1, "code": "AB1", "desc": ""})
+
+
+class PartSerializerTest(TestCase):
+    """ Test Part creation of a serializer from model """
+
+    def setUp(self) -> None:
+        self.part = Part.objects.create(
+            nsn="Ship-to",
+            nomen="Ship it",
+            uom="ea",
+            price=1234,
+            sac=1,
+            serial_control_flag="N",
+            lot_control_flag="N",
+            recoverability_code="Z",
+            shelf_life_code=0,
+            controlled_inv_item_code="U",
+        )
+
+    def test_address_type_serializer(self):
+        serial_object = PartSerializer(self.part)
         self.assertEqual(
-            serial_object.data, {"id": 1, "code": "AB1", "desc": ""}
+            serial_object.data,
+            {
+                "id": 1,
+                "nsn": "Ship-to",
+                "nomen": "Ship it",
+                "uom": "ea",
+                "price": 1234,
+                "sac": 1,
+                "serial_control_flag": "N",
+                "lot_control_flag": "N",
+                "recoverability_code": "Z",
+                "shelf_life_code": 0,
+                "controlled_inv_item_code": "U",
+            },
         )
