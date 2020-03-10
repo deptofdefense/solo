@@ -13,7 +13,7 @@ git status -s
 echo "\nFRONTEND"
 cd frontend
 echo "+ lint frontend"
-npm run --silent lint:fix
+npm run --silent lint
 
 echo "+ check typescript types"
 npm run --silent typecheck
@@ -24,8 +24,8 @@ npm run --silent test:ci
 echo "\nBACKEND"
 cd ../backend
 
-echo "+ fix and check python style"
-black -q . 
+echo "+ check python style"
+black -q --check . 
 
 echo "+ lint backend"
 pylint -sn backend
