@@ -24,7 +24,7 @@ npm run --silent test:ci
 echo "\nBACKEND"
 cd ../backend
 
-echo "+ fix and check python style"
+echo "+ check python style"
 black -q --check . 
 
 echo "+ lint backend"
