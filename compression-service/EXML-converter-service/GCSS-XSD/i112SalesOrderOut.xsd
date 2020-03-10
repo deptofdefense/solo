@@ -1,0 +1,52 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.usmc.mil/schemas/1/if/solo"
+           targetNamespace="http://www.usmc.mil/schemas/1/if/solo"
+           elementFormDefault="qualified" attributeFormDefault="qualified" version="$Revision:   2.0  $">
+   <xsd:include schemaLocation="soloCommon.xsd"/>  
+   <xsd:element name="salesorderOutCollection">
+      <xsd:complexType>
+         <xsd:sequence maxOccurs="unbounded">
+            <xsd:element name="salesorderOutRecord" minOccurs="1" maxOccurs="unbounded">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element ref="dIC"/>
+                     <xsd:element ref="rIC"/>                       <!-- Routing Identifier Code -->
+                     <xsd:element ref="nIIN"/>                      <!-- Item number  -->
+                     <xsd:element ref="uOI" />                      <!-- Unit of Issue - Measure  -->
+                     <xsd:element ref="qTr"/>                       <!-- Transaction Quantity  -->
+                     <xsd:element ref="sDN" />                      <!-- Standard Document Number -->
+                     <xsd:element ref="sC"/>                        <!-- Status Code -->
+                     <xsd:element ref="supADD"/>                    <!-- Supplementary Address -->    
+                     <xsd:element ref="proj"/>                      <!-- Project Code -->
+                     <xsd:element ref="pri" />                      <!-- Priority Code -->
+                     <xsd:element ref="rDD"/>                       <!-- Required Delivery Date -->
+                     <xsd:element ref="adviceCode"/>
+                     <xsd:element ref="cC"/>                        <!-- Condition Code -->
+                     <xsd:element ref="shipToName"/>
+                     <xsd:element ref="shipToLine1"/>
+                     <xsd:element ref="shipToLine2"/>
+                     <xsd:element ref="shipToLine3"/>
+                     <xsd:element ref="shipToLine4"/>
+                     <xsd:element ref="shipToCity"/>
+                     <xsd:element ref="shipToState"/>
+                     <xsd:element ref="shipToZipCode"/>
+                     <xsd:element ref="shipToCountry"/>
+                     <xsd:element ref="disposalAuthority"/>
+                     <xsd:element ref="sfx"/>                        <!-- Document Suffix Code -->
+                     <xsd:element ref="sRN"/>                        <!-- Service Request Number -->
+                     <xsd:element ref="precMIC"/>                    <!-- Precious Metal Indicator Code -->
+                     <xsd:element ref="demilC"/>                     <!-- Demilitarization Code -->
+                     <xsd:element ref="distC"/>                      <!-- Distribution Code -->
+                     <xsd:element ref="fund"/>                       <!-- Fund Code -->
+                     <xsd:element ref="rICT"/>                       <!-- RIC TO  -->
+                 </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+</xsd:schema>
+
+
+

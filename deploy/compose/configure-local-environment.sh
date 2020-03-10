@@ -22,8 +22,8 @@ rm ./nginx-selfsigned.key;
 rm ./nginx-selfsigned.crt;
 
 echo "local development environment setup has completed!\\n";
-echo "run the following command for HTTPS instantiation: docker-compose -f docker-compose.yml up --build";
-echo "run the following command for HTTP instantiation: docker-compose up --build\n";
+echo "run the following command for HTTP instantiation: docker-compose -f docker-compose.yml up --build";
+echo "run the following command for HTTPS instantiation: docker-compose up --build\n";
 echo "solo https access point: https://stage.solo.localhost"
 echo "solo http access point: http://stage.solo.localhost:3000/"
 

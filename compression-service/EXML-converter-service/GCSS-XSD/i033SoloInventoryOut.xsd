@@ -1,0 +1,50 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      xmlns="http://www.usmc.mil/schemas/1/if/solo"
+      targetNamespace="http://www.usmc.mil/schemas/1/if/solo"
+      elementFormDefault="qualified" attributeFormDefault="qualified" version="$Revision:   2.0  $">
+   <xsd:include schemaLocation="soloCommon.xsd"/>  
+    <xsd:element name="stratisInvOutbCollection">
+      <xsd:complexType>
+         <xsd:sequence>
+           <xsd:element name="stratisInvOutboundMasterRec" minOccurs="1" maxOccurs="unbounded">
+             <xsd:complexType>
+               <xsd:sequence>
+                 <xsd:element ref="iPAAC"/>                <!-- AAC  -->
+                 <xsd:element ref="cC"/>                   <!-- Condition Code  -->
+                 <xsd:element ref="nIIN"/>                 <!-- Item number  -->
+                 <xsd:element ref="uOI"/>                  <!-- Unit of Issue - Measure  -->
+                 <xsd:element ref="serialControlFlag"/>    <!-- Flag to denote if item is serial controlled  -->
+                 <xsd:element ref="lotControlFlag"/>       <!-- Flag to denote if item is lot controlled  --> 
+                 <xsd:element ref="txnDate"/>              <!-- Transaction Date  -->
+                 <xsd:element ref="qTOH"/>                 <!-- Total Qty On Hand  -->
+                 <xsd:element ref="qA5A"/>                 <!-- Reserve qty for NIIN and subinv where demand type = Sales Order  -->
+                 <xsd:element ref="qWrs"/>                 <!-- Reserve Qty for NIIN where demand type = WRS -->
+                 <xsd:element ref="qOPC"/>                 <!-- Reserve Qty for NIIN where demand type = OPCODE -->
+                 <xsd:element ref="wrsTgt"/>               <!-- Forecast qty for NIIN in forecast named WRS  -->
+                 <xsd:element ref="qSTG"/>                 <!-- Qty in subinv STAGE   -->
+                 <xsd:element ref="qDock"/>                <!-- Qty in subinv DOCK: 01A SDOCK01AA or 01F SDOCK01AF  -->
+                 <xsd:element name="stratisInvOutboundDetailCollection" minOccurs="0"
+                              maxOccurs="1">
+                   <xsd:complexType>
+                       <xsd:sequence >
+                           <xsd:element name="stratisInvOutboundDetailRec"
+                                        minOccurs="0" maxOccurs="unbounded"> 
+                             <xsd:complexType>
+                                <xsd:sequence>
+                                   <xsd:element ref="serN"/>     
+                                   <xsd:element ref="lotN"/> 
+                                   <xsd:element ref="qLot"/>
+                                </xsd:sequence>
+                              </xsd:complexType>
+                            </xsd:element> 
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+     </xsd:element>
+</xsd:schema>

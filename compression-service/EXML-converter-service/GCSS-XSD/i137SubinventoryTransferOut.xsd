@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.usmc.mil/schemas/1/if/solo"
+            targetNamespace="http://www.usmc.mil/schemas/1/if/solo"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified" version="$Revision:   2.0  $">
+  <xsd:include schemaLocation="soloCommon.xsd"/>
+  <xsd:element name="Stratis_Subinventory_Outbound">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="Stratis_Subinventory_Outbound_Record"
+                     maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="dIC"/>        <!--  Document Identifier Code -->
+              <xsd:element ref="rIC"/>        <!-- Routing Identifier Code -->
+              <xsd:element ref="nIIN"/>       <!-- National Identifier Item Number -->
+              <xsd:element ref="uOI"/>        <!-- Unit Of Issue -->
+              <xsd:element ref="qTr"/>        <!-- Transaction Quantity -->
+              <xsd:element ref="sDN"/>        <!-- Document Number -->
+              <xsd:element ref="fCC"/>        <!-- Condition Code From -->
+              <xsd:element ref="tCC"/>        <!-- Condition Code To -->
+              <xsd:element ref="serN"/>       <!-- Serial Number -->
+              <xsd:element ref="lotN"/>       <!-- Lot Number -->
+              <xsd:element ref="txnDate"/>    <!-- Transaction Date -->
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

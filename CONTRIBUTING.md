@@ -103,13 +103,21 @@ The website's source code is in the `root` folder which contains content pages a
 ### Running the development environment
 
 #### Setting up Local HTTP/S environments
-  1. Navigate to solo/deploy/compose and run configure-local-environment.sh.
+  1. Navigate to solo/deploy/compose and run configure-local-environment.sh
       - `sh configure-local-environment.sh`
   2. Tell Chrome to allow self-signed certificates on localhost
       - Navigate to `chrome://flags/#allow-insecure-localhost` and enable that setting
-  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally 
+  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally
   after configuration.
   
+#### Setting up Local Proprietary Compression 
+  1. Navigate to solo/compression-service/EXML-converter-service and run pull-proprietary-code.sh (requires AWS authentication and region to be set)
+      - `sh pull-proprietary-code.sh.sh`
+  2. move up one directory
+      - ` cd ..`
+  3. Build and run the container and set the hostname of the container license ex:
+      - `HOST_NAME=Garretts-MacBook-Pro.local docker-compose up --build`
+
 ##### Possible Error(s) and Troubleshooting recommendation(s)
 1. Error with worker when running. Fix is to `docker-compose down -v` - this will delete the persistent volume, 
 `docker volume prune` - delete the actual volume, and `docker-compose -f docker-compose.yml up --build` 
@@ -121,6 +129,8 @@ has been blocked by CORS policy: Response to preflight request doesn't pass acce
 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your
  needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.` Possible troubleshooting 
  step to disable and enable - [Chrome Disable Web Security](https://www.codeworkshop.com.au/chrome-disable-web-security/)
+
+ 2. Compression authentication: make sure that you have properly logged in, the region is set, and the resource you are trying to pull is in the s3 bucket as specified in the pull-proprietary-code.sh file.
 
 ### Code Style
 
