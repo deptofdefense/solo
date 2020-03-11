@@ -3,7 +3,16 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Log, AddressType, Dic, Part, ServiceRequest, SuppAdd, SubInventory
+from .models import (
+    Log,
+    AddressType,
+    Dic,
+    Part,
+    ServiceRequest,
+    SuppAdd,
+    SubInventory,
+    Locator,
+)
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -16,6 +25,20 @@ class TokenObtainSerializer(serializers.Serializer):
         refresh = RefreshToken.for_user(user)
         refresh["username"] = user.username
         return {"refresh": str(refresh), "access": str(refresh.access_token)}
+
+
+class LocatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Locator
+        fields = "__all__"
+
+
+class SubInventorySerializer(serializers.ModelSerializer):
+    locators = LocatorSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SubInventory
+        fields = "__all__"
 
 
 class LogSerializer(serializers.ModelSerializer):
@@ -50,14 +73,10 @@ class PartSerializer(serializers.ModelSerializer):
 
 
 class SuppAddSerializer(serializers.ModelSerializer):
+    subinventorys = SubInventorySerializer(many=True, read_only=True)
+
     class Meta:
         model = SuppAdd
-        fields = "__all__"
-
-
-class SubInventorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubInventory
         fields = "__all__"
 
 

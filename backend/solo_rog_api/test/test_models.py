@@ -7,6 +7,7 @@ from solo_rog_api.models import (
     SuppAdd,
     SubInventory,
     ServiceRequest,
+    Locator,
 )
 
 
@@ -40,6 +41,21 @@ class DicStringTest(APITestCase):
     def test_representation(self) -> None:
         created_object = create_dic(**{"id": 1, "code": "D6T", "desc": ""})
         self.assertEqual(str(created_object), "D6T")
+
+
+def create_locator(**param: Any) -> Locator:
+    model = Locator
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+class LocatorStringTest(APITestCase):
+    """ This is the test Locator model string representation """
+
+    def test_representation(self) -> None:
+        created_object = create_locator(**{"id": 1, "code": "M1234AA", "desc": ""})
+        self.assertEqual(str(created_object), "M1234AA")
 
 
 def create_part(**param: Any) -> Part:
