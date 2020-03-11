@@ -52,10 +52,16 @@ class Part(models.Model):
         return "{} : {} : {}".format(self.nomen, self.get_fsc(), self.get_niin())
 
 
+class SuppAdd(models.Model):
+    code = models.CharField(max_length=5)
+    desc = models.CharField(max_length=40, blank=True)
+
+    def __str__(self):
+        return self.code
+
+
 class ServiceRequest(models.Model):
     service_request = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return str(self.service_request)
-        
-
