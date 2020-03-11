@@ -12,6 +12,7 @@ from .models import (
     SuppAdd,
     SubInventory,
     Locator,
+    Document,
 )
 
 
@@ -83,4 +84,16 @@ class SuppAddSerializer(serializers.ModelSerializer):
 class ServiceRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceRequest
+        fields = "__all__"
+
+
+class DocumentSerializer(serializers.ModelSerializer):
+    # statuses = StatusSerializer(many=True, read_only=True)
+    # suppadd = SuppAddSerializer(many=False, read_only=True)
+    # part = PartSerializer(many=False, read_only=True)
+    # service_request = ServiceRequestSerializer(many=False, read_only=True)
+    # addresses = AddressSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Document
         fields = "__all__"

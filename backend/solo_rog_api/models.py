@@ -92,6 +92,40 @@ class Locator(models.Model):
         return self.code
 
 
+class Document(models.Model):
+    service_request = models.ForeignKey(
+        "ServiceRequest",
+        related_name="documents",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    suppadd = models.ForeignKey(
+        "SuppAdd",
+        related_name="documents",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    part = models.ForeignKey(
+        "Part",
+        related_name="documents",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    sdn = models.CharField(max_length=50, null=True, blank=True)
+
+    def get_aac(self) -> Optional[str]:
+        return self.sdn[:5]
+
+    def get_doc_num(self) -> Optional[str]:
+        return self.sdn[6:]
+
+    def __str__(self) -> str:
+        return str(self.sdn)
+
+
 class ServiceRequest(models.Model):
     service_request = models.CharField(max_length=50, null=True, blank=True)
 

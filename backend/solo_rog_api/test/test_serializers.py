@@ -13,6 +13,7 @@ from solo_rog_api.models import (
     SuppAdd,
     SubInventory,
     Locator,
+    Document,
 )
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
@@ -23,6 +24,7 @@ from solo_rog_api.serializers import (
     SuppAddSerializer,
     SubInventorySerializer,
     LocatorSerializer,
+    DocumentSerializer,
 )
 
 User = get_user_model()
@@ -192,5 +194,27 @@ class PartSerializerTest(TestCase):
                 "recoverability_code": "Z",
                 "shelf_life_code": 0,
                 "controlled_inv_item_code": "U",
+            },
+        )
+
+
+class DocumentSerializerTest(TestCase):
+    """ Test Document creation of a serializer from model """
+
+    def setUp(self) -> None:
+        self.test = Document.objects.create(
+            sdn="M1234AA", suppadd=None, part=None, service_request=None
+        )
+
+    def test_dic_serializer(self) -> None:
+        serial_object = DocumentSerializer(self.test)
+        self.assertEqual(
+            serial_object.data,
+            {
+                "id": 1,
+                "sdn": "M1234AA",
+                "suppadd": None,
+                "service_request": None,
+                "part": None,
             },
         )
