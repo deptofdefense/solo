@@ -1,4 +1,5 @@
-import { ApiDocument } from "solo-types";
+import { ApiDocument, Status } from "solo-types";
+import * as faker from "faker";
 
 export const defaultApiDoc: ApiDocument = {
   id: 1,
@@ -173,12 +174,91 @@ export const defaultApiDoc: ApiDocument = {
   sdn: "M3030012341234"
 };
 
+const idxToStatus = (idx: number): Status => {
+  const base: Omit<Status, "dic"> = {
+    id: Math.floor(Math.random() * 20),
+    status_date: faker.date.recent().toISOString(),
+    key_and_transmit_date: null,
+    esd: "2020-03-20",
+    projected_qty: 20,
+    received_qty: faker.random.number(20),
+    document: 1
+  };
+  switch (idx) {
+    case 0:
+      return {
+        ...base,
+        dic: {
+          id: 1,
+          code: "AE1",
+          desc: "in transit"
+        }
+      };
+    case 1:
+      return {
+        ...base,
+        dic: {
+          id: 2,
+          code: "AS1",
+          desc: "shipped"
+        }
+      };
+    case 2:
+      return {
+        ...base,
+        dic: {
+          id: 3,
+          code: "AS2",
+          desc: "in transit"
+        }
+      };
+    case 3:
+      return {
+        ...base,
+        dic: {
+          id: 4,
+          code: "D6T",
+          desc: "received"
+        }
+      };
+    default:
+      return {
+        ...base,
+        dic: {
+          id: 5,
+          code: "COR",
+          desc: "confirmed"
+        }
+      };
+  }
+};
+
 const createFakeApiDocuments = (count: number = 20): ApiDocument[] => {
   return Array.from({ length: count }).map(() => ({
     ...defaultApiDoc,
-    statuses: defaultApiDoc.statuses.map(stat => ({
-      ...stat,
-      id: Math.floor(Math.random() * 100)
+    statuses: Array.from({
+      length: faker.random.number({ min: 1, max: 5 })
+    }).map((_, idx) => idxToStatus(idx)),
+    service_request: {
+      id: faker.random.number(50),
+      service_request: faker.random.alphaNumeric(8).toUpperCase()
+    },
+    part: {
+      ...defaultApiDoc.part,
+      nomen: faker.commerce.productName()
+    },
+    suppadd: {
+      ...defaultApiDoc.suppadd,
+      desc: faker.random.arrayElement([
+        "Motor Transportation",
+        "Armory",
+        "Communications",
+        "Electronics Maintenence"
+      ])
+    },
+    addresses: defaultApiDoc.addresses.map(addy => ({
+      ...addy,
+      name: faker.company.companyName()
     }))
   }));
 };
