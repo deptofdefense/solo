@@ -50,3 +50,12 @@ class Part(models.Model):
 
     def __str__(self):
         return "{} : {} : {}".format(self.nomen, self.get_fsc(), self.get_niin())
+
+
+class ServiceRequest(models.Model):
+    service_request = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.service_request)
+        
+
