@@ -9,3 +9,4 @@ omit =
     *manage.py
     *settings.py
     */apps.py
+    *__init__.py
