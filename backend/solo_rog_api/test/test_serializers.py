@@ -85,7 +85,7 @@ class AddressTypeSerializerTest(TestCase):
 
 
 class ServiceRequestSerializerTest(TestCase):
-    """ Test Dic creation of a serializer from model """
+    """ Test ServiceRequest creation of a serializer from model """
 
     def setUp(self) -> None:
         self.test = ServiceRequest.objects.create(service_request="12345678")
@@ -96,7 +96,7 @@ class ServiceRequestSerializerTest(TestCase):
 
 
 class DicSerializerTest(TestCase):
-    """ Test ServiceRequest creation of a serializer from model """
+    """ Test Dic creation of a serializer from model """
 
     def setUp(self) -> None:
         self.test = Dic.objects.create(code="AB1", desc="")
