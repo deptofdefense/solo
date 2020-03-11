@@ -26,11 +26,22 @@ const DocumentDetails: React.FC<DocumentDetailDataProps> = ({
               className="grid-row flex-nowrap flex-col flex-align-center"
               key={code}
             >
-              <div className="margin-right-2">{code}</div>
+              <div className="width-5">{code}</div>
               <div>{`${formattedDate} ago`}</div>
             </div>
           );
         })}
+      </div>
+      <div className="flex-col">
+        <div className="text-bold">Quantity</div>
+        {statuses.map(({ id, projected_qty, received_qty }) => (
+          <div
+            className="grid-row flex-nowrap flex-col flex-align-center"
+            key={id}
+          >
+            {`${received_qty}/${projected_qty}`}
+          </div>
+        ))}
       </div>
       {part && (
         <>

@@ -22,6 +22,7 @@
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/classnames": "^2.2.9",
+    "@types/faker": "^4.1.10",
     "@types/jest": "^24.9.0",
     "@types/jwt-decode": "^2.2.1",
     "@types/node": "^12.12.24",
@@ -33,6 +34,7 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.0",
+    "faker": "^4.1.0",
     "node-sass": "^4.13.1",
     "prettier": "1.19.1",
     "react-scripts": "3.3.1"

@@ -18,7 +18,7 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
     shipper: apiDoc.addresses.find(
       addy => addy.address_type.type === "Ship-To"
     ),
-    reciever: apiDoc.addresses.find(
+    receiver: apiDoc.addresses.find(
       addy => addy.address_type.type === "Requester"
     )
   }));
