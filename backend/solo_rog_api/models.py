@@ -60,6 +60,17 @@ class SuppAdd(models.Model):
         return self.code
 
 
+class SubInventory(models.Model):
+    suppadd = models.ForeignKey("SuppAdd", related_name='subinventorys', on_delete=models.CASCADE, null=True,
+                                 blank=True)
+
+    code = models.CharField(max_length=15)
+    desc = models.CharField(max_length=40, blank=True)
+
+    def __str__(self):
+        return self.code
+
+
 class ServiceRequest(models.Model):
     service_request = models.CharField(max_length=50, null=True, blank=True)
 
