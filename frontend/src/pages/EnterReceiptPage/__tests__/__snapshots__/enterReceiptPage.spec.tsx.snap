@@ -2,8 +2,14 @@
 
 exports[`EnterReceiptPage Component matches snapshot 1`] = `
 <DocumentFragment>
-  <div>
-    Enter Receipt
+  <div
+    class="tablet:margin-x-8 overflow-x-auto"
+  >
+    <h1
+      class="usa-prose"
+    >
+      D6T
+    </h1>
   </div>
 </DocumentFragment>
 `;
