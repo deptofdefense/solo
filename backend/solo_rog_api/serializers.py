@@ -50,14 +50,12 @@ class PartSerializer(serializers.ModelSerializer):
 
 
 class SuppAddSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SuppAdd
         fields = "__all__"
 
 
 class SubInventorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SubInventory
         fields = "__all__"
