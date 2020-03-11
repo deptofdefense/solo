@@ -5,7 +5,14 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from solo_rog_api.models import AddressType, Dic, Part, ServiceRequest, SuppAdd, SubInventory
+from solo_rog_api.models import (
+    AddressType,
+    Dic,
+    Part,
+    ServiceRequest,
+    SuppAdd,
+    SubInventory,
+)
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
     AddressTypeSerializer,
@@ -115,7 +122,7 @@ class SuppAddSerializerTest(TestCase):
         self.test = SuppAdd.objects.create(code="MTM_STGE", desc="")
 
     def test_dic_serializer(self):
-        serial_object = SuppAddSerializer(self.test) 
+        serial_object = SuppAddSerializer(self.test)
         self.assertEqual(serial_object.data, {"id": 1, "code": "MTM_STGE", "desc": ""})
 
 
@@ -126,8 +133,11 @@ class SubInventorySerializerTest(TestCase):
         self.test = SubInventory.objects.create(code="M1234AA", desc="")
 
     def test_dic_serializer(self):
-        serial_object = SubInventorySerializer(self.test) 
-        self.assertEqual(serial_object.data, {"id": 1, "code": "M1234AA", "desc": "","suppadd": None})
+        serial_object = SubInventorySerializer(self.test)
+        self.assertEqual(
+            serial_object.data,
+            {"id": 1, "code": "M1234AA", "desc": "", "suppadd": None},
+        )
 
 
 class PartSerializerTest(TestCase):
@@ -165,4 +175,3 @@ class PartSerializerTest(TestCase):
                 "controlled_inv_item_code": "U",
             },
         )
-        

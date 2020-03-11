@@ -50,14 +50,12 @@ class PartSerializer(serializers.ModelSerializer):
 
 
 class SuppAddSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SuppAdd
         fields = "__all__"
 
 
 class SubInventorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SubInventory
         fields = "__all__"
@@ -67,4 +65,3 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceRequest
         fields = "__all__"
-        
