@@ -12,6 +12,7 @@ from solo_rog_api.models import (
     ServiceRequest,
     SuppAdd,
     SubInventory,
+    Locator,
 )
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
@@ -21,6 +22,7 @@ from solo_rog_api.serializers import (
     ServiceRequestSerializer,
     SuppAddSerializer,
     SubInventorySerializer,
+    LocatorSerializer,
 )
 
 User = get_user_model()
@@ -119,24 +121,41 @@ class SuppAddSerializerTest(TestCase):
     """ Test SuppAdd creation of a serializer from model """
 
     def setUp(self) -> None:
-        self.test = SuppAdd.objects.create(code="MTM_STGE", desc="")
+        self.test = SuppAdd.objects.create(code="YMTM", desc="")
 
     def test_dic_serializer(self) -> None:
         serial_object = SuppAddSerializer(self.test)
-        self.assertEqual(serial_object.data, {"id": 1, "code": "MTM_STGE", "desc": ""})
+        self.assertEqual(
+            serial_object.data,
+            {"id": 1, "subinventorys": [], "code": "YMTM", "desc": ""},
+        )
 
 
 class SubInventorySerializerTest(TestCase):
     """ Test SubInventory creation of a serializer from model """
 
     def setUp(self) -> None:
-        self.test = SubInventory.objects.create(code="M1234AA", desc="")
+        self.test = SubInventory.objects.create(code="MTM_STGE", desc="")
 
     def test_dic_serializer(self) -> None:
         serial_object = SubInventorySerializer(self.test)
         self.assertEqual(
             serial_object.data,
-            {"id": 1, "code": "M1234AA", "desc": "", "suppadd": None},
+            {"id": 1, "locators": [], "code": "MTM_STGE", "desc": "", "suppadd": None},
+        )
+
+
+class LocatorSerializerTest(TestCase):
+    """ Test Locator creation of a serializer from model """
+
+    def setUp(self) -> None:
+        self.test = Locator.objects.create(code="M1234AA", desc="")
+
+    def test_dic_serializer(self) -> None:
+        serial_object = LocatorSerializer(self.test)
+        self.assertEqual(
+            serial_object.data,
+            {"id": 1, "code": "M1234AA", "desc": "", "subinventorys": None},
         )
 
 

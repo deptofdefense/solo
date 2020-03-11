@@ -8,7 +8,11 @@ services:
 
   migrate:
     build: ../../backend
-    command: "sleep 2 && python manage.py migrate"
+    command: >
+      /bin/sh -c "
+        sleep 3;
+        python manage.py migrate
+      "
     env_file: 
       - ./.env
     depends_on:

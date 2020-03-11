@@ -77,6 +77,21 @@ class SubInventory(models.Model):
         return self.code
 
 
+class Locator(models.Model):
+    subinventorys = models.ForeignKey(
+        "SubInventory",
+        related_name="locators",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    code = models.CharField(max_length=15)
+    desc = models.CharField(max_length=40, blank=True)
+
+    def __str__(self) -> str:
+        return self.code
+
+
 class ServiceRequest(models.Model):
     service_request = models.CharField(max_length=50, null=True, blank=True)
 
