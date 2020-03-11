@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Row } from "react-table";
 import { Document } from "solo-types";
-import { Table, DocumentDetails, DocumentStepper } from "components";
+import { Table, DocumentDetails, DocumentStepper, Title } from "components";
 import useDocuments from "./useDocuments";
 import createColumns from "./tableColumns";
 
@@ -28,6 +28,7 @@ const StatusPage: React.FC = () => {
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
+      <Title>Status</Title>
       <Table<Document>
         columns={tableColumns}
         data={docs}

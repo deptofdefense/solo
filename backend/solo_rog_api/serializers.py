@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Log, AddressType, Dic
+from .models import Log, AddressType, Dic, Part, ServiceRequest, SuppAdd, SubInventory
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -42,3 +42,26 @@ class DicSerializer(serializers.ModelSerializer):
         model = Dic
         fields = "__all__"
 
+
+class PartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Part
+        fields = "__all__"
+
+
+class SuppAddSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SuppAdd
+        fields = "__all__"
+
+
+class SubInventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubInventory
+        fields = "__all__"
+
+
+class ServiceRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceRequest
+        fields = "__all__"
