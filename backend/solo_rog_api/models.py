@@ -65,3 +65,4 @@ class ServiceRequest(models.Model):
 
     def __str__(self):
         return str(self.service_request)
+        
