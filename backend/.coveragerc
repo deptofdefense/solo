@@ -8,3 +8,4 @@ omit =
     */test/*
     *manage.py
     *settings.py
+    */apps.py
