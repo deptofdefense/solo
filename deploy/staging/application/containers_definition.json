@@ -19,7 +19,7 @@
       "manage.py",
       "migrate"
     ],
-    "workingDirectory": "/app",
+    "workingDirectory": "/backend",
     "secrets": [
       {
         "name": "POSTGRES_DB",

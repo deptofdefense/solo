@@ -22,7 +22,7 @@
       "-l",
       "info"
     ],
-    "workingDirectory": "/app",
+    "workingDirectory": "/backend",
     "secrets": [
       {
         "name": "POSTGRES_DB",
