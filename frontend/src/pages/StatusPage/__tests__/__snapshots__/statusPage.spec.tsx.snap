@@ -5,6 +5,11 @@ exports[`StatusPage component matches snapshot 1`] = `
   <div
     class="tablet:margin-x-8 overflow-x-auto"
   >
+    <h1
+      class="usa-prose"
+    >
+      Status
+    </h1>
     <table
       class="usa-table grid-col-12 usa-table--borderless"
       role="table"
