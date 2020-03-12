@@ -13,6 +13,7 @@ from .models import (
     SubInventory,
     Locator,
     Document,
+    Status,
 )
 
 
@@ -78,6 +79,14 @@ class SuppAddSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SuppAdd
+        fields = "__all__"
+
+
+class StatusSerializer(serializers.ModelSerializer):
+    dic = DicSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Status
         fields = "__all__"
 
 

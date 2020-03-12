@@ -117,13 +117,31 @@ class Document(models.Model):
     sdn = models.CharField(max_length=50, null=True, blank=True)
 
     def get_aac(self) -> Optional[str]:
-        return self.sdn[:5]
+        return self.sdn[:6]
 
     def get_doc_num(self) -> Optional[str]:
         return self.sdn[6:]
 
     def __str__(self) -> str:
         return str(self.sdn)
+
+
+class Status(models.Model):
+    document = models.ForeignKey(
+        "Document", related_name="statuses", null=True, on_delete=models.CASCADE
+    )
+    dic = models.ForeignKey("Dic", on_delete=models.CASCADE, null=True, blank=True)
+    status_date = models.DateTimeField()
+    key_and_transmit_date = models.DateTimeField(null=True, blank=True)
+    esd = models.DateField(null=True, blank=True)
+    projected_qty = models.PositiveSmallIntegerField(null=True, blank=True)
+    received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    def status_converted_date(self):
+        return self.status_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    def __str__(self):
+        return "{}: {}".format(self.document.sdn, self.dic.code)
 
 
 class ServiceRequest(models.Model):
