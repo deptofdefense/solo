@@ -4,3 +4,4 @@ export { default as Table } from "./Table";
 export { default as Title } from "./Title";
 export { default as DocumentDetails } from "./DocumentDetails";
 export { default as DocumentStepper } from "./DocumentStepper";
+export { default as SelectFilterControls } from "./SelectFilterControls";
