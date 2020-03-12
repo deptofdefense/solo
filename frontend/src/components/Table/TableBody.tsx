@@ -8,7 +8,7 @@ interface TableBodyProps<T extends object> extends TableInstance<T> {
 
 const TableBody = <T extends object>({
   rows,
-  numColumns,
+  visibleColumns,
   prepareRow,
   renderSubComponent,
   getTableBodyProps
@@ -33,7 +33,10 @@ const TableBody = <T extends object>({
 
             {row.isExpanded && renderSubComponent ? (
               <tr>
-                <td colSpan={numColumns} className={classes.subComponentTd}>
+                <td
+                  colSpan={visibleColumns.length}
+                  className={classes.subComponentTd}
+                >
                   {renderSubComponent(row)}
                 </td>
               </tr>
