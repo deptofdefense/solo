@@ -137,10 +137,10 @@ class Status(models.Model):
     projected_qty = models.PositiveSmallIntegerField(null=True, blank=True)
     received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
 
-    def status_converted_date(self):
+    def status_converted_date(self) -> str:
         return self.status_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "{}: {}".format(self.document.sdn, self.dic.code)
 
 
