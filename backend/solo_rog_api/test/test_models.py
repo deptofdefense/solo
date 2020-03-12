@@ -8,6 +8,7 @@ from solo_rog_api.models import (
     SubInventory,
     ServiceRequest,
     Locator,
+    Document,
 )
 
 
@@ -136,3 +137,26 @@ class ServiceStringTest(APITestCase):
             **{"id": 1, "service_request": "12345678"}
         )
         self.assertEqual(str(created_object), "12345678")
+
+
+def create_document(**param: Any) -> Document:
+    model = Document
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+class DocumentStringTest(APITestCase):
+    """ This is the test Document model string representation """
+
+    def test_representation(self) -> None:
+        created_object = create_document(
+            **{
+                "id": 1,
+                "sdn": "M3030012345678",
+                "suppadd": None,
+                "service_request": None,
+                "part": None,
+            }
+        )
+        self.assertEqual(str(created_object), "M3030012345678")
