@@ -7,7 +7,8 @@ import {
   StatusPage,
   LoginPage,
   HomePage,
-  EnterReceiptPage
+  EnterReceiptPage,
+  ConfirmationOfReceiptPage
 } from "pages";
 
 const Layout: React.FC = () => (
@@ -25,6 +26,12 @@ const Layout: React.FC = () => (
         exact
         path="/d6t"
         component={EnterReceiptPage}
+        redirectUrl="/"
+      />
+      <AuthRoute
+        exact
+        path="/cor"
+        component={ConfirmationOfReceiptPage}
         redirectUrl="/"
       />
       <Route exact path="/testpage" component={HomePage} />

@@ -1,12 +1,12 @@
 import React from "react";
 import { Title } from "components";
 
-const EnterReceiptPage: React.FC = () => {
+const ConfirmationOfReceiptPage: React.FC = () => {
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
-      <Title>Enter Receipt</Title>
+      <Title>Confirmation of Receipt</Title>
     </div>
   );
 };
 
-export default EnterReceiptPage;
+export default ConfirmationOfReceiptPage;
