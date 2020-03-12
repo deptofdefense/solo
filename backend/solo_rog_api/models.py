@@ -1,7 +1,7 @@
 from typing import Optional
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.utils.dateparse import parse_datetime
 
 class User(AbstractUser):
     pass
@@ -138,7 +138,8 @@ class Status(models.Model):
     received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def status_converted_date(self) -> str:
-        return self.status_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        return parse_datetime(self.status_date).strftime("%Y-%m-%dT%H:%M:%S.000Z") 
+
 
     def __str__(self) -> str:
         return "{}: {}".format(self.document.sdn, self.dic.code)
