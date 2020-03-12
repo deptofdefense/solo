@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import { SortingRule } from "react-table";
+import { useCallback, useState } from "react";
 import useAuthContext from "context/AuthContext";
-import { Document, ApiDocument } from "solo-types";
+import { Document, ApiDocument, Query } from "solo-types";
 import { createFakeApiDocs } from "solo-types";
 
 // covert api returned document to Document
@@ -26,43 +25,41 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
 const useDocuments = () => {
   const { apiCall } = useAuthContext();
   const [docs, setDocs] = useState<Document[]>([]);
-  const [sortBy, setSortBy] = useState<SortingRule<Document>[]>([]);
 
-  const makeQueryString = useCallback(() => {
+  const makeQueryString = useCallback((query: Query<Document>) => {
+    const {
+      sort: [currentSort]
+    } = query;
     const params = new URLSearchParams();
-    const currentSort = sortBy[0];
     if (currentSort?.id) {
       params.set("sort", currentSort.id);
     }
     if (currentSort?.desc) {
       params.set("desc", "true");
     }
-    const query = params.toString();
-    return query ? `?${query}` : "";
-  }, [sortBy]);
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : "";
+  }, []);
 
-  const fetchDocuments = useCallback(async () => {
-    try {
-      const query = makeQueryString();
-      const url = `/documents${query}`;
-      const docs = await apiCall<ApiDocument[]>(url, {
-        method: "GET"
-      });
-      setDocs(parseApiDocuments(docs));
-    } catch (e) {
-      // use fake data until api is implemented
-      setDocs(parseApiDocuments(createFakeApiDocs(10)));
-    }
-  }, [setDocs, apiCall, makeQueryString]);
-
-  useEffect(() => {
-    fetchDocuments();
-  }, [setSortBy, sortBy, fetchDocuments]);
+  const fetchDocuments = useCallback(
+    async (query: Query<Document>) => {
+      try {
+        const url = `/documents${makeQueryString(query)}`;
+        const docs = await apiCall<ApiDocument[]>(url, {
+          method: "GET"
+        });
+        setDocs(parseApiDocuments(docs));
+      } catch (e) {
+        // use fake data until api is implemented
+        setDocs(parseApiDocuments(createFakeApiDocs(10)));
+      }
+    },
+    [setDocs, apiCall, makeQueryString]
+  );
 
   return {
     docs,
-    onSort: setSortBy,
-    sort: sortBy
+    fetchDocuments
   };
 };
 

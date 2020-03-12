@@ -6,7 +6,7 @@ import useDocuments from "./useDocuments";
 import createColumns from "./tableColumns";
 
 const StatusPage: React.FC = () => {
-  const { sort, onSort, docs } = useDocuments();
+  const { fetchDocuments, docs } = useDocuments();
   const tableColumns = useMemo(createColumns, []);
 
   const renderSubComponent = (row: Row<Document>) => {
@@ -33,8 +33,7 @@ const StatusPage: React.FC = () => {
         columns={tableColumns}
         data={docs}
         renderSubComponent={renderSubComponent}
-        onSort={onSort}
-        initialSortBy={sort}
+        fetchData={fetchDocuments}
       />
     </div>
   );

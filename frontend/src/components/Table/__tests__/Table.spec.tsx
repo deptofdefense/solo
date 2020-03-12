@@ -15,7 +15,8 @@ describe("Table component", () => {
         <span data-testid="testexpand" {...row.getToggleRowExpandedProps()}>
           expand
         </span>
-      )
+      ),
+      id: "expand"
     },
     {
       Header: "test column",
@@ -24,12 +25,12 @@ describe("Table component", () => {
   ];
 
   const data = [{ value: "2" }];
-  const onSortMock = jest.fn();
   const onRenderSubMock = jest.fn();
+  const fetchDataMock = jest.fn();
 
   afterEach(() => {
-    onSortMock.mockReset();
     onRenderSubMock.mockReset();
+    fetchDataMock.mockReset();
   });
 
   it("matches snapshot", () => {
@@ -37,41 +38,57 @@ describe("Table component", () => {
       <Table<TestDoc>
         columns={columns}
         data={data}
-        initialSortBy={[]}
-        onSort={onSortMock}
         renderSubComponent={onRenderSubMock}
+        fetchData={fetchDataMock}
       />
     );
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it("calls onSort callback on sort toggled", async () => {
+  it("honors the initial sort by prop", async () => {
+    render(
+      <Table<TestDoc>
+        columns={columns}
+        data={data}
+        renderSubComponent={onRenderSubMock}
+        fetchData={fetchDataMock}
+        initialSortBy={[{ id: "value", desc: true }]}
+      />
+    );
+    await wait(() => {
+      expect(fetchDataMock).toHaveBeenCalled();
+      expect(fetchDataMock.mock.calls[0][0]).toMatchObject({
+        sort: [{ id: "value", desc: true }]
+      });
+    });
+  });
+
+  it("calls re-fetches data on sort toggled", async () => {
     const { getByText } = render(
       <Table<TestDoc>
         columns={columns}
         data={data}
-        initialSortBy={[{ id: "value" }]}
-        onSort={onSortMock}
         renderSubComponent={onRenderSubMock}
+        fetchData={fetchDataMock}
       />
     );
     await wait(() => {
-      expect(onSortMock).toHaveBeenCalled();
+      expect(fetchDataMock).toHaveBeenCalledTimes(1);
     });
     const sortHeader = getByText("test column");
     fireEvent.click(sortHeader);
     await wait(() => {
-      expect(onSortMock).toHaveBeenCalledTimes(2);
-      expect(onSortMock.mock.calls[1][0]).toMatchObject([
-        {
-          id: "value"
-        }
-      ]);
+      expect(fetchDataMock).toHaveBeenCalledTimes(2);
+      expect(fetchDataMock.mock.calls[1][0]).toMatchObject({
+        sort: [{ id: "value" }]
+      });
     });
     fireEvent.click(sortHeader);
     await wait(() => {
-      expect(onSortMock).toHaveBeenCalledTimes(3);
-      expect(onSortMock.mock.calls[2][0]).toEqual([]);
+      expect(fetchDataMock).toHaveBeenCalledTimes(3);
+      expect(fetchDataMock.mock.calls[2][0]).toMatchObject({
+        sort: [{ id: "value", desc: true }]
+      });
     });
   });
 
@@ -80,9 +97,8 @@ describe("Table component", () => {
       <Table<TestDoc>
         columns={columns}
         data={data}
-        initialSortBy={[]}
-        onSort={onSortMock}
         renderSubComponent={onRenderSubMock}
+        fetchData={fetchDataMock}
       />
     );
     const toggleBtn = getByTestId("testexpand");

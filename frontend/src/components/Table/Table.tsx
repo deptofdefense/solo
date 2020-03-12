@@ -7,6 +7,7 @@ import {
   useSortBy,
   SortingRule
 } from "react-table";
+import { Query } from "solo-types";
 import { Table as USWDSTable } from "solo-uswds";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
@@ -14,8 +15,8 @@ import TableBody from "./TableBody";
 interface TableProps<T extends object> {
   columns: Column<T>[];
   data: T[];
-  initialSortBy: SortingRule<T>[];
-  onSort: (sortBy: SortingRule<T>[]) => void;
+  initialSortBy?: SortingRule<T>[];
+  fetchData: (query: Query<T>) => void;
   renderSubComponent?: (row: Row<T>) => JSX.Element;
 }
 
@@ -23,43 +24,38 @@ const Table = <T extends object>({
   columns,
   data,
   initialSortBy,
-  onSort,
+  fetchData,
   renderSubComponent
 }: TableProps<T>) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    visibleColumns,
-    state: { sortBy }
-  } = useTable(
+  const instance = useTable(
     {
       columns,
       data,
       manualSortBy: true,
-      initialState: { sortBy: initialSortBy }
+      manualPagination: true,
+      disableMultiSort: true,
+      initialState: { sortBy: initialSortBy ?? [], pageSize: 20 },
+      autoResetSortBy: false
     },
     useSortBy,
     useExpanded
   );
 
+  const {
+    state: { sortBy }
+  } = instance;
+
   useEffect(() => {
-    onSort(sortBy);
-  }, [sortBy, onSort]);
+    fetchData({
+      sort: sortBy
+    });
+  }, [fetchData, sortBy]);
 
   return (
     <>
-      <USWDSTable {...getTableProps()}>
-        <TableHead headerGroups={headerGroups} />
-        <TableBody
-          rows={rows}
-          renderSubComponent={renderSubComponent}
-          prepareRow={prepareRow}
-          numColumns={visibleColumns.length}
-          {...getTableBodyProps()}
-        />
+      <USWDSTable {...instance.getTableProps()}>
+        <TableHead headerGroups={instance.headerGroups} />
+        <TableBody {...instance} renderSubComponent={renderSubComponent} />
       </USWDSTable>
     </>
   );
