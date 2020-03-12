@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import classNames from "classnames";
+import classes from "./Button.module.scss";
 
 interface ButtonProps extends Partial<JSX.IntrinsicElements["button"]> {
   focused?: boolean;
   active?: boolean;
   disabled?: boolean;
+  square?: boolean;
   outline?: boolean;
   inverse?: boolean;
   big?: boolean;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
   color?: "secondary" | "accent-cool" | "base";
   className?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
-  onClick,
   color,
   focused = false,
   active = false,
@@ -23,6 +23,7 @@ export const Button: React.FC<ButtonProps> = ({
   inverse = false,
   big = false,
   disabled = false,
+  square = false,
   className = "",
   ...rest
 }) => {
@@ -30,11 +31,10 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
-      onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       disabled={disabled}
-      className={classNames(className, "usa-button", {
+      className={classNames("usa-button", className, {
         "usa-button--hover": isHovered,
         "usa-button--active": active,
         "usa-button--outline": outline,
@@ -43,7 +43,8 @@ export const Button: React.FC<ButtonProps> = ({
         "usa-button--secondary": color === "secondary",
         "usa-button--accent-cool": color === "accent-cool",
         "usa-button--base": color === "base",
-        "usa-button--big": big
+        "usa-button--big": big,
+        [classes.square]: square
       })}
       {...rest}
     >

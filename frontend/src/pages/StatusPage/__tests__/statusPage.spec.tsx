@@ -5,6 +5,9 @@ import StatusPage from "../StatusPage";
 import { fireEvent } from "@testing-library/react";
 
 jest.mock("components/DocumentDetails", () => () => <div>testdetails</div>);
+jest.mock("components/SelectFilterControls", () => () => (
+  <div>filtercontrols</div>
+));
 
 // prevent snapshot tests from failing per day
 jest.mock("date-fns", () => ({
@@ -23,10 +26,6 @@ describe("StatusPage component", () => {
 
   afterEach(() => {
     fetchMock.mockReset();
-  });
-
-  afterAll(() => {
-    jest.restoreAllMocks();
   });
 
   it("matches snapshot", async () => {
@@ -73,7 +72,7 @@ describe("StatusPage component", () => {
     });
   });
 
-  it("re-fetches documents on table sort change", async () => {
+  it("re-fetches documents on status_date table sort change", async () => {
     const { getByText } = render(<StatusPage />, {
       authContext: {
         apiCall: fetchMock
@@ -102,6 +101,60 @@ describe("StatusPage component", () => {
       // sort by is undefined
       expect(fetchMock).toHaveBeenCalledTimes(4);
       expect(fetchMock.mock.calls[3][0]).toEqual("/documents");
+    });
+  });
+
+  it("re-fetches documents on sdn table sort change", async () => {
+    const { getByText } = render(<StatusPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    await wait(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+    const sdnHeader = getByText(/^SDN$/);
+    fireEvent.click(sdnHeader);
+    await wait(() => {
+      // first call was on render, this is second
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock.mock.calls[1][0]).toEqual("/documents?sort=sdn");
+    });
+    fireEvent.click(sdnHeader);
+    await wait(() => {
+      // sort by is now desc
+      expect(fetchMock).toHaveBeenCalledTimes(3);
+      expect(fetchMock.mock.calls[2][0]).toEqual(
+        "/documents?sort=sdn&desc=true"
+      );
+    });
+  });
+
+  it("re-fetches documents on sdn table sort change", async () => {
+    const { getByText } = render(<StatusPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    await wait(() => {
+      expect(fetchMock).toHaveBeenCalled();
+    });
+    const serviceReqHeader = getByText(/^Service Request/);
+    fireEvent.click(serviceReqHeader);
+    await wait(() => {
+      // first call was on render, this is second
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock.mock.calls[1][0]).toEqual(
+        "/documents?sort=service_request"
+      );
+    });
+    fireEvent.click(serviceReqHeader);
+    await wait(() => {
+      // sort by is now desc
+      expect(fetchMock).toHaveBeenCalledTimes(3);
+      expect(fetchMock.mock.calls[2][0]).toEqual(
+        "/documents?sort=service_request&desc=true"
+      );
     });
   });
 

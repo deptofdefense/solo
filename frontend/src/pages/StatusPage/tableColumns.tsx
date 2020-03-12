@@ -22,7 +22,8 @@ const createColumns: CreateColumns = () => [
   },
   {
     Header: "Service Request #",
-    accessor: "serviceRequest.service_request"
+    accessor: "serviceRequest.service_request",
+    id: "service_request"
   },
   {
     Header: "Commodity",

@@ -25,21 +25,31 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
 const useDocuments = () => {
   const { apiCall } = useAuthContext();
   const [docs, setDocs] = useState<Document[]>([]);
+  const [filter, setFilter] = useState<{ option: string; value: string }>({
+    option: "",
+    value: ""
+  });
 
-  const makeQueryString = useCallback((query: Query<Document>) => {
-    const {
-      sort: [currentSort]
-    } = query;
-    const params = new URLSearchParams();
-    if (currentSort?.id) {
-      params.set("sort", currentSort.id);
-    }
-    if (currentSort?.desc) {
-      params.set("desc", "true");
-    }
-    const queryString = params.toString();
-    return queryString ? `?${queryString}` : "";
-  }, []);
+  const makeQueryString = useCallback(
+    (query: Query<Document>) => {
+      const {
+        sort: [currentSort]
+      } = query;
+      const params = new URLSearchParams();
+      if (currentSort?.id) {
+        params.set("sort", currentSort.id);
+      }
+      if (currentSort?.desc) {
+        params.set("desc", "true");
+      }
+      if (filter.value) {
+        params.set(filter.option, filter.value);
+      }
+      const queryString = params.toString();
+      return queryString ? `?${queryString}` : "";
+    },
+    [filter]
+  );
 
   const fetchDocuments = useCallback(
     async (query: Query<Document>) => {
@@ -59,7 +69,13 @@ const useDocuments = () => {
 
   return {
     docs,
-    fetchDocuments
+    fetchDocuments,
+    setFilter,
+    filterOptions: [
+      { name: "SDN", value: "sdn" },
+      { name: "Nomenclature", value: "nomen" },
+      { name: "Commodity", value: "commodity" }
+    ]
   };
 };
 
