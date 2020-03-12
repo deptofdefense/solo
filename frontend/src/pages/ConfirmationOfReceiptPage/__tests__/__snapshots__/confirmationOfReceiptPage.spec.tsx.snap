@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EnterReceiptPage Component matches snapshot 1`] = `
+exports[`ConfirmationOfReceiptPage Component matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="tablet:margin-x-8 overflow-x-auto"
@@ -8,7 +8,7 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
     <h1
       class="usa-prose"
     >
-      Enter Receipt
+      Confirmation of Receipt
     </h1>
   </div>
 </DocumentFragment>

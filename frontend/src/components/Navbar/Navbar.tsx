@@ -35,6 +35,9 @@ const Navbar: React.FC = () => {
             <HeaderNavLink to="/d6t" exact onClick={close}>
               Enter Receipt (D6T)
             </HeaderNavLink>
+            <HeaderNavLink to="/cor" exact onClick={close}>
+              Confirmation of Receipt (COR)
+            </HeaderNavLink>
           </>
         )}
       </HeaderNav>
