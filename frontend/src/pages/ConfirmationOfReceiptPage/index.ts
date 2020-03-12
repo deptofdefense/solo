@@ -1,1 +1,1 @@
-export { default } from "./ConfirmationOfReceiptPage"
+export { default } from "./ConfirmationOfReceiptPage";
