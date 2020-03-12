@@ -7,6 +7,7 @@ interface ButtonProps extends Partial<JSX.IntrinsicElements["button"]> {
   active?: boolean;
   disabled?: boolean;
   square?: boolean;
+  unstyled?: boolean;
   outline?: boolean;
   inverse?: boolean;
   big?: boolean;
@@ -24,6 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
   big = false,
   disabled = false,
   square = false,
+  unstyled = false,
   className = "",
   ...rest
 }) => {
@@ -44,6 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
         "usa-button--accent-cool": color === "accent-cool",
         "usa-button--base": color === "base",
         "usa-button--big": big,
+        "usa-button--unstyled": unstyled,
         [classes.square]: square
       })}
       {...rest}

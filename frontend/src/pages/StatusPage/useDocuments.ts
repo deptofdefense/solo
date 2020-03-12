@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
 import useAuthContext from "context/AuthContext";
-import { Document, ApiDocument, Query } from "solo-types";
+import { Document, ApiDocument, Query, PaginatedApiResponse } from "solo-types";
 import { createFakeApiDocs } from "solo-types";
+
+type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 
 // covert api returned document to Document
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
@@ -25,6 +27,7 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
 const useDocuments = () => {
   const { apiCall } = useAuthContext();
   const [docs, setDocs] = useState<Document[]>([]);
+  const [pageCount, setPageCount] = useState<number>(9);
   const [filter, setFilter] = useState<{ option: string; value: string }>({
     option: "",
     value: ""
@@ -33,7 +36,8 @@ const useDocuments = () => {
   const makeQueryString = useCallback(
     (query: Query<Document>) => {
       const {
-        sort: [currentSort]
+        sort: [currentSort],
+        page
       } = query;
       const params = new URLSearchParams();
       if (currentSort?.id) {
@@ -45,6 +49,9 @@ const useDocuments = () => {
       if (filter.value) {
         params.set(filter.option, filter.value);
       }
+      if (page > 1) {
+        params.set("page", page.toString());
+      }
       const queryString = params.toString();
       return queryString ? `?${queryString}` : "";
     },
@@ -55,10 +62,11 @@ const useDocuments = () => {
     async (query: Query<Document>) => {
       try {
         const url = `/documents${makeQueryString(query)}`;
-        const docs = await apiCall<ApiDocument[]>(url, {
+        const { count, results } = await apiCall<DocumentApiResponse>(url, {
           method: "GET"
         });
-        setDocs(parseApiDocuments(docs));
+        setPageCount(Math.ceil(count / 25));
+        setDocs(parseApiDocuments(results));
       } catch (e) {
         // use fake data until api is implemented
         setDocs(parseApiDocuments(createFakeApiDocs(10)));
@@ -70,6 +78,7 @@ const useDocuments = () => {
   return {
     docs,
     fetchDocuments,
+    pageCount,
     setFilter,
     filterOptions: [
       { name: "SDN", value: "sdn" },

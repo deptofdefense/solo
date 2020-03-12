@@ -1,13 +1,13 @@
 import React from "react";
-import { render, wait } from "test-utils";
-import { defaultApiDoc } from "solo-types";
+import { render, wait, fireEvent } from "test-utils";
+import { defaultApiResponse } from "solo-types";
 import StatusPage from "../StatusPage";
-import { fireEvent } from "@testing-library/react";
 
 jest.mock("components/DocumentDetails", () => () => <div>testdetails</div>);
 jest.mock("components/SelectFilterControls", () => () => (
   <div>filtercontrols</div>
 ));
+jest.mock("components/Paginator", () => () => <div>paginator</div>);
 
 // prevent snapshot tests from failing per day
 jest.mock("date-fns", () => ({
@@ -17,11 +17,15 @@ jest.mock("date-fns", () => ({
   }
 }));
 
+afterAll(() => {
+  jest.restoreAllMocks();
+});
+
 describe("StatusPage component", () => {
   const fetchMock = jest.fn();
 
   beforeEach(() => {
-    fetchMock.mockResolvedValue([defaultApiDoc]);
+    fetchMock.mockResolvedValue(defaultApiResponse);
   });
 
   afterEach(() => {
@@ -41,7 +45,10 @@ describe("StatusPage component", () => {
   });
 
   it("requests documents from api on initial render", async () => {
-    fetchMock.mockResolvedValue([]);
+    fetchMock.mockResolvedValue({
+      ...defaultApiResponse,
+      results: []
+    });
     render(<StatusPage />, {
       authContext: {
         apiCall: fetchMock

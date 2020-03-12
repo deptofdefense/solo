@@ -1,4 +1,4 @@
-import { ApiDocument, Status } from "solo-types";
+import { ApiDocument, Status, PaginatedApiResponse } from "solo-types";
 import * as faker from "faker";
 
 export const defaultApiDoc: ApiDocument = {
@@ -172,6 +172,13 @@ export const defaultApiDoc: ApiDocument = {
     }
   ],
   sdn: "M3030012341234"
+};
+
+export const defaultApiResponse: PaginatedApiResponse<ApiDocument[]> = {
+  results: [defaultApiDoc],
+  count: 100,
+  next: 1,
+  previous: 2
 };
 
 const idxToStatus = (idx: number): Status => {
