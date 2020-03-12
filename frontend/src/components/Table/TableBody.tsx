@@ -1,11 +1,8 @@
 import React, { PropsWithChildren } from "react";
-import { TableBodyProps as RTableBodyProps, Row } from "react-table";
+import { TableInstance, Row } from "react-table";
 import classes from "./TableBody.module.scss";
 
-interface TableBodyProps<T extends object> extends RTableBodyProps {
-  rows: Row<T>[];
-  numColumns: number;
-  prepareRow: (row: Row<T>) => void;
+interface TableBodyProps<T extends object> extends TableInstance<T> {
   renderSubComponent?: (row: Row<T>) => JSX.Element;
 }
 
@@ -14,10 +11,10 @@ const TableBody = <T extends object>({
   numColumns,
   prepareRow,
   renderSubComponent,
-  ...rest
+  getTableBodyProps
 }: PropsWithChildren<TableBodyProps<T>>) => {
   return (
-    <tbody {...rest}>
+    <tbody {...getTableBodyProps()}>
       {rows.map(row => {
         prepareRow(row);
         const { key, ...rest } = row.getRowProps();

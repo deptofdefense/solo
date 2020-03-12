@@ -1,3 +1,4 @@
+import { SortingRule } from "react-table";
 export { default as createFakeApiDocs, defaultApiDoc } from "./apiDoc";
 export { default as createFakeDocs, defaultDoc } from "./doc";
 
@@ -86,4 +87,8 @@ export interface Document {
 
   shipper?: Address;
   receiver?: Address;
+}
+
+export interface Query<T> {
+  sort: SortingRule<T>[];
 }
