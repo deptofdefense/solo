@@ -10,11 +10,19 @@ from solo_rog_api.models import (
     Locator,
     Document,
     Status,
+    Address,
 )
 
 
 def create_address_type(**param: Any) -> AddressType:
     model = AddressType
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_address(**param: Any) -> Address:
+    model = Address
     test = model.objects.create(**param)
     assert isinstance(test, model)
     return test
@@ -82,6 +90,30 @@ class AddressTypeStringTest(APITestCase):
     def test_representation(self) -> None:
         created_object = create_address_type(
             **{"id": 1, "type": "Ship-to", "desc": "Ship it"}
+        )
+        self.assertEqual(str(created_object), "Ship-to")
+
+
+class AddressStringTest(APITestCase):
+    """ This is the test address model string representation """
+
+    def test_representation(self) -> None:
+        address_type = create_address_type(
+            **{"id": 1, "type": "Ship-to", "desc": "Ship it"}
+        )
+        created_object = create_address(
+            **{
+                "address_type": address_type,
+                "name": "AAC-M30300",
+                "ric": "SMS",
+                "addy1": "addy1",
+                "addy2": "addy2",
+                "addy3": "addy3",
+                "city": "Arlington",
+                "state": "VA",
+                "zip": "22202",
+                "country": "United States",
+            }
         )
         self.assertEqual(str(created_object), "Ship-to")
 

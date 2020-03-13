@@ -145,6 +145,29 @@ class Status(models.Model):
         return "{}: {}".format(self.document.sdn, self.dic.code)
 
 
+class Address(models.Model):
+    document = models.ManyToManyField("Document", related_name="addresses", blank=True)
+    address_type = models.ForeignKey(
+        "AddressType",
+        related_name="addresses",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    name = models.CharField(max_length=50)
+    ric = models.CharField(max_length=20)
+    addy1 = models.CharField(max_length=50, null=True, blank=True)
+    addy2 = models.CharField(max_length=50, null=True, blank=True)
+    addy3 = models.CharField(max_length=50, null=True, blank=True)
+    city = models.CharField(max_length=20)
+    state = models.CharField(max_length=20)
+    zip = models.CharField(max_length=11, null=True, blank=True)
+    country = models.CharField(max_length=15, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.address_type.type
+
+
 class ServiceRequest(models.Model):
     service_request = models.CharField(max_length=50, null=True, blank=True)
 
