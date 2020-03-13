@@ -28,35 +28,29 @@ const useDocuments = () => {
   const { apiCall } = useAuthContext();
   const [docs, setDocs] = useState<Document[]>([]);
   const [pageCount, setPageCount] = useState<number>(9);
-  const [filter, setFilter] = useState<{ option: string; value: string }>({
-    option: "",
-    value: ""
-  });
 
-  const makeQueryString = useCallback(
-    (query: Query<Document>) => {
-      const {
-        sort: [currentSort],
-        page
-      } = query;
-      const params = new URLSearchParams();
-      if (currentSort?.id) {
-        params.set("sort", currentSort.id);
-      }
-      if (currentSort?.desc) {
-        params.set("desc", "true");
-      }
-      if (filter.value) {
-        params.set(filter.option, filter.value);
-      }
-      if (page > 1) {
-        params.set("page", page.toString());
-      }
-      const queryString = params.toString();
-      return queryString ? `?${queryString}` : "";
-    },
-    [filter]
-  );
+  const makeQueryString = useCallback((query: Query<Document>) => {
+    const {
+      sort: [currentSort],
+      page,
+      filters
+    } = query;
+    const params = new URLSearchParams();
+    if (currentSort?.id) {
+      params.set("sort", currentSort.id);
+    }
+    if (currentSort?.desc) {
+      params.set("desc", "true");
+    }
+    if (page > 1) {
+      params.set("page", page.toString());
+    }
+    filters.forEach(({ id, value }) => {
+      params.set(id, value);
+    });
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : "";
+  }, []);
 
   const fetchDocuments = useCallback(
     async (query: Query<Document>) => {
@@ -78,13 +72,7 @@ const useDocuments = () => {
   return {
     docs,
     fetchDocuments,
-    pageCount,
-    setFilter,
-    filterOptions: [
-      { name: "SDN", value: "sdn" },
-      { name: "Nomenclature", value: "nomen" },
-      { name: "Commodity", value: "commodity" }
-    ]
+    pageCount
   };
 };
 

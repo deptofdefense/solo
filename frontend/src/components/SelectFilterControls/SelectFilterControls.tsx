@@ -6,7 +6,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import classes from "./SelectFilterControls.module.scss";
 
 interface SelectFilterControls {
-  onSubmit: (filter: { option: string; value: string }) => void;
+  onSubmit: (filter: { id: string; value: string }[]) => void;
   options: Array<{ name: string; value: string }>;
   defaultOption?: string;
 }
@@ -31,10 +31,12 @@ const SelectFilterControls: React.FC<SelectFilterControls> = ({
 
   const onSubmitted: React.FormEventHandler<HTMLFormElement> = event => {
     event.preventDefault();
-    onSubmit({
-      option: currentOption,
-      value: currentValue
-    });
+    onSubmit([
+      {
+        id: currentOption,
+        value: currentValue
+      }
+    ]);
   };
 
   return (

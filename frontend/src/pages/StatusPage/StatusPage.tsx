@@ -12,14 +12,14 @@ import {
 import useDocuments from "./useDocuments";
 import createColumns from "./tableColumns";
 
+const filterAble = [
+  { name: "SDN", value: "sdn" },
+  { name: "Nomenclature", value: "nomen" },
+  { name: "Commodity", value: "commodity" }
+];
+
 const StatusPage: React.FC = () => {
-  const {
-    docs,
-    fetchDocuments,
-    setFilter,
-    filterOptions,
-    pageCount
-  } = useDocuments();
+  const { docs, fetchDocuments, pageCount } = useDocuments();
   const tableColumns = useMemo(createColumns, []);
 
   const renderSubComponent = (row: Row<Document>) => {
@@ -42,16 +42,22 @@ const StatusPage: React.FC = () => {
   const renderPagination = (table: TableInstance<Document>) => (
     <Paginator table={table} />
   );
+  const renderFilterControls = (table: TableInstance<Document>) => {
+    const { setGlobalFilter } = table;
+    return (
+      <SelectFilterControls options={filterAble} onSubmit={setGlobalFilter} />
+    );
+  };
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
       <Title>Status</Title>
-      <SelectFilterControls options={filterOptions} onSubmit={setFilter} />
       <Table<Document>
         columns={tableColumns}
         data={docs}
         renderSubComponent={renderSubComponent}
         renderPagination={renderPagination}
+        renderFilterControls={renderFilterControls}
         fetchData={fetchDocuments}
         pageCount={pageCount}
       />
