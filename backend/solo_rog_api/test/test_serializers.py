@@ -15,6 +15,7 @@ from solo_rog_api.models import (
     Locator,
     Document,
     Status,
+    Address,
 )
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
@@ -27,6 +28,7 @@ from solo_rog_api.serializers import (
     LocatorSerializer,
     DocumentSerializer,
     StatusSerializer,
+    AddressSerializer,
 )
 
 User = get_user_model()
@@ -257,5 +259,43 @@ class DocumentSerializerTest(TestCase):
                 "suppadd": None,
                 "service_request": None,
                 "part": None,
+            },
+        )
+
+
+class AddressSerializerTest(TestCase):
+    """ Test Address creation of a serializer from model """
+
+    def setUp(self) -> None:
+        self.test = Address.objects.create(
+            address_type=None,
+            name="AAC-M30300",
+            ric="SMS",
+            addy1="addy1",
+            addy2="addy2",
+            addy3="addy3",
+            city="Arlington",
+            state="VA",
+            zip="22202",
+            country="United States",
+        )
+
+    def test_address_serializer(self) -> None:
+        serial_object = AddressSerializer(self.test)
+        self.assertEqual(
+            serial_object.data,
+            {
+                "id": 1,
+                "document": [],
+                "address_type": None,
+                "name": "AAC-M30300",
+                "ric": "SMS",
+                "addy1": "addy1",
+                "addy2": "addy2",
+                "addy3": "addy3",
+                "city": "Arlington",
+                "state": "VA",
+                "zip": "22202",
+                "country": "United States",
             },
         )

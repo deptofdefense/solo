@@ -14,6 +14,7 @@ from .models import (
     Locator,
     Document,
     Status,
+    Address,
 )
 
 
@@ -59,6 +60,14 @@ class AddressTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AddressType
+        fields = "__all__"
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    address_type = AddressTypeSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Address
         fields = "__all__"
 
 
