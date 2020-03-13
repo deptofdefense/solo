@@ -3,7 +3,9 @@ import classNames from "classnames";
 import { Button } from "solo-uswds";
 import classes from "./Paginator.module.scss";
 
-interface PaginatorButtonProps {
+type BaseButtonProps = Omit<Partial<JSX.IntrinsicElements["button"]>, "color">;
+
+interface PaginatorButtonProps extends BaseButtonProps {
   disabled?: boolean;
   isPageNumber?: boolean;
   active?: boolean;
