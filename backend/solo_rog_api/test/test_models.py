@@ -169,8 +169,11 @@ class StatusStringTest(APITestCase):
                 "received_qty": None,
             }
         )
-        self.assertEqual(created_object.status_converted_date(), "2020-03-01T21:47:13.000Z") 
+        self.assertEqual(
+            created_object.status_converted_date(), "2020-03-01T21:47:13.000Z"
+        )
         self.assertEqual(str(created_object), "M3030012345678: D6T")
+
 
 class ServiceStringTest(APITestCase):
     """ This is the test Service Request model string representation """
