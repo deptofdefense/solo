@@ -1,4 +1,4 @@
-import { SortingRule } from "react-table";
+import { SortingRule, Filters } from "react-table";
 export {
   default as createFakeApiDocs,
   defaultApiDoc,
@@ -93,9 +93,10 @@ export interface Document {
   receiver?: Address;
 }
 
-export interface Query<T> {
+export interface Query<T extends object> {
   sort: SortingRule<T>[];
   page: number;
+  filters: Filters<T>;
 }
 
 export interface PaginatedApiResponse<T> {

@@ -63,10 +63,12 @@ describe("SelectFilterControls component", () => {
     fireEvent.click(btn as Element);
     await wait(() => {
       expect(submitCallback).toHaveBeenCalled();
-      expect(submitCallback.mock.calls[0][0]).toMatchObject({
-        option: "testopt2",
-        value: "my search value"
-      });
+      expect(submitCallback.mock.calls[0][0]).toMatchObject([
+        {
+          id: "testopt2",
+          value: "my search value"
+        }
+      ]);
     });
   });
 });

@@ -7,6 +7,7 @@ import {
   useSortBy,
   SortingRule,
   usePagination,
+  useGlobalFilter,
   TableInstance
 } from "react-table";
 import { Query } from "solo-types";
@@ -22,6 +23,7 @@ interface TableProps<T extends object> {
   fetchData: (query: Query<T>) => void;
   renderSubComponent?: (row: Row<T>) => JSX.Element;
   renderPagination?: (table: TableInstance<T>) => JSX.Element;
+  renderFilterControls?: (table: TableInstance<T>) => JSX.Element;
 }
 
 const Table = <T extends object>({
@@ -31,10 +33,11 @@ const Table = <T extends object>({
   pageCount = 0,
   fetchData,
   renderSubComponent,
-  renderPagination
+  renderPagination,
+  renderFilterControls
 }: TableProps<T>) => {
   const stateReducer = (nextState: any, action: any, prevState: any) => {
-    if (action.type === "toggleSortBy") {
+    if (action.type === "toggleSortBy" || action.type === "setGlobalFilter") {
       return { ...nextState, pageIndex: 0 };
     }
     return nextState;
@@ -46,30 +49,38 @@ const Table = <T extends object>({
       data,
       manualSortBy: true,
       manualPagination: true,
+      manualGlobalFilter: true,
       disableMultiSort: true,
-      initialState: { sortBy: initialSortBy ?? [], pageSize: 25 },
       autoResetSortBy: false,
       pageCount,
-      stateReducer
+      stateReducer,
+      initialState: {
+        sortBy: initialSortBy ?? [],
+        pageSize: 20,
+        globalFilter: []
+      }
     },
+    useGlobalFilter,
     useSortBy,
     useExpanded,
     usePagination
   );
 
   const {
-    state: { sortBy, pageIndex }
+    state: { sortBy, pageIndex, globalFilter }
   } = instance;
 
   useEffect(() => {
     fetchData({
       sort: sortBy,
-      page: pageIndex + 1
+      page: pageIndex + 1,
+      filters: globalFilter
     });
-  }, [fetchData, sortBy, pageIndex]);
+  }, [fetchData, sortBy, globalFilter, pageIndex]);
 
   return (
     <>
+      {renderFilterControls && renderFilterControls(instance)}
       <USWDSTable {...instance.getTableProps()}>
         <TableHead headerGroups={instance.headerGroups} />
         <TableBody {...instance} renderSubComponent={renderSubComponent} />
