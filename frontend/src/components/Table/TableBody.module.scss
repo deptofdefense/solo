@@ -2,6 +2,8 @@
 .td {
   background-color: #f0f0f0;
   border-color: white;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .subComponentTd {

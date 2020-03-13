@@ -1,18 +1,25 @@
 import React, { useMemo } from "react";
-import { Row } from "react-table";
+import { Row, TableInstance } from "react-table";
 import { Document } from "solo-types";
 import {
   Table,
   DocumentDetails,
   DocumentStepper,
   Title,
-  SelectFilterControls
+  SelectFilterControls,
+  Paginator
 } from "components";
 import useDocuments from "./useDocuments";
 import createColumns from "./tableColumns";
 
 const StatusPage: React.FC = () => {
-  const { docs, fetchDocuments, setFilter, filterOptions } = useDocuments();
+  const {
+    docs,
+    fetchDocuments,
+    setFilter,
+    filterOptions,
+    pageCount
+  } = useDocuments();
   const tableColumns = useMemo(createColumns, []);
 
   const renderSubComponent = (row: Row<Document>) => {
@@ -32,6 +39,10 @@ const StatusPage: React.FC = () => {
     );
   };
 
+  const renderPagination = (table: TableInstance<Document>) => (
+    <Paginator table={table} />
+  );
+
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
       <Title>Status</Title>
@@ -40,7 +51,9 @@ const StatusPage: React.FC = () => {
         columns={tableColumns}
         data={docs}
         renderSubComponent={renderSubComponent}
+        renderPagination={renderPagination}
         fetchData={fetchDocuments}
+        pageCount={pageCount}
       />
     </div>
   );
