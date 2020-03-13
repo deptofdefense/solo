@@ -8,11 +8,8 @@ type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 // covert api returned document to Document
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
   apiDocs.map(apiDoc => ({
-    id: apiDoc.id,
-    sdn: apiDoc.sdn,
+    ...apiDoc,
     serviceRequest: apiDoc.service_request,
-    part: apiDoc.part,
-    statuses: apiDoc.statuses,
     suppadd: {
       ...apiDoc.suppadd
     },
