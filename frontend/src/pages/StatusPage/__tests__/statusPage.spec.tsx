@@ -165,7 +165,7 @@ describe("StatusPage component", () => {
     });
   });
 
-  it("renders 10 fake documents on fetch error for now", async () => {
+  it("renders 25 fake documents on fetch error for now", async () => {
     fetchMock.mockRejectedValue(new Error());
     const { getAllByTitle } = render(<StatusPage />, {
       authContext: {
@@ -176,6 +176,6 @@ describe("StatusPage component", () => {
       expect(fetchMock).toHaveBeenCalled();
     });
     const allRowToggles = getAllByTitle("Toggle Row Expanded");
-    expect(allRowToggles.length).toEqual(10);
+    expect(allRowToggles.length).toEqual(25);
   });
 });
