@@ -6,3 +6,4 @@ export { default as DocumentDetails } from "./DocumentDetails";
 export { default as DocumentStepper } from "./DocumentStepper";
 export { default as SelectFilterControls } from "./SelectFilterControls";
 export { default as Paginator } from "./Paginator";
+export { default as SdnInputForm } from "./SdnInputForm";
