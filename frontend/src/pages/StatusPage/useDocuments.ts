@@ -69,7 +69,7 @@ const useDocuments = () => {
         setDocs(parseApiDocuments(results));
       } catch (e) {
         // use fake data until api is implemented
-        setDocs(parseApiDocuments(createFakeApiDocs(10)));
+        setDocs(parseApiDocuments(createFakeApiDocs(25)));
       }
     },
     [setDocs, apiCall, makeQueryString]

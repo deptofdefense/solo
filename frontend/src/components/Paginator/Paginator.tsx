@@ -22,7 +22,7 @@ const Paginator = <T extends object>({
   const listSize = endIdx - startIdx;
 
   return (
-    <div className="grid-row flex-justify-center margin-top-3">
+    <div className="grid-row flex-justify-center margin-y-4">
       <PaginatorButton onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
         <PaginatorIndicator left />
         <PaginatorIndicator left pad />
