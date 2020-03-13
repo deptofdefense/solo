@@ -191,6 +191,16 @@ class StatusSerializerTest(TestCase):
             },
         )
 
+    def test_status_serializer_serialization(self) -> None:
+        data = {
+            "status_date": "2020-03-01T21:47:13-05:00",
+        }
+        serializer = StatusSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        status = serializer.save()
+        from_db = Status.objects.get(id=status.id)
+        self.assertEqual(from_db.status_converted_date(), "2020-03-02T02:47:13.000Z")
+
 
 class PartSerializerTest(TestCase):
     """ Test Part creation of a serializer from model """
