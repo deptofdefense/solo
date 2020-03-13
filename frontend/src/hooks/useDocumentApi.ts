@@ -10,9 +10,6 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
   apiDocs.map(apiDoc => ({
     ...apiDoc,
     serviceRequest: apiDoc.service_request,
-    suppadd: {
-      ...apiDoc.suppadd
-    },
     shipper: apiDoc.addresses.find(
       addy => addy.address_type.type === "Ship-To"
     ),
