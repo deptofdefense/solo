@@ -9,11 +9,68 @@ from solo_rog_api.models import (
     ServiceRequest,
     Locator,
     Document,
+    Status,
 )
 
 
 def create_address_type(**param: Any) -> AddressType:
     model = AddressType
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_document(**param: Any) -> Document:
+    model = Document
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_dic(**param: Any) -> Dic:
+    model = Dic
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_locator(**param: Any) -> Locator:
+    model = Locator
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_part(**param: Any) -> Part:
+    model = Part
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_suppadd(**param: Any) -> SuppAdd:
+    model = SuppAdd
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_subinventory(**param: Any) -> SubInventory:
+    model = SubInventory
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_status(**param: Any) -> Status:
+    model = Status
+    test = model.objects.create(**param)
+    assert isinstance(test, model)
+    return test
+
+
+def create_service_request(**param: Any) -> ServiceRequest:
+    model = ServiceRequest
     test = model.objects.create(**param)
     assert isinstance(test, model)
     return test
@@ -29,13 +86,6 @@ class AddressTypeStringTest(APITestCase):
         self.assertEqual(str(created_object), "Ship-to")
 
 
-def create_dic(**param: Any) -> Dic:
-    model = Dic
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
-
-
 class DicStringTest(APITestCase):
     """ This is the test dic model string representation """
 
@@ -44,26 +94,12 @@ class DicStringTest(APITestCase):
         self.assertEqual(str(created_object), "D6T")
 
 
-def create_locator(**param: Any) -> Locator:
-    model = Locator
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
-
-
 class LocatorStringTest(APITestCase):
     """ This is the test Locator model string representation """
 
     def test_representation(self) -> None:
         created_object = create_locator(**{"id": 1, "code": "M1234AA", "desc": ""})
         self.assertEqual(str(created_object), "M1234AA")
-
-
-def create_part(**param: Any) -> Part:
-    model = Part
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
 
 
 class PartStringTest(APITestCase):
@@ -90,26 +126,12 @@ class PartStringTest(APITestCase):
         self.assertEqual(str(created_object), "TANK,LIQUID STORAGE : 5430 : 015061999")
 
 
-def create_suppadd(**param: Any) -> SuppAdd:
-    model = SuppAdd
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
-
-
 class SuppaddStringTest(APITestCase):
     """ This is the test suppadd model string representation """
 
     def test_representation(self) -> None:
         created_object = create_suppadd(**{"id": 1, "code": "MTM_STGE", "desc": ""})
         self.assertEqual(str(created_object), "MTM_STGE")
-
-
-def create_subinventory(**param: Any) -> SubInventory:
-    model = SubInventory
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
 
 
 class SubInventoryStringTest(APITestCase):
@@ -122,11 +144,35 @@ class SubInventoryStringTest(APITestCase):
         self.assertEqual(str(created_object), "M1234AA")
 
 
-def create_service_request(**param: Any) -> ServiceRequest:
-    model = ServiceRequest
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
+class StatusStringTest(APITestCase):
+    """ This is the test Status model string representation """
+
+    def test_representation(self) -> None:
+        doc = create_document(
+            **{
+                "id": 1,
+                "sdn": "M3030012345678",
+                "suppadd": None,
+                "service_request": None,
+                "part": None,
+            }
+        )
+        dic = create_dic(**{"id": 1, "code": "D6T", "desc": ""})
+        created_object = create_status(
+            **{
+                "document": doc,
+                "dic": dic,
+                "status_date": "2020-03-01T21:47:13-05:00",
+                "key_and_transmit_date": None,
+                "esd": "2020-03-20",
+                "projected_qty": 2,
+                "received_qty": None,
+            }
+        )
+        self.assertEqual(
+            created_object.status_converted_date(), "2020-03-01T21:47:13.000Z"
+        )
+        self.assertEqual(str(created_object), "M3030012345678: D6T")
 
 
 class ServiceStringTest(APITestCase):
@@ -137,13 +183,6 @@ class ServiceStringTest(APITestCase):
             **{"id": 1, "service_request": "12345678"}
         )
         self.assertEqual(str(created_object), "12345678")
-
-
-def create_document(**param: Any) -> Document:
-    model = Document
-    test = model.objects.create(**param)
-    assert isinstance(test, model)
-    return test
 
 
 class DocumentStringTest(APITestCase):
@@ -159,4 +198,6 @@ class DocumentStringTest(APITestCase):
                 "part": None,
             }
         )
+        self.assertEqual(created_object.get_aac(), "M30300")
+        self.assertEqual(created_object.get_doc_num(), "12345678")
         self.assertEqual(str(created_object), "M3030012345678")

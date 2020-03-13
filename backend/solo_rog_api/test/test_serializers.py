@@ -14,6 +14,7 @@ from solo_rog_api.models import (
     SubInventory,
     Locator,
     Document,
+    Status,
 )
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
@@ -25,6 +26,7 @@ from solo_rog_api.serializers import (
     SubInventorySerializer,
     LocatorSerializer,
     DocumentSerializer,
+    StatusSerializer,
 )
 
 User = get_user_model()
@@ -103,7 +105,7 @@ class ServiceRequestSerializerTest(TestCase):
     def setUp(self) -> None:
         self.test = ServiceRequest.objects.create(service_request="12345678")
 
-    def test_dic_serializer(self) -> None:
+    def test_servicerequest_serializer(self) -> None:
         serial_object = ServiceRequestSerializer(self.test)
         self.assertEqual(serial_object.data, {"id": 1, "service_request": "12345678"})
 
@@ -125,7 +127,7 @@ class SuppAddSerializerTest(TestCase):
     def setUp(self) -> None:
         self.test = SuppAdd.objects.create(code="YMTM", desc="")
 
-    def test_dic_serializer(self) -> None:
+    def test_suppadd_serializer(self) -> None:
         serial_object = SuppAddSerializer(self.test)
         self.assertEqual(
             serial_object.data,
@@ -139,7 +141,7 @@ class SubInventorySerializerTest(TestCase):
     def setUp(self) -> None:
         self.test = SubInventory.objects.create(code="MTM_STGE", desc="")
 
-    def test_dic_serializer(self) -> None:
+    def test_subinventory_serializer(self) -> None:
         serial_object = SubInventorySerializer(self.test)
         self.assertEqual(
             serial_object.data,
@@ -153,12 +155,51 @@ class LocatorSerializerTest(TestCase):
     def setUp(self) -> None:
         self.test = Locator.objects.create(code="M1234AA", desc="")
 
-    def test_dic_serializer(self) -> None:
+    def test_locator_serializer(self) -> None:
         serial_object = LocatorSerializer(self.test)
         self.assertEqual(
             serial_object.data,
             {"id": 1, "code": "M1234AA", "desc": "", "subinventorys": None},
         )
+
+
+class StatusSerializerTest(TestCase):
+    """ Test Status creation of a serializer from model """
+
+    def setUp(self) -> None:
+        self.test = Status.objects.create(
+            status_date="2020-03-01T21:47:13-05:00",
+            esd="2020-03-20",
+            projected_qty=2,
+            document=None,
+            dic=None,
+        )
+
+    def test_status_serializer(self) -> None:
+        serial_object = StatusSerializer(self.test)
+        self.assertEqual(
+            serial_object.data,
+            {
+                "id": 1,
+                "document": None,
+                "dic": None,
+                "status_date": "2020-03-01T21:47:13-05:00",
+                "key_and_transmit_date": None,
+                "esd": "2020-03-20",
+                "projected_qty": 2,
+                "received_qty": None,
+            },
+        )
+
+    def test_status_serializer_serialization(self) -> None:
+        data = {
+            "status_date": "2020-03-01T21:47:13-05:00",
+        }
+        serializer = StatusSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        status = serializer.save()
+        from_db = Status.objects.get(id=status.id)
+        self.assertEqual(from_db.status_converted_date(), "2020-03-02T02:47:13.000Z")
 
 
 class PartSerializerTest(TestCase):
@@ -206,7 +247,7 @@ class DocumentSerializerTest(TestCase):
             sdn="M1234AA", suppadd=None, part=None, service_request=None
         )
 
-    def test_dic_serializer(self) -> None:
+    def test_document_serializer(self) -> None:
         serial_object = DocumentSerializer(self.test)
         self.assertEqual(
             serial_object.data,
