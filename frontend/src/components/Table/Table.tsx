@@ -19,8 +19,10 @@ interface TableProps<T extends object> {
   columns: Column<T>[];
   data: T[];
   initialSortBy?: SortingRule<T>[];
+  manualSortBy?: boolean;
+  manualPagination?: boolean;
   pageCount?: number;
-  fetchData: (query: Query<T>) => void;
+  fetchData?: (query: Query<T>) => void;
   renderSubComponent?: (row: Row<T>) => JSX.Element;
   renderPagination?: (table: TableInstance<T>) => JSX.Element;
   renderFilterControls?: (table: TableInstance<T>) => JSX.Element;
@@ -30,6 +32,8 @@ const Table = <T extends object>({
   columns,
   data,
   initialSortBy,
+  manualPagination = true,
+  manualSortBy = true,
   pageCount = 0,
   fetchData,
   renderSubComponent,
@@ -47,11 +51,11 @@ const Table = <T extends object>({
     {
       columns,
       data,
-      manualSortBy: true,
-      manualPagination: true,
       manualGlobalFilter: true,
       disableMultiSort: true,
-      autoResetSortBy: false,
+      manualSortBy,
+      manualPagination,
+      autoResetSortBy: !manualSortBy,
       pageCount,
       stateReducer,
       initialState: {
@@ -71,11 +75,12 @@ const Table = <T extends object>({
   } = instance;
 
   useEffect(() => {
-    fetchData({
-      sort: sortBy,
-      page: pageIndex + 1,
-      filters: globalFilter
-    });
+    fetchData &&
+      fetchData({
+        sort: sortBy,
+        page: pageIndex + 1,
+        filters: globalFilter
+      });
   }, [fetchData, sortBy, globalFilter, pageIndex]);
 
   return (

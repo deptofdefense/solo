@@ -19,7 +19,7 @@ const filterAble = [
 ];
 
 const StatusPage: React.FC = () => {
-  const { docs, fetchDocuments, pageCount } = useDocuments();
+  const { docs, updateDocuments, pageCount } = useDocuments();
   const tableColumns = useMemo(createColumns, []);
 
   const renderSubComponent = (row: Row<Document>) => {
@@ -58,7 +58,7 @@ const StatusPage: React.FC = () => {
         renderSubComponent={renderSubComponent}
         renderPagination={renderPagination}
         renderFilterControls={renderFilterControls}
-        fetchData={fetchDocuments}
+        fetchData={updateDocuments}
         pageCount={pageCount}
       />
     </div>
