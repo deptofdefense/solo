@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns="http://www.usmc.mil/schemas/1" 
+            targetNamespace="http://www.usmc.mil/schemas/1" elementFormDefault="qualified"  version="$Revision:   2.0  $">
+
+       <xsd:import namespace="http://www.usmc.mil/schemas/1/if/solo" schemaLocation="./i111SoloDueInsOut.xsd"/>
+       <xsd:import namespace="http://www.usmc.mil/schemas/1/if/solo" schemaLocation="./i136SoloItemMaster.xsd"/>
+       <xsd:import namespace="http://www.usmc.mil/schemas/1/if/solo" schemaLocation="./i009ShipmentReceiptsIn.xsd"/>
+       <xsd:import namespace="http://www.usmc.mil/schemas/1/if/solo" schemaLocation="./i137SubinventoryTransferOut.xsd"/>
+       <xsd:import namespace="http://www.usmc.mil/schemas/1/if/solo" schemaLocation="./i112SalesOrderOut.xsd"/>
+       <xsd:import namespace="http://www.usmc.mil/schemas/1/if/solo" schemaLocation="./i033SoloInventoryOut.xsd" />
+</xsd:schema>
+

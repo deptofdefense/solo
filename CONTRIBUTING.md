@@ -103,13 +103,30 @@ The website's source code is in the `root` folder which contains content pages a
 ### Running the development environment
 
 #### Setting up Local HTTP/S environments
-  1. Navigate to solo/deploy/compose and run configure-local-environment.sh.
+  1. Navigate to solo/deploy/compose and run configure-local-environment.sh
       - `sh configure-local-environment.sh`
   2. Tell Chrome to allow self-signed certificates on localhost
       - Navigate to `chrome://flags/#allow-insecure-localhost` and enable that setting
-  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally 
+  3. Follow the directions given to you in the configure-local-environment.sh for building solo locally
   after configuration.
   
+#### Setting up Local Proprietary Compression 
+  1. Navigate to solo/compression-service/EXML-converter-service and run pull-proprietary-code.sh (requires AWS authentication and region to be set)
+      - `sh pull-proprietary-code.sh`
+  2. move up one directory
+      - ` cd ..`
+  3. Build and run the container and set the hostname of the container license, for example:
+      - `HOST_NAME=Garretts-MacBook-Pro.local docker-compose up --build`
+  4. API endpoints:
+      - localhost:8080/exml/decompress
+      - localhost:8080/xml/compress 
+  5. Ensure that Content-type and header of the request adhere to the following convention:
+      - application/xml 
+  6. The following are examples of compressed and decompressed request payloads that can be used to validate eXML compress/decompress:
+      - Compressed: gAtiYGSAAmYGKBtIssBIOGBjZHV0NWRxcuTw9XU2NDBgEIlmOHCAgXErI6MDE7eBoYmpgamJhQGLgRkDIytQhYCvIVAVEJmaA7EpinIWx0iGDUcurd5ewh0AlLQwMHB0BQA=
+      - Decompressed: <?xml version="1.0" encoding="UTF-8"?>
+<p0:shipmentReceiptsInCollection xmlns:p0="http://www.usmc.mil/schemas/1/if/solo"><p0:mRec><p0:dIC>AE1</p0:dIC><p0:status>BA</p0:status><p0:iPAAC>MMC100</p0:iPAAC><p0:keyD>2020-02-27T12:03:00.181-05:00</p0:keyD><p0:nIIN>014505480</p0:nIIN><p0:pri>06</p0:pri><p0:qCCA>1</p0:qCCA><p0:rIC>MC1</p0:rIC><p0:sDN>M1100100570055</p0:sDN><p0:txnDate>2020-02-27T12:03:00.181-05:00</p0:txnDate><p0:uOI>AY</p0:uOI><p0:spoolID>4000585130544</p0:spoolID><p0:sCN>P005800AE</p0:sCN></p0:mRec></p0:shipmentReceiptsInCollection>
+
 ##### Possible Error(s) and Troubleshooting recommendation(s)
 1. Error with worker when running. Fix is to `docker-compose down -v` - this will delete the persistent volume, 
 `docker volume prune` - delete the actual volume, and `docker-compose -f docker-compose.yml up --build` 
@@ -121,6 +138,8 @@ has been blocked by CORS policy: Response to preflight request doesn't pass acce
 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your
  needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.` Possible troubleshooting 
  step to disable and enable - [Chrome Disable Web Security](https://www.codeworkshop.com.au/chrome-disable-web-security/)
+
+ 2. Compression authentication: make sure that you have properly logged in, the region is set, and the resource you are trying to pull is in the s3 bucket as specified in the pull-proprietary-code.sh file.
 
 ### Code Style
 
