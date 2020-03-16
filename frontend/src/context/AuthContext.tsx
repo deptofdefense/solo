@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import JwtDecode from "jwt-decode";
 
 export interface User {
-  username: string | null;
+  username: string;
   userId: string | null;
   authenticated: boolean;
   tokenExp: string | null;
@@ -11,7 +11,7 @@ export interface User {
 }
 
 export const unauthenticatedUser: User = {
-  username: null,
+  username: "",
   userId: null,
   authenticated: false,
   tokenExp: null,
