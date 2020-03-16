@@ -47,6 +47,3 @@ services:
       - backend
     env_file: 
       - ./.env
-
-      
-
