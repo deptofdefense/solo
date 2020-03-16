@@ -1,11 +1,21 @@
 import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
-import { Button } from "solo-uswds";
+import ReceivedByInputCell from "./ReceivedByInput";
 
-type CreateColumns = () => Column<Document>[];
+export interface DocumentWithReceivedBy extends Document {
+  receivedBy?: string;
+  submitting?: boolean;
+  error?: string | null;
+}
 
-const createColumns: CreateColumns = () => [
+interface CreateOptions {
+  onSubmitCOR: (sdn: string, receivedBy: string) => void;
+}
+
+type CreateColumns = (opts: CreateOptions) => Column<DocumentWithReceivedBy>[];
+
+const createColumns: CreateColumns = ({ onSubmitCOR }) => [
   {
     Header: "SDN",
     accessor: "sdn"
@@ -26,14 +36,12 @@ const createColumns: CreateColumns = () => [
     accessor: "suppadd.desc"
   },
   {
-    Header: "Received By",
+    Header: "Submit COR",
     id: "receivedBy",
-    accessor: () => "Received By"
-  },
-  {
-    Header: "Submit",
-    id: "submit",
-    Cell: () => <Button onClick={() => {}}>Submit</Button>
+    accessor: "receivedBy",
+    Cell: ({ ...args }) => (
+      <ReceivedByInputCell {...args} onSubmitCOR={onSubmitCOR} />
+    )
   }
 ];
 

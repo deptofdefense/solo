@@ -12,8 +12,14 @@ const filterable = [
 ];
 
 const ConfirmationOfReceiptPage: React.FC = () => {
-  const { docs, updateDocuments, pageCount } = useCORDocuments();
-  const columns = useMemo(createColumns, []);
+  const { docs, updateDocuments, pageCount, submitCOR } = useCORDocuments();
+  const columns = useMemo(
+    () =>
+      createColumns({
+        onSubmitCOR: submitCOR
+      }),
+    [submitCOR]
+  );
 
   const renderPagination = (table: TableInstance<Document>) => (
     <Paginator table={table} />

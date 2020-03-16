@@ -266,7 +266,8 @@ const createFakeApiDocuments = (count: number = 20): ApiDocument[] => {
     addresses: defaultApiDoc.addresses.map(addy => ({
       ...addy,
       name: faker.company.companyName()
-    }))
+    })),
+    sdn: `M30300${faker.finance.account(8)}`
   }));
 };
 

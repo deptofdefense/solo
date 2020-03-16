@@ -73,7 +73,7 @@ describe("EnterReceiptPage Component", () => {
     fireEvent.click(submit);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(queryByText(defaultDoc.sdn)).toBeInTheDocument();
+      expect(queryByText(/^M30300/)).toBeInTheDocument();
     });
   });
 
