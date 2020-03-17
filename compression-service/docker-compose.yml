@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  efficientxml:
+    hostname: ${HOST_NAME}
+    build: ./
+    ports:
+      - "8080:8080"

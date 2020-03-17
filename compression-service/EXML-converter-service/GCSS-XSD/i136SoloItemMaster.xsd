@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.usmc.mil/schemas/1/if/solo"
+            targetNamespace="http://www.usmc.mil/schemas/1/if/solo"
+            elementFormDefault="qualified" attributeFormDefault="unqualified" version="$Revision:   2.0  $">
+      <xsd:include schemaLocation="soloCommon.xsd"/>
+      <xsd:element name="stratisItemMasterRequest">
+            <xsd:complexType>
+                  <xsd:sequence>
+                        <xsd:element ref="rIC"/>
+                        <xsd:element ref="countRequested"/>
+                        <xsd:element name="stratisItemCollection">
+                              <xsd:complexType>
+                                    <xsd:sequence>
+                                          <xsd:element ref="nIIN"
+                                                       maxOccurs="unbounded"/>
+                                    </xsd:sequence>
+                              </xsd:complexType>
+                        </xsd:element>
+                  </xsd:sequence>
+            </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="stratisItemMasterResponse">
+            <xsd:complexType>
+                  <xsd:sequence>
+                        <xsd:element ref="rIC"/>
+                        <xsd:element ref="countRequested"/>
+                        <xsd:element ref="countRetrieved"/>
+                        <xsd:element name="stratisItemMasterCollection"
+                                     minOccurs="0">
+                              <xsd:complexType>
+                                    <xsd:sequence>
+                                          <xsd:element name="stratisItemMasterRecord"
+                                                       maxOccurs="unbounded"
+                                                       minOccurs="0">
+                                                <xsd:complexType>
+                                                      <xsd:sequence>
+                                                            <xsd:element ref="iPAAC"/>
+                                                            <xsd:element ref="fSC"/>
+                                                            <xsd:element ref="nIIN"/>
+                                                            <xsd:element ref="primeFSC"/>
+                                                            <xsd:element ref="primeNIIN"/>
+                                                            <xsd:element ref="nomenclature"/>
+                                                            <xsd:element ref="uOI"/>
+                                                            <xsd:element ref="serialControlFlag"/>
+                                                            <xsd:element ref="lotControlFlag"/>
+                                                            <xsd:element ref="storesAccountCode"/>
+                                                            <xsd:element ref="unitPrice"/>
+                                                            <xsd:element ref="recoverabilityCode"/>
+                                                            <xsd:element ref="shelfLifeCode"/>
+                                                            <xsd:element ref="controlledInvItemCode"/>
+                                                            <xsd:element ref="phraseCode"/>
+                                                            <xsd:element ref="precMIC"/>
+                                                            <xsd:element ref="combatEssentiallyCode"/>
+                                                            <xsd:element ref="demilC"/>
+                                                            <xsd:element ref="dateOfReconciliation"/>
+                                                            <xsd:element ref="eStatus"/>
+                                                            <xsd:element ref="eMsg"/>
+                                                      </xsd:sequence>
+                                                </xsd:complexType>
+                                          </xsd:element>
+                                    </xsd:sequence>
+                              </xsd:complexType>
+                        </xsd:element>
+                  </xsd:sequence>
+            </xsd:complexType>
+      </xsd:element>
+</xsd:schema>
+
+
+

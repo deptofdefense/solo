@@ -58,3 +58,40 @@ celerybeat-schedule
 # Terraform
 .terraform
 
+## Java ignore ##################################
+compression-service/EXML-converter-service/HELP.md
+compression-service/EXML-converter-service/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+.DS_Store
+
+### STS ###
+compression-service/EXML-converter-service/.apt_generated
+compression-service/EXML-converter-service/.classpath
+compression-service/EXML-converter-service/.factorypath
+compression-service/EXML-converter-service/.project
+compression-service/EXML-converter-service/.settings
+compression-service/EXML-converter-service/.springBeans
+compression-service/EXML-converter-service/.sts4-cache
+
+### IntelliJ IDEA ###
+compression-service/EXML-converter-service/.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+compression-service/EXML-converter-service/nbproject/private/
+compression-service/EXML-converter-service/nbbuild/
+compression-service/EXML-converter-service/dist/
+compression-service/EXML-converter-service/nbdist/
+compression-service/EXML-converter-service/.nb-gradle/
+compression-service/EXML-converter-service/build/
+
+
+### Proprietary Code ###
+compression-service/EXML-converter-service/agiledelta
+
+### VS Code ###
+compression-service/EXML-converter-service/.vscode/

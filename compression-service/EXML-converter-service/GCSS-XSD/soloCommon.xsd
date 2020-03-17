@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.usmc.mil/schemas/1/if/solo" targetNamespace="http://www.usmc.mil/schemas/1/if/solo" elementFormDefault="qualified" attributeFormDefault="qualified" version="$Revision:   2.0  $">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en-US">  This schema is a collection of
+                                          individual elements that have been
+                                          collected from all the SOLO
+                                          interfaces. It is not the definition
+                                          of any particular message. It provides
+                                          common naming, type, and size
+                                          declarations of all SOLO elements
+                                          and should be included by reference in
+                                          each individual SOLO message schema
+                                          to enforce these common declarations.</xsd:documentation>
+  </xsd:annotation>
+    <xsd:annotation>
+           <xsd:documentation xml:lang="en-US"> ************ START OF NEW I-009 SCHEMA ELEMENTS for I-009,I-108,I-014 and I-135 MERGE **************** </xsd:documentation>
+       </xsd:annotation>
+       <xsd:element name="adviceCode">
+           <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="2"/>
+             </xsd:restriction>
+           </xsd:simpleType>
+  </xsd:element>
+  <xsd:element name="bORelDate" type="xsd:dateTime">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Back Order Released Date </xsd:documentation>
+      </xsd:annotation>
+     </xsd:element>
+      <xsd:element name="cC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Condition Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="cFlag">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Correction Flag </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="combatEssentiallyCode">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="2"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="controlledInvItemCode">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="1"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="costCode">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="12"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+       </xsd:element>
+       <xsd:element name="crossdockDocumentNumber">
+               <xsd:simpleType>
+                 <xsd:restriction base="xsd:string">
+                   <xsd:maxLength value="14"/>
+                 </xsd:restriction>
+               </xsd:simpleType>
+       </xsd:element>
+       <xsd:element name="countRequested" type="xsd:integer"/>
+       <xsd:element name="countRetrieved" type="xsd:integer"/>
+       <xsd:element name="dateOfReconciliation" type="xsd:dateTime"/>
+       <xsd:element name="demC">
+         <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Demand Code </xsd:documentation>
+         </xsd:annotation>
+         <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="1"/>
+         </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="demilC">
+       <xsd:annotation>
+         <xsd:documentation xml:lang="en-US"> Demilitarization Code </xsd:documentation>
+       </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="2"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="dIC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Document Identifier Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="3"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="disposalAuthority">
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+                </xsd:restriction>
+              </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="distC">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en-US"> Distribution Code </xsd:documentation>
+        </xsd:annotation>
+           <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+             <xsd:maxLength value="3"/>
+            </xsd:restriction>
+           </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="eStatus">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Error Status </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="eMsg">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Error Message </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="200"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="fCC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Condition Code From </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="fSC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> FSC Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="4"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="fund">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Fund Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="2"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="iPAAC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Issue Point AAC </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="6"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="jON">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Job Order Number for Z0* </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="60"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="keyD" type="xsd:dateTime"/>
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Date Kepunched </xsd:documentation>
+      </xsd:annotation>
+      <xsd:element name="lotControlFlag">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="lotN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Lot Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="lotED" type="xsd:dateTime">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Lot Expiration Date </xsd:documentation>
+      </xsd:annotation>
+     </xsd:element>
+      <xsd:element name="mOfShip">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Mode of Shipment </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="nIIN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> National Identification Item Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="9"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+       <xsd:element name="nomenclature">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="20"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+       </xsd:element>
+       <xsd:element name="phraseCode">
+           <xsd:simpleType>
+             <xsd:restriction base="xsd:string">
+               <xsd:maxLength value="1"/>
+             </xsd:restriction>
+           </xsd:simpleType>
+       </xsd:element>
+       <xsd:element name="precMIC">
+        <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Precious Metal Indicator Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="30"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+  </xsd:element>
+      <xsd:element name="pIN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Picking Identification Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="50"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="pri">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Priority Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="2"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="primeFSC">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="4"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="primeNIIN">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="9"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="proj">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Project Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="3"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="qA5A" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Reserve qty for NIIN and subinv where demand type = Sales Order </xsd:documentation>
+        </xsd:annotation>
+     </xsd:element>
+       <xsd:element name="qCCA" type="xsd:integer">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Quantity on hand in 01A </xsd:documentation>
+      </xsd:annotation>
+       </xsd:element>
+      <xsd:element name="qCCF" type="xsd:integer">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Quantity on hand in 01F </xsd:documentation>
+      </xsd:annotation>
+       </xsd:element>
+      <xsd:element name="qDock" type="xsd:integer">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Qty in subinv DOCK
+                                                          01A: Qty
+                                                          01F: Qty
+                                                         </xsd:documentation>
+      </xsd:annotation>
+       </xsd:element>
+      <xsd:element name="qLot" type="xsd:integer">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Lot Quantity </xsd:documentation>
+      </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="qM" type="xsd:integer">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Quantity Manifested </xsd:documentation>
+      </xsd:annotation>
+       </xsd:element>
+      <xsd:element name="qOH" type="xsd:integer">
+      <xsd:annotation>
+       <xsd:documentation xml:lang="en-US"> Quantity On Hand </xsd:documentation>
+       </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="qOPC" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Reserve Qty for NIIN where demand type = Op Code </xsd:documentation>
+      </xsd:annotation>
+      </xsd:element>
+       <xsd:element name="qSTG" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Qty in subinv STAGE </xsd:documentation>
+      </xsd:annotation>
+      </xsd:element>
+       <xsd:element name="qTOH" type="xsd:integer">
+        <xsd:annotation>
+         <xsd:documentation xml:lang="en-US"> Total Quantity On Hand </xsd:documentation>
+      </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="qTr" type="xsd:integer">
+         <xsd:annotation>
+           <xsd:documentation xml:lang="en-US"> Transaction Quantity </xsd:documentation>
+          </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="quantityDueIn" type="xsd:integer"/>
+      <xsd:element name="quantityInvoiced" type="xsd:integer"/>
+      <xsd:element name="qWrs" type="xsd:integer">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Reserve Qty for NIIN where demand type = WRS </xsd:documentation>
+      </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="rCN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Receipt Control Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="50"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="rDD">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Required Delivery Date </xsd:documentation>
+              <xsd:documentation xml:lang="en-US"> To preserve legacy SASSY/SOLO business
+                                               logic, this element remains as a 'julian'
+                                               date which can be augmented with a priority
+                                               code character so it is defined as a string.
+                                                                        </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="3"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="recordFSC">
+         <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+           <xsd:maxLength value="4"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="recoverabilityCode">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="recSDN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Receipt Document Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="15"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="rIC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Routing Identifier Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="3"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="rICT">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-US"> Routing Identifier Code TO </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+             <xsd:maxLength value="3"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="rON">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Reimburseable Order Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="15"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="sC">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Signal Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="sCN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Shipping Control Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="50"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="sDN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Document Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="14"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="serialControlFlag">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="serN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Serial Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="30"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="sfx">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Document Suffix Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="1"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="shelfLifeCode">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>  
+      <xsd:element name="shipToName">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="100"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToLine1">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToLine2">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToLine3">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToLine4">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="100"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToCity">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="50"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToState">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="2"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToZipCode">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="10"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="shipToCountry">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="50"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+       </xsd:element>
+      <xsd:element name="sID">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Stow ID </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="50"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="spoolID" type="xsd:integer"/>
+      <xsd:element name="sRN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Service Request Number </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="50"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="status">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> DIC Status Code for AE1 mostly</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="2"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="storesAccountCode">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="supADD">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Supplementary Address </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="6"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="tCC">
+                <xsd:annotation>
+                    <xsd:documentation xml:lang="en-US"> Condition Code To </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="1"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="tCN">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Transport Control Code </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="17"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="txnDate" type="xsd:dateTime">
+      <xsd:annotation>
+          <xsd:documentation xml:lang="en-US"> Transaction Date </xsd:documentation>
+      </xsd:annotation>
+     </xsd:element>
+      <xsd:element name="uII">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Unique Item Identification </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="100"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="unitPrice" type="xsd:decimal"/>
+      <xsd:element name="uOI">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Unit of Issue - Measure </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="2"/>
+              </xsd:restriction>
+          </xsd:simpleType>
+    </xsd:element>
+      <xsd:element name="wrsTgt" type="xsd:integer">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-US"> Forecast qty for NIIN in forecast named WRS </xsd:documentation>
+      </xsd:annotation>
+  </xsd:element>
+      <xsd:element name="fDate" type="xsd:dateTime">
+          <xsd:annotation>
+              <xsd:documentation xml:lang="en-US"> Future Use Date  </xsd:documentation>
+          </xsd:annotation>
+     </xsd:element>
+     <xsd:element name="fStr">
+               <xsd:annotation>
+                   <xsd:documentation xml:lang="en-US"> Future Use String </xsd:documentation>
+               </xsd:annotation>
+               <xsd:simpleType>
+                   <xsd:restriction base="xsd:string">
+                       <xsd:maxLength value="100"/>
+                   </xsd:restriction>
+               </xsd:simpleType>
+      </xsd:element>
+       <xsd:element name="fInt" type="xsd:integer">
+        <xsd:annotation>
+               <xsd:documentation xml:lang="en-US"> Future Use Integer </xsd:documentation>
+      </xsd:annotation>
+      </xsd:element>
+</xsd:schema>
