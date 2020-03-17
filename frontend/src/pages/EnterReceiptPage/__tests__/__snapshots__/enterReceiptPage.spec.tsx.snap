@@ -315,21 +315,33 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
         </tr>
       </tbody>
     </table>
-    <form
-      class="grid-row flex-row flex-justify-start flex-align-center margin-3 col-5"
+    <div
+      class="grid-row flex-align-start flex-justify"
     >
-      <input
-        class="usa-input"
-        placeholder="SDN"
-        value=""
-      />
-      <button
-        class="usa-button margin-top-1 margin-left-1 square"
-        type="submit"
+      <form
+        class="display-flex flex-row flex-justify-start flex-align-center flex-no-wrap flex-auto margin-1"
       >
-        Submit
+        <input
+          class="usa-input"
+          placeholder="SDN"
+          value=""
+        />
+        <button
+          class="usa-button margin-top-1 margin-left-1 square"
+          type="submit"
+        >
+          Search
+        </button>
+      </form>
+      <button
+        class="usa-button margin-top-2"
+      >
+        Submit All
       </button>
-    </form>
+    </div>
+    <div
+      class="grid-row flex-justify-center flex-12 tablet:flex-4"
+    />
   </div>
 </DocumentFragment>
 `;
