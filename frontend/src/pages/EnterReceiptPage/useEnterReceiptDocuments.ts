@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useDocumentApi } from "hooks";
+import { useDocumentSet } from "hooks";
 import { useAuthContext } from "context";
 import { DocumentWithLoadingStatus } from "./tableColumns";
 
@@ -22,22 +22,17 @@ interface SubmissionStatus {
 
 const useDocuments = () => {
   const { apiCall } = useAuthContext();
-  const { fetchDocuments, ...rest } = useDocumentApi();
+  const {
+    addDocument,
+    modifyDocument,
+    fetchDocuments,
+    clearAllDocuments,
+    docs,
+    ...rest
+  } = useDocumentSet<DocumentWithLoadingStatus>();
   const [submitStatus, setSubmitStatus] = useState<SubmissionStatus>({
     loading: false
   });
-  const [docs, setDocs] = useState<DocumentWithLoadingStatus[]>([]);
-
-  const updateDoc = useCallback(
-    (sdn: string, data: Partial<DocumentWithLoadingStatus>) => {
-      setDocs(prevDocs =>
-        prevDocs.map(existingDoc =>
-          existingDoc.sdn === sdn ? { ...existingDoc, ...data } : existingDoc
-        )
-      );
-    },
-    [setDocs]
-  );
 
   const fetchDetailsForDocument = useCallback(
     async (sdn: string) => {
@@ -47,24 +42,24 @@ const useDocuments = () => {
           sort: [],
           page: 0
         });
-        updateDoc(sdn, {
+        modifyDocument(sdn, {
           ...doc,
           loading: false,
           error: null
         });
       } catch (e) {
         /* istanbul ignore next */
-        updateDoc(sdn, {
+        modifyDocument(sdn, {
           loading: false,
           error: e.toString()
         });
       }
     },
-    [fetchDocuments, updateDoc]
+    [fetchDocuments, modifyDocument]
   );
 
   const addSdn = (sdn: string) => {
-    setDocs(prevDocs => [...prevDocs, { sdn, loading: true, error: null }]);
+    addDocument(sdn, { loading: true, error: null });
     fetchDetailsForDocument(sdn);
   };
 
@@ -95,7 +90,7 @@ const useDocuments = () => {
         method: "POST",
         body: JSON.stringify(data)
       });
-      setDocs([]);
+      clearAllDocuments();
       setSubmitStatus({
         loading: false,
         status: "success",
