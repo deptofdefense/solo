@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.usmc.mil/schemas/1/if/solo"
+            targetNamespace="http://www.usmc.mil/schemas/1/if/solo"
+            elementFormDefault="qualified" version="$Revision:   2.0  $">
+  <xsd:include schemaLocation="soloCommon.xsd"/>
+   <xsd:element name="shipmentReceiptsInCollection">
+        <xsd:complexType>
+            <xsd:sequence maxOccurs="unbounded">
+                <xsd:element name="mRec" minOccurs="1" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="jON" minOccurs="0" maxOccurs="1"/>
+                            <!-- Job Order Number for Z0* -->
+                            <xsd:element ref="dIC" minOccurs="1" maxOccurs="1"/>
+                            <!-- Document Identifier Code -->
+                            <xsd:element ref="status" minOccurs="0" maxOccurs="1"/>
+                            <!-- DIC Status Code-->
+                            <xsd:element ref="iPAAC" minOccurs="1" maxOccurs="1"/>
+                            <!-- Issue Point AAC -->
+                            <xsd:element ref="rON" minOccurs="0" maxOccurs="1"/>
+                            <!-- Reimburseable Order Number -->
+                            <xsd:element ref="fCC" minOccurs="0" maxOccurs="1"/>
+                            <!-- Condition Code From for DAC only-->
+                            <xsd:element ref="fund" minOccurs="0" maxOccurs="1"/>
+                            <!-- Fund Code -->
+                            <xsd:element ref="keyD" minOccurs="1" maxOccurs="1"/>
+                            <!-- Date Keypunched same as Date Received -->
+                            <xsd:element ref="mOfShip" minOccurs="0" maxOccurs="1"/>
+                            <!-- Mode of Shipment for AS1 only-->
+                            <xsd:element ref="nIIN" minOccurs="1" maxOccurs="1"/>
+                            <!-- Item Number -->
+                            <xsd:element ref="pri" minOccurs="0" maxOccurs="1"/>
+                            <!-- Priority Code -->
+                            <xsd:element ref="proj" minOccurs="0" maxOccurs="1"/>
+                            <!-- Project Code -->
+                            <xsd:element ref="qCCA" minOccurs="0" maxOccurs="1"/>
+                            <!-- Quantity CC A -->
+                            <xsd:element ref="qCCF" minOccurs="0" maxOccurs="1"/>
+                            <!-- Quantity CC F -->
+                            <xsd:element ref="qM" minOccurs="0" maxOccurs="1"/>
+                            <!-- Quantity Manifested for D6* only -->
+                            <xsd:element ref="rDD" minOccurs="0" maxOccurs="1"/>
+                            <!-- Required Delivery Date- 3 chars -->
+                            <xsd:element ref="recSDN" minOccurs="0" maxOccurs="1"/>
+                            <!-- Receipt Document Number for DWF only-->
+                            <xsd:element ref="rIC" minOccurs="1" maxOccurs="1"/>
+                            <!-- Routing Identifier Code -->
+                            <xsd:element ref="sC" minOccurs="0" maxOccurs="1"/>
+                            <!-- Signal Code -->
+                            <xsd:element ref="sDN" minOccurs="1" maxOccurs="1"/>
+                            <!-- Standard Document Number -->
+                            <xsd:element ref="sfx" minOccurs="0" maxOccurs="1"/>
+                            <!-- Document Suffix Code-->
+                            <xsd:element ref="supADD" minOccurs="0" maxOccurs="1"/>
+                            <!-- Supplementary Address -->
+                            <xsd:element ref="sRN" minOccurs="0" maxOccurs="1"/>
+                            <!-- Service Request Number -->
+                            <xsd:element ref="tCN" minOccurs="0" maxOccurs="1"/>
+                            <!-- Transportation Control Number -->
+                            <xsd:element ref="txnDate" minOccurs="1" maxOccurs="1"/>
+                            <!-- Solo Transmission Date-->
+                            <xsd:element ref="uOI" minOccurs="1" maxOccurs="1"/>
+                            <!-- Unit of Issue - Measure -->
+                            <xsd:element ref="spoolID" minOccurs="1" maxOccurs="1"/>
+                            <!-- Solo Spool ID -->
+                            <xsd:element ref="sCN" minOccurs="0" maxOccurs="1"/>
+                            <!-- Solo Shipping Control Number -->
+                            <xsd:element ref="rCN" minOccurs="0" maxOccurs="1"/>
+                            <!-- Solo Receipt Control Number -->
+                            <xsd:element ref="sID" minOccurs="0" maxOccurs="1"/>
+                            <!-- Solo Stow ID -->
+                            <xsd:element ref="pIN" minOccurs="0" maxOccurs="1"/>
+                            <!-- Solo Pick ID Number -->
+                            <xsd:element ref="cFlag" minOccurs="0" maxOccurs="1"/>
+                            <!-- Correction Flag -->
+                             <xsd:element ref="demC" minOccurs="0" maxOccurs="1"/>
+                            <!-- Demand Code -->
+                                <xsd:element name="detRec" minOccurs="0" maxOccurs="unbounded">  
+                                <!-- Detailed Record -->
+                                    <xsd:complexType>
+                                        <xsd:sequence>
+                                            <xsd:element ref="cC" minOccurs="1" maxOccurs="1"/>
+                                            <!-- Condition Code -->
+                                            <xsd:element ref="lotED" minOccurs="0" maxOccurs="1"/>
+                                            <!-- LOT Expiration Date -->
+                                            <xsd:element ref="lotN" minOccurs="0" maxOccurs="1"/>
+                                            <!-- LOT Number -->
+                                            <xsd:element ref="qLot" minOccurs="0" maxOccurs="1"/>
+                                            <!-- Lot Quantity -->
+                                            <xsd:element ref="serN" minOccurs="0" maxOccurs="1"/>
+                                            <!-- Serial Number -->
+                                            <xsd:element ref="uII" minOccurs="0" maxOccurs="1"/>
+                                            <!-- Unique Item Identifier -->
+                                        </xsd:sequence>
+                                    </xsd:complexType>
+                                </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

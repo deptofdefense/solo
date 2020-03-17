@@ -14,7 +14,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("matches snapshot", async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { asFragment, queryByText, container } = render(
+    const { asFragment, queryByText, getByText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -22,9 +22,7 @@ describe("EnterReceiptPage Component", () => {
         }
       }
     );
-    const submitBtn = container.querySelector(
-      "button[type='submit']"
-    ) as Element;
+    const submitBtn = getByText("Search");
     fireEvent.click(submitBtn);
     await wait(() => {
       // wait for some data to render before checking snapshot
@@ -36,7 +34,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("calls api and adds result to table when adding an sdn", async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { queryByText, getByPlaceholderText, container } = render(
+    const { queryByText, getByPlaceholderText, getByText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -45,7 +43,7 @@ describe("EnterReceiptPage Component", () => {
       }
     );
     const inputField = getByPlaceholderText("SDN");
-    const submit = container.querySelector("button[type='submit']") as Element;
+    const submit = getByText("Search");
     fireEvent.change(inputField, {
       target: { value: "somesdn" }
     });
@@ -59,7 +57,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("keeps sdn in table on fetch error", async () => {
     fetchMock.mockRejectedValue(new Error());
-    const { queryByText, getByPlaceholderText, container } = render(
+    const { queryByText, getByPlaceholderText, getByText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -68,7 +66,7 @@ describe("EnterReceiptPage Component", () => {
       }
     );
     const inputField = getByPlaceholderText("SDN");
-    const submit = container.querySelector("button[type='submit']") as Element;
+    const submit = getByText("Search");
     fireEvent.change(inputField, {
       target: { value: "badsdn" }
     });
@@ -84,7 +82,7 @@ describe("EnterReceiptPage Component", () => {
       ...defaultApiResponse,
       results: [{ ...defaultDoc, sdn: "1234" }]
     });
-    const { queryByText, queryAllByText, container } = render(
+    const { queryByText, queryAllByText, getByText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -92,7 +90,7 @@ describe("EnterReceiptPage Component", () => {
         }
       }
     );
-    const submit = container.querySelector("button[type='submit']") as Element;
+    const submit = getByText("Search");
     fireEvent.click(submit);
     await wait(() => {
       expect(queryByText("1234")).toBeInTheDocument();

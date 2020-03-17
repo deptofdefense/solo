@@ -31,6 +31,13 @@ const customRender = (ui: any, options: CustomRenderOptions = {}) => {
   return render(ui, { wrapper: Wrapper, ...rest });
 };
 
+// utility async sleep function
+export const sleep = (timeout = 5000) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+};
+
 // re-export everything
 export * from "@testing-library/react";
 
