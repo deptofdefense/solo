@@ -1,9 +1,10 @@
 .receivedByInput {
   margin-top: 0 !important;
+  outline: none !important;
 }
 
 .btn {
   margin-left: 8px;
-  width: 100px !important;
+  min-width: 100px !important;
   flex-shrink: 0;
 }

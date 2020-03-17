@@ -1,7 +1,8 @@
 import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
-import ReceivedByInputCell from "./ReceivedByInput";
+import { Checkbox } from "solo-uswds";
+import ReceivedByInputCell from "./SubmitCORCell";
 
 export interface DocumentWithReceivedBy extends Document {
   receivedBy?: string;
@@ -16,6 +17,32 @@ interface CreateOptions {
 type CreateColumns = (opts: CreateOptions) => Column<DocumentWithReceivedBy>[];
 
 const createColumns: CreateColumns = ({ onSubmitCOR }) => [
+  {
+    id: "select",
+    disableSortBy: true,
+    Header: ({ getToggleAllRowsSelectedProps }) => {
+      const {
+        checked,
+        onChange,
+        indeterminate,
+        ...rest
+      } = getToggleAllRowsSelectedProps();
+      return (
+        <div className="padding-left-2">
+          <Checkbox checked={checked} onChange={onChange} {...rest} />
+        </div>
+      );
+    },
+    Cell: ({ row }) => {
+      const {
+        checked,
+        onChange,
+        indeterminate,
+        ...rest
+      } = row.getToggleRowSelectedProps();
+      return <Checkbox checked={checked} onChange={onChange} {...rest} />;
+    }
+  },
   {
     Header: "SDN",
     accessor: "sdn"
@@ -37,8 +64,9 @@ const createColumns: CreateColumns = ({ onSubmitCOR }) => [
   },
   {
     Header: "Submit COR",
-    id: "receivedBy",
+    id: "submitCOR",
     accessor: "receivedBy",
+    disableSortBy: true,
     Cell: ({ ...args }) => (
       <ReceivedByInputCell {...args} onSubmitCOR={onSubmitCOR} />
     )

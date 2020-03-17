@@ -6,3 +6,4 @@ export { HeaderNavLink } from "./HeaderNavLink";
 export { HeaderLogo } from "./HeaderLogo";
 export { Table } from "./Table";
 export { Alert } from "./Alert";
+export { Checkbox } from "./Checkbox";
