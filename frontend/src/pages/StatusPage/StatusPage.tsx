@@ -9,7 +9,7 @@ import {
   SelectFilterControls,
   Paginator
 } from "components";
-import useDocuments from "./useDocuments";
+import { useDocumentSet } from "hooks";
 import createColumns from "./tableColumns";
 
 const filterAble = [
@@ -19,7 +19,7 @@ const filterAble = [
 ];
 
 const StatusPage: React.FC = () => {
-  const { docs, updateDocuments, pageCount } = useDocuments();
+  const { docs, updateDocuments, pageCount } = useDocumentSet();
   const tableColumns = useMemo(createColumns, []);
 
   const renderSubComponent = (row: Row<Document>) => {
