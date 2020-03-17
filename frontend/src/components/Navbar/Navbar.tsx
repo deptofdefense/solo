@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { useHistory } from "react-router";
 import {
   Header,
   HeaderNavbar,
@@ -6,10 +7,12 @@ import {
   HeaderNavLink,
   HeaderLogo
 } from "solo-uswds";
+import NavbarUserDropdown from "./NavbarUserDropdown";
 import { useAuthContext } from "context";
 
 const Navbar: React.FC = () => {
-  const { authenticated } = useAuthContext();
+  const history = useHistory();
+  const { authenticated, username, apiLogout } = useAuthContext();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
@@ -17,6 +20,11 @@ const Navbar: React.FC = () => {
   }, [isOpen, setIsOpen]);
 
   const close = () => setIsOpen(false);
+
+  const onLogout = async () => {
+    await apiLogout();
+    history.push("/postlogout");
+  };
 
   return (
     <Header>
@@ -38,6 +46,7 @@ const Navbar: React.FC = () => {
             <HeaderNavLink to="/cor" exact onClick={close}>
               Confirmation of Receipt (COR)
             </HeaderNavLink>
+            <NavbarUserDropdown username={username} onLogout={onLogout} />
           </>
         )}
       </HeaderNav>
