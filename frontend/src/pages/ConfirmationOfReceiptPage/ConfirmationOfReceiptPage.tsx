@@ -1,6 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { TableInstance } from "react-table";
-import { Title, Table, SelectFilterControls, Paginator } from "components";
+import {
+  Title,
+  Table,
+  SelectFilterControls,
+  Paginator,
+  CORInputForm
+} from "components";
 import { Document } from "solo-types";
 import useCORDocuments from "./useCORDocuments";
 import createColumns from "./tableColumns";
@@ -12,7 +18,16 @@ const filterable = [
 ];
 
 const ConfirmationOfReceiptPage: React.FC = () => {
-  const { docs, updateDocuments, pageCount, submitCOR } = useCORDocuments();
+  const [bulkReceivedBy, setBulkReceivedBy] = useState("");
+  const {
+    docs,
+    updateDocuments,
+    pageCount,
+    submitCOR,
+    submitBulkCOR,
+    bulkSubmitStatus,
+    resetBulkSubmitStatus
+  } = useCORDocuments();
   const columns = useMemo(
     () =>
       createColumns({
@@ -21,13 +36,37 @@ const ConfirmationOfReceiptPage: React.FC = () => {
     [submitCOR]
   );
 
+  const onSelectedRowsChange = useCallback(
+    ({ toggleHideColumn, selectedFlatRows }: TableInstance<Document>) => {
+      // show individual row submit forms only when no rows are selected
+      resetBulkSubmitStatus();
+      toggleHideColumn("submitCOR", selectedFlatRows.length > 0);
+    },
+    [resetBulkSubmitStatus]
+  );
+
   const renderPagination = (table: TableInstance<Document>) => (
-    <Paginator table={table} />
+    <>{table.selectedFlatRows.length === 0 && <Paginator table={table} />}</>
   );
 
   const renderFilterControls = (table: TableInstance<Document>) => {
-    const { setGlobalFilter } = table;
-    return (
+    const { setGlobalFilter, selectedFlatRows } = table;
+    return selectedFlatRows.length > 0 ? (
+      <CORInputForm
+        value={bulkReceivedBy}
+        onReceivedByChange={setBulkReceivedBy}
+        onSubmitCOR={() =>
+          submitBulkCOR(
+            selectedFlatRows.map(({ original }) => original.sdn),
+            bulkReceivedBy
+          )
+        }
+        loading={bulkSubmitStatus.submitting}
+        error={bulkSubmitStatus.error}
+        actionText={`Submit ${selectedFlatRows.length} Cors`}
+        className="margin-left-2 padding-y-2 flex-justify-center"
+      />
+    ) : (
       <SelectFilterControls options={filterable} onSubmit={setGlobalFilter} />
     );
   };
@@ -38,6 +77,7 @@ const ConfirmationOfReceiptPage: React.FC = () => {
       <Table<Document>
         columns={columns}
         data={docs}
+        onSelectedRowsChange={onSelectedRowsChange}
         renderFilterControls={renderFilterControls}
         renderPagination={renderPagination}
         pageCount={pageCount}

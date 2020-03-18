@@ -20,6 +20,11 @@ import {
   UseRowStateOptions,
   UseRowStateRowProps,
   UseRowStateState,
+  UseRowSelectHooks,
+  UseRowSelectInstanceProps,
+  UseRowSelectOptions,
+  UseRowSelectRowProps,
+  UseRowSelectState,
   UseSortByColumnOptions,
   UseSortByColumnProps,
   UseSortByHooks,
@@ -47,11 +52,13 @@ declare module "react-table" {
       UsePaginationOptions<D>,
       UseRowStateOptions<D>,
       UseSortByOptions<D>,
+      UseRowSelectOptions<D>,
       Record<string, any> {}
 
   export interface Hooks<D extends object = {}>
     extends UseExpandedHooks<D>,
-      UseSortByHooks<D> {}
+      UseSortByHooks<D>,
+      UseRowSelectHooks<D> {}
 
   export interface TableInstance<D extends object = {}>
     extends UseColumnOrderInstanceProps<D>,
@@ -59,6 +66,7 @@ declare module "react-table" {
       UseFiltersInstanceProps<D>,
       TypedGlobalFiltersInstanceProps<D>,
       UsePaginationInstanceProps<D>,
+      UseRowSelectInstanceProps<D>,
       UseRowStateInstanceProps<D>,
       UseSortByInstanceProps<D> {}
 
@@ -69,7 +77,8 @@ declare module "react-table" {
       TypedGlobalFiltersState<D>,
       UsePaginationState<D>,
       UseRowStateState<D>,
-      UseSortByState<D> {}
+      UseSortByState<D>,
+      UseRowSelectState<D> {}
 
   export interface Column<D extends object = {}>
     extends UseFiltersColumnOptions<D>,
@@ -84,5 +93,6 @@ declare module "react-table" {
 
   export interface Row<D extends object = {}>
     extends UseExpandedRowProps<D>,
-      UseRowStateRowProps<D> {}
+      UseRowStateRowProps<D>,
+      UseRowSelectRowProps<D> {}
 }

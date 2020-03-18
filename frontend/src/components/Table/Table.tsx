@@ -8,6 +8,7 @@ import {
   SortingRule,
   usePagination,
   useGlobalFilter,
+  useRowSelect,
   TableInstance
 } from "react-table";
 import { Query } from "solo-types";
@@ -23,6 +24,7 @@ interface TableProps<T extends object> {
   manualPagination?: boolean;
   pageCount?: number;
   fetchData?: (query: Query<T>) => void;
+  onSelectedRowsChange?: (table: TableInstance<T>) => void;
   renderSubComponent?: (row: Row<T>) => JSX.Element;
   renderPagination?: (table: TableInstance<T>) => JSX.Element;
   renderFilterControls?: (table: TableInstance<T>) => JSX.Element;
@@ -36,6 +38,7 @@ const Table = <T extends object>({
   manualSortBy = true,
   pageCount = 0,
   fetchData,
+  onSelectedRowsChange,
   renderSubComponent,
   renderPagination,
   renderFilterControls
@@ -67,11 +70,12 @@ const Table = <T extends object>({
     useGlobalFilter,
     useSortBy,
     useExpanded,
-    usePagination
+    usePagination,
+    useRowSelect
   );
 
   const {
-    state: { sortBy, pageIndex, globalFilter }
+    state: { sortBy, pageIndex, globalFilter, selectedRowIds }
   } = instance;
 
   useEffect(() => {
@@ -82,6 +86,10 @@ const Table = <T extends object>({
         filters: globalFilter
       });
   }, [fetchData, sortBy, globalFilter, pageIndex]);
+
+  useEffect(() => {
+    onSelectedRowsChange && onSelectedRowsChange(instance);
+  }, [selectedRowIds, instance, onSelectedRowsChange]);
 
   return (
     <>

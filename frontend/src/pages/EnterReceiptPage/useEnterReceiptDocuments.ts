@@ -104,7 +104,7 @@ const useDocuments = () => {
         message: e.message || "Something went wrong"
       });
     }
-  }, [docs, apiCall]);
+  }, [docs, apiCall, clearAllDocuments]);
 
   return {
     docs,
