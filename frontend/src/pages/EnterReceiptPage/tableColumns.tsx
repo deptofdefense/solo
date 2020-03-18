@@ -3,21 +3,16 @@ import { Column } from "react-table";
 import { Document } from "solo-types";
 import LoadingIcon from "./LoadingIcon";
 
-export interface DocumentWithLoadingStatus extends Partial<Document> {
-  loading: boolean;
-  error: string | null;
-}
-
-type CreateColumns = () => Column<DocumentWithLoadingStatus>[];
+type CreateColumns = () => Column<Document>[];
 
 const createColumns: CreateColumns = () => [
   {
     Header: "Loading",
     Cell: ({
       row: {
-        original: { loading, error }
+        original: { loadingStatus }
       }
-    }) => <LoadingIcon loading={loading} error={error} />
+    }) => <LoadingIcon {...loadingStatus} />
   },
   {
     Header: "SDN",
@@ -36,8 +31,7 @@ const createColumns: CreateColumns = () => [
   {
     Header: "Quantity",
     id: "quantity",
-    accessor: ({ statuses = [] }) =>
-      statuses[statuses.length - 1]?.projected_qty
+    accessor: ({ enteredReceivedQty }) => enteredReceivedQty
   },
   {
     Header: "Commodity",

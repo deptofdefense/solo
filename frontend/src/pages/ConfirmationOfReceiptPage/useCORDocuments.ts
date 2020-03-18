@@ -1,17 +1,13 @@
 import { useCallback, useState } from "react";
 import { useDocumentSet } from "hooks";
-import { Query, Document } from "solo-types";
-import { DocumentWithReceivedBy } from "./tableColumns";
+import { Query, Document, LoadingStatus } from "solo-types";
 import { useAuthContext } from "context";
 import { sleep } from "test-utils";
 
 const useCORDocuments = () => {
   const { apiCall } = useAuthContext();
-  const [bulkSubmitStatus, setBulkSubmitStatus] = useState<{
-    submitting: boolean;
-    error?: string;
-  }>({
-    submitting: false
+  const [bulkSubmitStatus, setBulkSubmitStatus] = useState<LoadingStatus>({
+    loading: false
   });
   const {
     setDocs,
@@ -20,7 +16,7 @@ const useCORDocuments = () => {
     modifyDocument,
     removeDocument,
     ...rest
-  } = useDocumentSet<DocumentWithReceivedBy>();
+  } = useDocumentSet();
 
   const updateDocumentsWithD6TStatus = useCallback(
     (query: Query<Document>) =>
@@ -41,7 +37,9 @@ const useCORDocuments = () => {
   const submitCOR = useCallback(
     async (sdn: string, receivedBy: string) => {
       modifyDocument(sdn, {
-        submitting: true
+        loadingStatus: {
+          loading: true
+        }
       });
       // simulate up to 1.5 seconds of load time
       await sleep(Math.floor(Math.random() * 1500));
@@ -59,8 +57,11 @@ const useCORDocuments = () => {
       } catch (e) {
         // api or network error
         modifyDocument(sdn, {
-          submitting: false,
-          error: e.message || "Something went wrong"
+          loadingStatus: {
+            loading: false,
+            error: true,
+            message: e.message || "Something went wrong"
+          }
         });
       }
     },
@@ -70,7 +71,7 @@ const useCORDocuments = () => {
   const submitBulkCOR = useCallback(
     async (sdns: string[], receivedBy: string) => {
       setBulkSubmitStatus({
-        submitting: true
+        loading: true
       });
       // simulate up to 1.5 seconds of load time
       await sleep(Math.floor(Math.random() * 1500));
@@ -91,12 +92,13 @@ const useCORDocuments = () => {
           prevDocs.filter(({ sdn }) => sdns.indexOf(sdn) < 0)
         );
         setBulkSubmitStatus({
-          submitting: false
+          loading: false
         });
       } catch (e) {
         setBulkSubmitStatus({
-          submitting: false,
-          error: e.message || "Something went wrong"
+          loading: false,
+          error: true,
+          message: e.message || "Something went wrong"
         });
       }
     },
@@ -105,7 +107,7 @@ const useCORDocuments = () => {
 
   const resetBulkSubmitStatus = useCallback(() => {
     setBulkSubmitStatus({
-      submitting: false
+      loading: false
     });
   }, [setBulkSubmitStatus]);
 

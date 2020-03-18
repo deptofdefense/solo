@@ -7,3 +7,4 @@ export { HeaderLogo } from "./HeaderLogo";
 export { Table } from "./Table";
 export { Alert } from "./Alert";
 export { Checkbox } from "./Checkbox";
+export { Input } from "./Input";

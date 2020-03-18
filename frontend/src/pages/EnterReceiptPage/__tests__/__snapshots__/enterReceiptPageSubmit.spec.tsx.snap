@@ -3,7 +3,7 @@
 exports[`EnterReceiptPageStatusIndicator component does not render while loading 1`] = `
 <DocumentFragment>
   <div
-    class="grid-row flex-justify-center flex-12 tablet:flex-4"
+    class="grid-row flex-justify-center flex-12 tablet:flex-10"
   />
 </DocumentFragment>
 `;
@@ -11,23 +11,15 @@ exports[`EnterReceiptPageStatusIndicator component does not render while loading
 exports[`EnterReceiptPageStatusIndicator component renders error alert when status is error 1`] = `
 <DocumentFragment>
   <div
-    class="grid-row flex-justify-center flex-12 tablet:flex-4"
-  >
-    <div
-      class="usa-alert usa-alert--error margin-top-4"
-    >
-      <div
-        class="usa-alert__body"
-      />
-    </div>
-  </div>
+    class="grid-row flex-justify-center flex-12 tablet:flex-10"
+  />
 </DocumentFragment>
 `;
 
 exports[`EnterReceiptPageStatusIndicator component renders success alert when status is success 1`] = `
 <DocumentFragment>
   <div
-    class="grid-row flex-justify-center flex-12 tablet:flex-4"
+    class="grid-row flex-justify-center flex-12 tablet:flex-10"
   />
 </DocumentFragment>
 `;

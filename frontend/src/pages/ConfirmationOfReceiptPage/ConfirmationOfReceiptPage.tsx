@@ -61,10 +61,9 @@ const ConfirmationOfReceiptPage: React.FC = () => {
             bulkReceivedBy
           )
         }
-        loading={bulkSubmitStatus.submitting}
-        error={bulkSubmitStatus.error}
         actionText={`Submit ${selectedFlatRows.length} Cors`}
         className="margin-left-2 padding-y-2 flex-justify-center"
+        {...bulkSubmitStatus}
       />
     ) : (
       <SelectFilterControls options={filterable} onSubmit={setGlobalFilter} />

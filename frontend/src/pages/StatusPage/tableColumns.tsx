@@ -34,7 +34,8 @@ const createColumns: CreateColumns = () => [
     Header: "Status",
     disableSortBy: true,
     id: "currentStatus",
-    accessor: ({ statuses }) => statuses[statuses.length - 1].dic.desc
+    accessor: ({ mostRecentStatusIdx, statuses }) =>
+      statuses[mostRecentStatusIdx].dic.desc
   },
   {
     Header: "Nomenclature",
@@ -44,8 +45,10 @@ const createColumns: CreateColumns = () => [
   {
     Header: "Last Updated",
     id: "status_date",
-    accessor: ({ statuses }) =>
-      `${formatDistanceToNow(parseISO(statuses[0].status_date))} ago`
+    accessor: ({ mostRecentStatusIdx, statuses }) =>
+      `${formatDistanceToNow(
+        parseISO(statuses[mostRecentStatusIdx].status_date)
+      )} ago`
   }
 ];
 

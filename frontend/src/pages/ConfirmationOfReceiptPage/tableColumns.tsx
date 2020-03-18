@@ -2,19 +2,13 @@ import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
 import { Checkbox } from "solo-uswds";
-import ReceivedByInputCell from "./SubmitCORCell";
-
-export interface DocumentWithReceivedBy extends Document {
-  receivedBy?: string;
-  submitting?: boolean;
-  error?: string | null;
-}
+import SubmitCORCell from "./SubmitCORCell";
 
 interface CreateOptions {
   onSubmitCOR: (sdn: string, receivedBy: string) => void;
 }
 
-type CreateColumns = (opts: CreateOptions) => Column<DocumentWithReceivedBy>[];
+type CreateColumns = (opts: CreateOptions) => Column<Document>[];
 
 const createColumns: CreateColumns = ({ onSubmitCOR }) => [
   {
@@ -55,7 +49,8 @@ const createColumns: CreateColumns = ({ onSubmitCOR }) => [
   {
     Header: "Quantity",
     id: "quantity",
-    accessor: ({ statuses }) => statuses[statuses.length - 1]?.received_qty
+    accessor: ({ mostRecentStatusIdx, statuses }) =>
+      statuses[mostRecentStatusIdx].received_qty
   },
   {
     Header: "Commodity",
@@ -67,8 +62,8 @@ const createColumns: CreateColumns = ({ onSubmitCOR }) => [
     id: "submitCOR",
     accessor: "receivedBy",
     disableSortBy: true,
-    Cell: ({ ...args }) => (
-      <ReceivedByInputCell {...args} onSubmitCOR={onSubmitCOR} />
+    Cell: ({ row: { original } }) => (
+      <SubmitCORCell document={original} onSubmitCOR={onSubmitCOR} />
     )
   }
 ];

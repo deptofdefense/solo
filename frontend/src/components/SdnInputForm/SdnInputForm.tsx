@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Button } from "solo-uswds";
+import { Button, Input } from "solo-uswds";
 
 interface SdnInputFormProps {
   disabled?: boolean;
@@ -26,14 +26,13 @@ const SdnInputForm: React.FC<SdnInputFormProps> = ({
       onSubmit={onSubmitted}
       className="display-flex flex-row flex-justify-start flex-align-center flex-no-wrap flex-auto margin-1"
     >
-      <input
-        className="usa-input"
+      <Input
         value={value}
         onChange={e => setValue(e.currentTarget.value)}
         placeholder="SDN"
       />
       <Button
-        className="margin-top-1 margin-left-1"
+        className="margin-left-1"
         type="submit"
         disabled={disabled}
         square

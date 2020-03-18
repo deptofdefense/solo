@@ -1,17 +1,18 @@
 import React from "react";
 import classNames from "classnames";
 import { Button } from "solo-uswds";
+import { LoadingStatus } from "solo-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import classes from "./CORInputForm.module.scss";
 
-interface CORInputFormProps extends Partial<JSX.IntrinsicElements["form"]> {
+interface CORInputFormProps
+  extends Partial<JSX.IntrinsicElements["form"]>,
+    LoadingStatus {
   onSubmitCOR: (value: string) => void;
   onReceivedByChange: (value: string) => void;
   value: string;
   actionText?: string;
-  loading?: boolean;
-  error?: string | null;
 }
 
 const ReceivedByInputCell: React.FC<CORInputFormProps> = ({
@@ -20,6 +21,7 @@ const ReceivedByInputCell: React.FC<CORInputFormProps> = ({
   value,
   loading,
   error,
+  message,
   actionText = "Submit",
   className,
   ...rest
@@ -61,7 +63,7 @@ const ReceivedByInputCell: React.FC<CORInputFormProps> = ({
       </form>
       {error && (
         <div className="usa-error-message text-center" role="alert">
-          {error}
+          {message}
         </div>
       )}
     </div>
