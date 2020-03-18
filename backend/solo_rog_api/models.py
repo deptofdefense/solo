@@ -118,6 +118,7 @@ class Document(models.Model):
     def __str__(self) -> str:
         return str(self.sdn)
 
+
 # Add subinventory and locator so we can add that into the status d6t.
 class Status(models.Model):
     document = models.ForeignKey(
@@ -129,8 +130,12 @@ class Status(models.Model):
     esd = models.DateField(null=True, blank=True)
     projected_qty = models.PositiveSmallIntegerField(null=True, blank=True)
     received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
-    subinventory = models.ForeignKey("SubInventory", related_name='statuses', on_delete=models.SET_NULL, null=True)
-    locator = models.ForeignKey('Locator', related_name='statuses', on_delete=models.SET_NULL, null=True)
+    subinventory = models.ForeignKey(
+        "SubInventory", related_name="statuses", on_delete=models.SET_NULL, null=True
+    )
+    locator = models.ForeignKey(
+        "Locator", related_name="statuses", on_delete=models.SET_NULL, null=True
+    )
 
     def status_converted_date(self) -> str:
         return parse_datetime(str(self.status_date)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
