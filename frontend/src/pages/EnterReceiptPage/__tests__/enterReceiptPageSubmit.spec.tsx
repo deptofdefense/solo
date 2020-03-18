@@ -124,21 +124,21 @@ describe("EnterReceiptPage submit all process", () => {
 describe("EnterReceiptPageStatusIndicator component", () => {
   it("renders error alert when status is error", () => {
     const { asFragment } = render(
-      <EnterReceiptStatusIndicator loading={false} status="error" />
+      <EnterReceiptStatusIndicator loading={false} error={true} />
     );
     expect(asFragment()).toMatchSnapshot();
   });
 
   it("does not render while loading", async () => {
     const { asFragment } = render(
-      <EnterReceiptStatusIndicator loading={true} status="error" />
+      <EnterReceiptStatusIndicator loading={true} error={true} />
     );
     expect(asFragment()).toMatchSnapshot();
   });
 
   it("renders success alert when status is success", async () => {
     const { asFragment } = render(
-      <EnterReceiptStatusIndicator loading={true} status="error" />
+      <EnterReceiptStatusIndicator loading={true} error={false} />
     );
     expect(asFragment()).toMatchSnapshot();
   });

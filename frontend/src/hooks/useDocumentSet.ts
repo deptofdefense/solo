@@ -2,20 +2,20 @@ import { useCallback, useState } from "react";
 import { Document, Query } from "solo-types";
 import { useDocumentApi } from "hooks";
 
-const useDocumentSet = <T extends Partial<Document> = Document>() => {
+const useDocumentSet = () => {
   const { fetchDocuments, ...rest } = useDocumentApi();
-  const [docs, setDocs] = useState<T[]>([]);
+  const [docs, setDocs] = useState<Document[]>([]);
 
   const updateDocuments = useCallback(
     async (query: Query<Document>) => {
       const docs = await fetchDocuments(query);
-      setDocs(docs as T[]);
+      setDocs(docs);
     },
     [fetchDocuments, setDocs]
   );
 
   const modifyDocument = useCallback(
-    (sdn: string, data: Partial<T>) => {
+    (sdn: string, data: Partial<Document>) => {
       setDocs(prevDocs =>
         prevDocs.map(doc => (doc.sdn === sdn ? { ...doc, ...data } : doc))
       );
@@ -30,10 +30,15 @@ const useDocumentSet = <T extends Partial<Document> = Document>() => {
     [setDocs]
   );
 
-  const addDocument = useCallback((sdn: string, data: Partial<T>) => {
-    setDocs(prevDocs => [...prevDocs, ({ sdn, ...data } as unknown) as T]);
-    // fetchDetailsForDocument(sdn);
-  }, []);
+  const addDocument = useCallback(
+    (sdn: string, data: Partial<Document>) => {
+      setDocs(prevDocs => [
+        ...prevDocs,
+        ({ sdn, ...data } as unknown) as Document
+      ]);
+    },
+    [setDocs]
+  );
 
   const clearAllDocuments = useCallback(() => setDocs([]), [setDocs]);
 

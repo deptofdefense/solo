@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import classNames from "classnames";
-import { Button } from "solo-uswds";
+import { Button, Input } from "solo-uswds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import classes from "./SelectFilterControls.module.scss";
 
 interface SelectFilterControls {
   onSubmit: (filter: { id: string; value: string }[]) => void;
@@ -59,11 +57,10 @@ const SelectFilterControls: React.FC<SelectFilterControls> = ({
         </select>
       </div>
       <div className="grid-col-10 tablet:grid-col-3">
-        <input
+        <Input
+          defaultMargin
           value={currentValue}
           onChange={onValueChange}
-          className={classNames("usa-input", classes.select)}
-          name="input-type-text"
           type="text"
           placeholder="Search"
         />

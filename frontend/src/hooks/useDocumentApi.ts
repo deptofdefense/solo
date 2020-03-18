@@ -5,20 +5,28 @@ import { createFakeApiDocs } from "solo-types";
 
 type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 
-// covert api returned document to Document
+// covert api returned document to frontend friendly Document
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
-  apiDocs.map(apiDoc => ({
-    ...apiDoc,
-    serviceRequest: apiDoc.service_request,
-    shipper: apiDoc.addresses.find(
-      addy => addy.address_type.type === "Ship-To"
-    ),
-    receiver: apiDoc.addresses.find(
-      addy => addy.address_type.type === "Requester"
-    )
-  }));
+  apiDocs.map(({ addresses, service_request, statuses, ...apiDoc }) => {
+    const mostRecentStatusIdx = statuses.length - 1;
+    const enteredReceivedQty = statuses[mostRecentStatusIdx].projected_qty;
+    return {
+      ...apiDoc,
+      statuses,
+      serviceRequest: service_request,
+      shipper: addresses.find(addy => addy.address_type.type === "Ship-To"),
+      receiver: addresses.find(addy => addy.address_type.type === "Requester"),
+      loadingStatus: {
+        loading: false
+      },
+      commodityName: apiDoc.suppadd.desc,
+      mostRecentStatusIdx,
+      enteredReceivedQty,
+      enteredReceivedBy: ""
+    };
+  });
 
-const useDocuments = () => {
+const useDocumentApi = () => {
   const { apiCall } = useAuthContext();
   const [pageCount, setPageCount] = useState<number>(9);
 
@@ -70,4 +78,4 @@ const useDocuments = () => {
   };
 };
 
-export default useDocuments;
+export default useDocumentApi;

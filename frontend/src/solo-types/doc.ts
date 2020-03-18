@@ -52,7 +52,8 @@ export const defaultDoc: Document = {
   suppadd: {
     id: 5,
     code: "YMTM",
-    desc: "Motor Transportation"
+    desc: "Motor Transportation",
+    subinventorys: []
   },
   shipper: {
     id: 4,
@@ -90,7 +91,14 @@ export const defaultDoc: Document = {
     country: "United States",
     document: [1]
   },
-  sdn: "M3030012341234"
+  sdn: "M3030012341234",
+  commodityName: "Armory",
+  loadingStatus: {
+    loading: false
+  },
+  mostRecentStatusIdx: 1,
+  enteredReceivedBy: "",
+  enteredReceivedQty: 2
 };
 
 const createFakeDocuments = (count: number = 20): Document[] => {

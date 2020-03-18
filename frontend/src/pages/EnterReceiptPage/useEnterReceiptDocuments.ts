@@ -1,27 +1,25 @@
 import { useCallback, useState } from "react";
 import { useDocumentSet } from "hooks";
 import { useAuthContext } from "context";
-import { DocumentWithLoadingStatus } from "./tableColumns";
+import { Document, LoadingStatus } from "solo-types";
 
-const validateDocsBeforeSubmit = (
-  docs: DocumentWithLoadingStatus[]
-): boolean => {
+const validateDocsBeforeSubmit = (docs: Document[]): boolean => {
   for (let i = 0; i < docs.length; i++) {
-    if (docs[i].loading || docs[i].error) {
+    const { error, loading } = docs[i].loadingStatus;
+    if (loading || error) {
       return false;
     }
   }
   return true;
 };
 
-interface SubmissionStatus {
-  loading: boolean;
-  status?: "success" | "error";
-  message?: string;
-}
-
 const useDocuments = () => {
   const { apiCall } = useAuthContext();
+  const [submitAllLoadingStatus, setSubmitAllLoadingStatus] = useState<
+    LoadingStatus
+  >({
+    loading: false
+  });
   const {
     addDocument,
     modifyDocument,
@@ -29,10 +27,7 @@ const useDocuments = () => {
     clearAllDocuments,
     docs,
     ...rest
-  } = useDocumentSet<DocumentWithLoadingStatus>();
-  const [submitStatus, setSubmitStatus] = useState<SubmissionStatus>({
-    loading: false
-  });
+  } = useDocumentSet();
 
   const fetchDetailsForDocument = useCallback(
     async (sdn: string) => {
@@ -44,14 +39,17 @@ const useDocuments = () => {
         });
         modifyDocument(sdn, {
           ...doc,
-          loading: false,
-          error: null
+          loadingStatus: {
+            loading: false
+          }
         });
       } catch (e) {
         /* istanbul ignore next */
         modifyDocument(sdn, {
-          loading: false,
-          error: e.toString()
+          loadingStatus: {
+            loading: false,
+            error: e.message || "Something went wrong"
+          }
         });
       }
     },
@@ -59,20 +57,24 @@ const useDocuments = () => {
   );
 
   const addSdn = (sdn: string) => {
-    addDocument(sdn, { loading: true, error: null });
+    addDocument(sdn, {
+      loadingStatus: {
+        loading: true
+      }
+    });
     fetchDetailsForDocument(sdn);
   };
 
   const submitAll = useCallback(async () => {
-    setSubmitStatus({
+    setSubmitAllLoadingStatus({
       loading: true
     });
 
     if (!validateDocsBeforeSubmit(docs)) {
       // can't submit documents that are loading or contain errors
-      setSubmitStatus({
+      setSubmitAllLoadingStatus({
         loading: false,
-        status: "error",
+        error: true,
         message: "All documents must be successfully loaded before submitting"
       });
       return;
@@ -91,16 +93,16 @@ const useDocuments = () => {
         body: JSON.stringify(data)
       });
       clearAllDocuments();
-      setSubmitStatus({
+      setSubmitAllLoadingStatus({
         loading: false,
-        status: "success",
+        error: false,
         message: `Successfully submitted ${data.length} document(s)`
       });
     } catch (e) {
       // api or network error
-      setSubmitStatus({
+      setSubmitAllLoadingStatus({
         loading: false,
-        status: "error",
+        error: true,
         message: e.message || "Something went wrong"
       });
     }
@@ -108,7 +110,7 @@ const useDocuments = () => {
 
   return {
     docs,
-    submitStatus,
+    submitAllLoadingStatus,
     addSdn,
     submitAll,
     ...rest

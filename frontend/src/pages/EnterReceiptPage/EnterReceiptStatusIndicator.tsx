@@ -1,20 +1,19 @@
 import React from "react";
 import { Alert } from "solo-uswds";
+import { LoadingStatus } from "solo-types";
 
-interface IndicatorProps {
-  loading: boolean;
-  status?: "error" | "success";
-  message?: string;
-}
-
-const EnterReceiptStatusIndicator: React.FC<IndicatorProps> = ({
+const EnterReceiptStatusIndicator: React.FC<LoadingStatus> = ({
   loading,
-  status,
-  message
+  error = false,
+  message = ""
 }) => (
-  <div className="grid-row flex-justify-center flex-12 tablet:flex-4">
-    {!loading && status && (
-      <Alert status={status} className="margin-top-4" heading={message ?? ""} />
+  <div className="grid-row flex-justify-center flex-12 tablet:flex-10">
+    {!loading && message && (
+      <Alert
+        status={error ? "error" : "success"}
+        className="margin-top-4"
+        heading={message}
+      />
     )}
   </div>
 );

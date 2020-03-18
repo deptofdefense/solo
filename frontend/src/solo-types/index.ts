@@ -71,26 +71,34 @@ export interface SuppAdd {
   subinventorys: any;
 }
 
-export interface ApiDocument {
+interface BaseDocument {
   id: number;
   sdn: string;
-  service_request: ServiceRequest;
   part: Part;
   statuses: Status[];
-  addresses: Address[];
   suppadd: SuppAdd;
 }
 
-export interface Document {
-  id: number;
-  sdn: string;
-  serviceRequest: ServiceRequest;
-  part: Part;
-  statuses: Status[];
-  suppadd: Omit<SuppAdd, "subinventorys">;
+export interface LoadingStatus {
+  loading: boolean;
+  error?: boolean;
+  message?: string;
+}
 
+export interface ApiDocument extends BaseDocument {
+  service_request: ServiceRequest;
+  addresses: Address[];
+}
+
+export interface Document extends BaseDocument {
+  serviceRequest: ServiceRequest;
   shipper?: Address;
   receiver?: Address;
+  loadingStatus: LoadingStatus;
+  commodityName: string;
+  mostRecentStatusIdx: number;
+  enteredReceivedQty: number;
+  enteredReceivedBy: string;
 }
 
 export interface Query<T extends object> {

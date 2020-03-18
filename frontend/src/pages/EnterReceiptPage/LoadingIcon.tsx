@@ -6,20 +6,16 @@ import {
   faExclamationCircle,
   faCheck
 } from "@fortawesome/free-solid-svg-icons";
+import { LoadingStatus } from "solo-types";
 import classes from "./LoadingIcon.module.scss";
 
-interface LoadingIconProps {
-  loading: boolean;
-  error: string | null;
-}
-
-const LoadingIcon: React.FC<LoadingIconProps> = ({ loading, error }) => (
+const LoadingIcon: React.FC<LoadingStatus> = ({ loading, error }) => (
   <span>
     <FontAwesomeIcon
       spin={loading}
       icon={loading ? faSpinner : error ? faExclamationCircle : faCheck}
       className={classNames({
-        [classes.error]: !!error
+        [classes.error]: error
       })}
     />
   </span>

@@ -33,8 +33,7 @@ exports[`SelectFilterControls component matches snapshot 1`] = `
       class="grid-col-10 tablet:grid-col-3"
     >
       <input
-        class="usa-input select"
-        name="input-type-text"
+        class="usa-input noOutline"
         placeholder="Search"
         type="text"
         value=""

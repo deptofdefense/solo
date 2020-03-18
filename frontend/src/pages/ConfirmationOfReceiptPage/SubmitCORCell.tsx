@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Row, Cell } from "react-table";
-import { DocumentWithReceivedBy } from "./tableColumns";
-
+import { Document } from "solo-types";
 import { CORInputForm } from "components";
 
-interface ReceivedByInputCellProps {
+interface SubmitCORCellProps {
   onSubmitCOR: (sdn: string, receivedBy: string) => void;
-  cell: Cell<DocumentWithReceivedBy>;
-  row: Row<DocumentWithReceivedBy>;
+  document: Document;
 }
 
-const ReceivedByInputCell: React.FC<ReceivedByInputCellProps> = ({
+const ReceivedByInputCell: React.FC<SubmitCORCellProps> = ({
   onSubmitCOR,
-  row: {
-    original: { sdn, submitting, error }
-  }
+  document: { sdn, loadingStatus }
 }) => {
   const [receivedBy, setReceivedBy] = useState("");
 
@@ -31,8 +26,7 @@ const ReceivedByInputCell: React.FC<ReceivedByInputCellProps> = ({
       value={receivedBy}
       onReceivedByChange={setReceivedBy}
       onSubmitCOR={onSubmit}
-      error={error}
-      loading={submitting}
+      {...loadingStatus}
     />
   );
 };

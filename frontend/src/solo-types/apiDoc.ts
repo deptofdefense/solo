@@ -183,7 +183,7 @@ export const defaultApiResponse: PaginatedApiResponse<ApiDocument[]> = {
 
 const idxToStatus = (idx: number): Status => {
   const base: Omit<Status, "dic"> = {
-    id: Math.floor(Math.random() * 20),
+    id: Math.floor(Math.random() * 2000),
     status_date: faker.date.recent().toISOString(),
     key_and_transmit_date: null,
     esd: "2020-03-20",
