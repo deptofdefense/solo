@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdminPage Component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="tablet:margin-x-8 overflow-x-auto"
+  >
+    <h1
+      class="usa-prose"
+    >
+      User Administration
+    </h1>
+  </div>
+</DocumentFragment>
+`;
