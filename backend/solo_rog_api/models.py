@@ -8,14 +8,6 @@ class User(AbstractUser):
     pass
 
 
-class Log(models.Model):
-    aac = models.CharField(max_length=20)
-    request_number = models.CharField(max_length=255)
-
-    def __str__(self) -> str:
-        return str(self.request_number)
-
-
 class AddressType(models.Model):
     type = models.CharField(max_length=25)
     desc = models.CharField(max_length=50, null=True, blank=True)
@@ -126,7 +118,7 @@ class Document(models.Model):
     def __str__(self) -> str:
         return str(self.sdn)
 
-
+# Add subinventory and locator so we can add that into the status d6t.
 class Status(models.Model):
     document = models.ForeignKey(
         "Document", related_name="statuses", null=True, on_delete=models.CASCADE
@@ -137,6 +129,8 @@ class Status(models.Model):
     esd = models.DateField(null=True, blank=True)
     projected_qty = models.PositiveSmallIntegerField(null=True, blank=True)
     received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
+    subinventory = models.ForeignKey("SubInventory", related_name='statuses', on_delete=models.SET_NULL, null=True)
+    locator = models.ForeignKey('Locator', related_name='statuses', on_delete=models.SET_NULL, null=True)
 
     def status_converted_date(self) -> str:
         return parse_datetime(str(self.status_date)).strftime("%Y-%m-%dT%H:%M:%S.000Z")

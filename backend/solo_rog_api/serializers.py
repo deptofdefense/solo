@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import (
-    Log,
     AddressType,
     Dic,
     Part,
@@ -42,17 +41,6 @@ class SubInventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubInventory
         fields = "__all__"
-
-
-class LogSerializer(serializers.ModelSerializer):
-    """ Log Serializer """
-
-    class Meta:
-        model = Log
-        fields = [
-            "aac",
-            "request_number",
-        ]
 
 
 class AddressTypeSerializer(serializers.ModelSerializer):
@@ -106,12 +94,13 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
 
 
 class DocumentSerializer(serializers.ModelSerializer):
-    # statuses = StatusSerializer(many=True, read_only=True)
-    # suppadd = SuppAddSerializer(many=False, read_only=True)
-    # part = PartSerializer(many=False, read_only=True)
-    # service_request = ServiceRequestSerializer(many=False, read_only=True)
-    # addresses = AddressSerializer(many=True, read_only=True)
+    statuses = StatusSerializer(many=True, read_only=True)
+    suppadd = SuppAddSerializer(many=False, read_only=True)
+    part = PartSerializer(many=False, read_only=True)
+    service_request = ServiceRequestSerializer(many=False, read_only=True)
+    addresses = AddressSerializer(many=True, read_only=True)
 
     class Meta:
         model = Document
         fields = "__all__"
+

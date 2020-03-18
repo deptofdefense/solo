@@ -42,7 +42,7 @@ This django app is the backend to the System for Operational Logistics Orders (S
 Ensure to be in the `/solo/deploy/compose/` to execute the commands below
 1. `docker-compose up --build` spins up the defined containers
 1. `docker-compose down` spins down the defined containers
-1. `docker-compose run -e DEBUG backend python manage test` how to test inside the container
-1. `docker-compose run -e DEBUG backend python manage createsuperuser` how to create a super user inside the container
-1. `docker-compose run -e DEBUG backend python manage makemigrations` how to generate models inside the container
-1. `docker-compose run -e DEBUG backend python manage migrate` how to create database tables inside the container
+1. `docker-compose run -e DEBUG backend python manage.py test` how to test inside the container
+1. `docker-compose run -e DEBUG backend python manage.py createsuperuser` how to create a super user inside the container
+1. `docker-compose run -e DEBUG backend python manage.py makemigrations` how to generate models inside the container
+1. `docker-compose run -e DEBUG backend python manage.py migrate` how to create database tables inside the container
