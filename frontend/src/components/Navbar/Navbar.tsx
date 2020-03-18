@@ -46,10 +46,7 @@ const Navbar: React.FC = () => {
             <HeaderNavLink to="/cor" exact onClick={close}>
               Confirmation of Receipt (COR)
             </HeaderNavLink>
-            <NavbarUserDropdown
-              username={username}
-              onLogout={onLogout}
-            />
+            <NavbarUserDropdown username={username} onLogout={onLogout} />
           </>
         )}
       </HeaderNav>

@@ -12,7 +12,7 @@ interface NavbarUserDropdownProps {
 
 const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({
   username,
-  onLogout,
+  onLogout
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -36,11 +36,11 @@ const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({
       {expanded && (
         <ul className={classNames("usa-nav__submenu", classes.submenu)}>
           <li className="usa-nav__submenu-item">
-          <NavLink to="/adminpage" >
+            <NavLink to="/adminpage">
               <FontAwesomeIcon className="margin-right-1" icon={faCog} />
               Admin
             </NavLink>
-            </li>
+          </li>
           <li className="usa-nav__submenu-item">
             <a href="/postlogout" onClick={onLogoutClick}>
               <FontAwesomeIcon className="margin-right-1" icon={faUserLock} />
