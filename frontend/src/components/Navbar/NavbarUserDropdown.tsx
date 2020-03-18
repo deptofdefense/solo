@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserLock } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faUserLock, faCog } from "@fortawesome/free-solid-svg-icons";
 import classes from "./NavbarUserDropdown.module.scss";
+import { NavLink } from "react-router-dom";
 
 interface NavbarUserDropdownProps {
   username: string;
@@ -11,7 +12,7 @@ interface NavbarUserDropdownProps {
 
 const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({
   username,
-  onLogout
+  onLogout,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -34,6 +35,12 @@ const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({
       </button>
       {expanded && (
         <ul className={classNames("usa-nav__submenu", classes.submenu)}>
+          <li className="usa-nav__submenu-item">
+          <NavLink to="/adminpage" >
+              <FontAwesomeIcon className="margin-right-1" icon={faCog} />
+              Admin
+            </NavLink>
+            </li>
           <li className="usa-nav__submenu-item">
             <a href="/postlogout" onClick={onLogoutClick}>
               <FontAwesomeIcon className="margin-right-1" icon={faUserLock} />

@@ -8,7 +8,8 @@ import {
   LoginPage,
   HomePage,
   EnterReceiptPage,
-  ConfirmationOfReceiptPage
+  ConfirmationOfReceiptPage,
+  AdminPage
 } from "pages";
 
 const Layout: React.FC = () => (
@@ -32,6 +33,12 @@ const Layout: React.FC = () => (
         exact
         path="/cor"
         component={ConfirmationOfReceiptPage}
+        redirectUrl="/"
+      />
+      <AuthRoute
+        exact
+        path="/adminpage"
+        component={AdminPage}
         redirectUrl="/"
       />
       <Route exact path="/testpage" component={HomePage} />
