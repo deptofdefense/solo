@@ -28,7 +28,7 @@ const createColumns: CreateColumns = () => [
   {
     Header: "Commodity",
     id: "commodity",
-    accessor: ({ suppadd }) => suppadd.desc
+    accessor: "commodityName"
   },
   {
     Header: "Status",

@@ -1,30 +1,64 @@
 import { useCallback, useState } from "react";
 import useAuthContext from "context/AuthContext";
-import { Document, ApiDocument, Query, PaginatedApiResponse } from "solo-types";
+import {
+  Document,
+  ApiDocument,
+  Query,
+  PaginatedApiResponse,
+  LocatorMap
+} from "solo-types";
 import { createFakeApiDocs } from "solo-types";
 
 type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 
 // covert api returned document to frontend friendly Document
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
-  apiDocs.map(({ addresses, service_request, statuses, ...apiDoc }) => {
-    const mostRecentStatusIdx = statuses.length - 1;
-    const enteredReceivedQty = statuses[mostRecentStatusIdx].projected_qty;
-    return {
-      ...apiDoc,
+  apiDocs.map(
+    ({
+      addresses,
+      suppadd: { desc: commodityName, subinventorys },
+      service_request,
       statuses,
-      serviceRequest: service_request,
-      shipper: addresses.find(addy => addy.address_type.type === "Ship-To"),
-      receiver: addresses.find(addy => addy.address_type.type === "Requester"),
-      loadingStatus: {
-        loading: false
-      },
-      commodityName: apiDoc.suppadd.desc,
-      mostRecentStatusIdx,
-      enteredReceivedQty,
-      enteredReceivedBy: ""
-    };
-  });
+      ...apiDoc
+    }) => {
+      const mostRecentStatusIdx = statuses.length - 1;
+      const enteredReceivedQty = statuses[mostRecentStatusIdx].projected_qty;
+      const locatorsBySubinventory: LocatorMap = subinventorys.reduce(
+        (locators, nextInv) => ({
+          ...locators,
+          [nextInv.code]: nextInv.locators
+        }),
+        {}
+      );
+      const flattenedSubinventorys = subinventorys.map(
+        ({ locators, ...rest }) => ({ ...rest })
+      );
+      const enteredSubinventoryCode = flattenedSubinventorys[0].code;
+      const enteredLocatorCode =
+        locatorsBySubinventory[enteredSubinventoryCode][0].code;
+      return {
+        ...apiDoc,
+        subinventorys: flattenedSubinventorys,
+        locatorsBySubinventory,
+        statuses,
+        serviceRequest: service_request,
+        shipper: addresses.find(addy => addy.address_type.type === "Ship-To"),
+        receiver: addresses.find(
+          addy => addy.address_type.type === "Requester"
+        ),
+        loadingStatus: {
+          loading: false
+        },
+        commodityName,
+        mostRecentStatusIdx,
+
+        enteredReceivedQty,
+        enteredReceivedBy: "",
+        enteredLocatorCode,
+        enteredSubinventoryCode
+      };
+    }
+  );
 
 const useDocumentApi = () => {
   const { apiCall } = useAuthContext();

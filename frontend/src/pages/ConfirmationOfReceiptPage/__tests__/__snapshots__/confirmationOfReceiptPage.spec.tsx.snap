@@ -291,9 +291,7 @@ exports[`ConfirmationOfReceiptPage Component matches snapshot 1`] = `
           <td
             class="td"
             role="cell"
-          >
-            Motor Transportation
-          </td>
+          />
           <td
             class="td"
             role="cell"

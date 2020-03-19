@@ -8,3 +8,4 @@ export { Table } from "./Table";
 export { Alert } from "./Alert";
 export { Checkbox } from "./Checkbox";
 export { Input } from "./Input";
+export { Select } from "./Select";

@@ -292,7 +292,11 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            2
+            <input
+              class="usa-input noMargin noOutline"
+              placeholder="Quantity"
+              value="2"
+            />
           </td>
           <td
             class="td"
@@ -304,13 +308,51 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            Subinventory
+            <select
+              class="usa-select noMargin noOutline"
+              placeholder="Subinventory"
+            >
+              <option
+                value="MTM_STGE"
+              >
+                MTM_STGE
+              </option>
+              <option
+                value="MTM_LAY"
+              >
+                MTM_LAY
+              </option>
+              <option
+                value="MTM_PEB"
+              >
+                MTM_PEB
+              </option>
+            </select>
           </td>
           <td
             class="td"
             role="cell"
           >
-            locator
+            <select
+              class="usa-select noMargin noOutline"
+              placeholder="Locator"
+            >
+              <option
+                value="M1234AA"
+              >
+                M1234AA
+              </option>
+              <option
+                value="M1235A"
+              >
+                M1235A
+              </option>
+              <option
+                value="M1236"
+              >
+                M1236
+              </option>
+            </select>
           </td>
         </tr>
       </tbody>
