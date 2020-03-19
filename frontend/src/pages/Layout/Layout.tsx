@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import { OfficialSiteBanner } from "solo-uswds";
+import { GovBanner } from "@trussworks/react-uswds";
 import { Navbar, HomeRoute, AuthRoute } from "components";
 import {
   PostLogoutPage,
@@ -14,7 +14,7 @@ import {
 
 const Layout: React.FC = () => (
   <>
-    <OfficialSiteBanner />
+    <GovBanner />
     <Navbar />
     <Switch>
       <HomeRoute
