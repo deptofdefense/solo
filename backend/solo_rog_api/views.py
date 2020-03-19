@@ -1,5 +1,5 @@
 from typing import Any
-from rest_framework import viewsets, generics, status
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
@@ -51,7 +51,7 @@ class DocumentList(generics.ListAPIView):
         commod = self.request.query_params.get("commod", None)
 
         # example /documents?status=d6t
-        status = self.request.query_params.get("status", None)
+        doc_status = self.request.query_params.get("status", None)
         if sdn is not None:
             queryset = queryset.filter(sdn__icontains=sdn)
         if commod is not None:
@@ -62,8 +62,8 @@ class DocumentList(generics.ListAPIView):
             queryset = queryset.filter(part__nomen__icontains=nomen).order_by(
                 "-statuses__status_date"
             )
-        if status is not None:
-            queryset = queryset.filter(statuses__dic__code__icontains=status).order_by(
-                "-statuses__status_date"
-            )
+        if doc_status is not None:
+            queryset = queryset.filter(
+                statuses__dic__code__icontains=doc_status
+            ).order_by("-statuses__status_date")
         return queryset

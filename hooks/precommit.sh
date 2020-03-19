@@ -21,6 +21,7 @@ npm run --silent typecheck
 echo "+ unit test frontend"
 npm run --silent test:ci
 
+# Backend Checks
 echo "\nBACKEND"
 cd ../backend
 
