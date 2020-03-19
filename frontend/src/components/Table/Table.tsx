@@ -12,7 +12,7 @@ import {
   TableInstance
 } from "react-table";
 import { Query } from "solo-types";
-import { Table as USWDSTable } from "solo-uswds";
+import { Table as USWDSTable } from "@trussworks/react-uswds";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
 
@@ -94,7 +94,7 @@ const Table = <T extends object>({
   return (
     <>
       {renderFilterControls && renderFilterControls(instance)}
-      <USWDSTable {...instance.getTableProps()}>
+      <USWDSTable {...instance.getTableProps()} fullWidth>
         <TableHead headerGroups={instance.headerGroups} />
         <TableBody {...instance} renderSubComponent={renderSubComponent} />
       </USWDSTable>
