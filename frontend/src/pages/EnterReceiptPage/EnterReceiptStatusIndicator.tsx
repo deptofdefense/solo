@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "solo-uswds";
+import { Alert } from "@trussworks/react-uswds";
 import { LoadingStatus } from "solo-types";
 
 const EnterReceiptStatusIndicator: React.FC<LoadingStatus> = ({
@@ -7,13 +7,9 @@ const EnterReceiptStatusIndicator: React.FC<LoadingStatus> = ({
   error = false,
   message = ""
 }) => (
-  <div className="grid-row flex-justify-center flex-12 tablet:flex-10">
+  <div className="grid-row flex-justify-center flex-12 margin-top-4 tablet:flex-10">
     {!loading && message && (
-      <Alert
-        status={error ? "error" : "success"}
-        className="margin-top-4"
-        heading={message}
-      />
+      <Alert type={error ? "error" : "success"} heading={message} />
     )}
   </div>
 );

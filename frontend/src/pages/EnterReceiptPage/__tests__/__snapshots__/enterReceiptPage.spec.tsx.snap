@@ -340,7 +340,7 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
       </button>
     </div>
     <div
-      class="grid-row flex-justify-center flex-12 tablet:flex-10"
+      class="grid-row flex-justify-center flex-12 margin-top-4 tablet:flex-10"
     />
   </div>
 </DocumentFragment>
