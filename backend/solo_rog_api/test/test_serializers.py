@@ -255,10 +255,12 @@ class DocumentSerializerTest(TestCase):
             serial_object.data,
             {
                 "id": 1,
-                "sdn": "M1234AA",
+                "statuses": [],
                 "suppadd": None,
-                "service_request": None,
                 "part": None,
+                "service_request": None,
+                "addresses": [],
+                "sdn": "M1234AA",
             },
         )
 
