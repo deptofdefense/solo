@@ -36,9 +36,11 @@ AUTHENTICATION_BACKENDS = ["solo_rog_api.authentication.CACAuthenticationBackend
 if DEBUG:
     AUTHENTICATION_BACKENDS = ["solo_rog_api.authentication.DevAuthenticationBackend"]
 REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 25,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication"
-    ]
+    ],
 }
 
 # setup the domain to serve from based on environment
