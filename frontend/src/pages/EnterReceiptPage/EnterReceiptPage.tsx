@@ -11,9 +11,12 @@ const EnterReceiptPage: React.FC = () => {
     docs,
     addSdn,
     submitAllLoadingStatus,
-    submitAll
+    submitAll,
+    modifyDocument
   } = useEnterReceiptDocuments();
-  const columns = useMemo(createColumns, []);
+  const columns = useMemo(() => createColumns(modifyDocument), [
+    modifyDocument
+  ]);
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">

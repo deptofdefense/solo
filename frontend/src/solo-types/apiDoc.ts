@@ -64,14 +64,28 @@ export const defaultApiDoc: ApiDocument = {
       },
       {
         id: 2,
-        locators: [],
+        locators: [
+          {
+            id: 3,
+            code: "M2296",
+            desc: "",
+            subinventorys: 1
+          }
+        ],
         code: "MTM_LAY",
         desc: "",
         suppadd: 1
       },
       {
         id: 3,
-        locators: [],
+        locators: [
+          {
+            id: 3,
+            code: "M3336",
+            desc: "",
+            subinventorys: 1
+          }
+        ],
         code: "MTM_PEB",
         desc: "",
         suppadd: 1

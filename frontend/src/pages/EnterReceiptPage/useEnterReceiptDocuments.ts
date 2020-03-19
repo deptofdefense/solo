@@ -83,7 +83,10 @@ const useDocuments = () => {
     // format documents for api call
     const data = docs.map(doc => ({
       sdn: doc.sdn,
-      status: "D6T"
+      status: "D6T",
+      quantity: doc.enteredReceivedQty,
+      subinventory: doc.enteredSubinventoryCode,
+      locator: doc.enteredLocatorCode
     }));
 
     try {
@@ -112,6 +115,7 @@ const useDocuments = () => {
     docs,
     submitAllLoadingStatus,
     addSdn,
+    modifyDocument,
     submitAll,
     ...rest
   };
