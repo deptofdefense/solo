@@ -61,3 +61,23 @@ class CeleryDebugMessageTestCase(APITestCase):
         data = response.json()
         self.assertIn("task_id", data)
         self.assertIsInstance(data["task_id"], str)
+
+
+# class DocumentListTestCase(APITestCase):
+#
+#     def setUp(self) -> None:
+#         self.test = Document.objects.create(
+#             sdn="M3030012345678", suppadd=None, part=None, service_request=None
+#         )
+#
+#
+
+
+# class SubInventoryStringTest(APITestCase):
+#     """ This is the test subinventory model string representation """
+#
+#     def test_representation(self) -> None:
+#         created_object = create_subinventory(
+#             **{"id": 1, "code": "M1234AA", "desc": "", "suppadd": None}
+#         )
+#         self.assertEqual(str(created_object), "M1234AA")
