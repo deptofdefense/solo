@@ -6,7 +6,8 @@ disable=
     invalid-name,
     fixme,
     abstract-method,
-    no-member
+    no-member,
+    bad-continuation
 
 load-plugins=
     pylint_django

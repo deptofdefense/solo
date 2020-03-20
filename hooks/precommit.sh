@@ -34,6 +34,9 @@ pylint -sn backend
 echo "+ check python types with mypy"
 mypy
 
+echo "+ static code security analysis with bandit"
+bandit -s B101 -r ./ -q
+
 echo "+ unit test backend with coverage"
 coverage run
 coverage report --fail-under 80

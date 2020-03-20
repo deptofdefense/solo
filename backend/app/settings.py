@@ -95,8 +95,9 @@ DATABASES = {
 
 # Use sqlite3 for unit tests until usage diverges enough
 # that postgres is neccessary for unit testing
-if "test" in sys.argv:
+if "test" in sys.argv or DEBUG:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
+    DATABASES["default"]["NAME"] = "solo.sqlite3"
 
 # Celery worker
 ESCAPED_POSTGRES_HOST = quote(POSTGRES_HOST.encode())
