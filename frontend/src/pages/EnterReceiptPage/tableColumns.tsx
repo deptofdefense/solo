@@ -2,10 +2,14 @@ import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
 import LoadingIcon from "./LoadingIcon";
+import QuantityInput from "./QuantityInput";
+import { SubinventorySelector, LocatorSelector } from "./SubinventorySelector";
 
-type CreateColumns = () => Column<Document>[];
+type CreateColumns = (
+  modifyDocument: (sdn: string, data: Partial<Document>) => void
+) => Column<Document>[];
 
-const createColumns: CreateColumns = () => [
+const createColumns: CreateColumns = modifyDocument => [
   {
     Header: "Loading",
     Cell: ({
@@ -31,22 +35,70 @@ const createColumns: CreateColumns = () => [
   {
     Header: "Quantity",
     id: "quantity",
-    accessor: ({ enteredReceivedQty }) => enteredReceivedQty
+    accessor: ({ sdn, enteredReceivedQty }) => (
+      <QuantityInput
+        enteredQuantity={enteredReceivedQty}
+        onQuantitiyChange={value =>
+          modifyDocument(sdn, {
+            enteredReceivedQty: value
+          })
+        }
+      />
+    )
   },
   {
     Header: "Commodity",
     id: "commodity",
-    accessor: "suppadd.desc"
+    accessor: "commodityName"
   },
   {
     Header: "Subinventory",
     id: "subinventory",
-    accessor: () => "Subinventory"
+    accessor: ({
+      sdn,
+      subinventorys,
+      enteredSubinventoryCode,
+      locatorsBySubinventory
+    }) => (
+      <>
+        {subinventorys && (
+          <SubinventorySelector
+            subinventorys={subinventorys}
+            enteredSubinventoryCode={enteredSubinventoryCode}
+            onSelectSubinventory={code => {
+              modifyDocument(sdn, {
+                enteredSubinventoryCode: code,
+                enteredLocatorCode: locatorsBySubinventory[code][0].code
+              });
+            }}
+          />
+        )}
+      </>
+    )
   },
   {
     Header: "Locator",
     id: "locator",
-    accessor: () => "locator"
+    accessor: ({
+      sdn,
+      locatorsBySubinventory,
+      enteredSubinventoryCode,
+      enteredLocatorCode
+    }) => (
+      <>
+        {locatorsBySubinventory && enteredSubinventoryCode && (
+          <LocatorSelector
+            locators={locatorsBySubinventory[enteredSubinventoryCode]}
+            enteredLocatorCode={enteredLocatorCode}
+            onSelectLocator={code => {
+              modifyDocument(sdn, {
+                enteredLocatorCode: code
+              });
+            }}
+          />
+        )}
+      </>
+    )
   }
 ];
 

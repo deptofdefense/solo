@@ -12,15 +12,9 @@ describe("EnterReceiptPage submit all process", () => {
     fetchMock.mockReset();
   });
 
-  it("cannot submit all when there are no documents to submit", async () => {
-    const { getByText } = render(<EnterReceiptPage />);
-    const submitBtn = getByText("Submit All");
-    expect(submitBtn).toHaveAttribute("disabled");
-  });
-
-  it("posts documents to api and displays success message on submit all", async () => {
+  const renderAndSearchForDocument = async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { getByPlaceholderText, getByText, queryByText } = render(
+    const { getByPlaceholderText, getByText, queryByText, ...rest } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -42,6 +36,25 @@ describe("EnterReceiptPage submit all process", () => {
       expect(fetchMock).toHaveBeenCalled();
       expect(queryByText(defaultDoc.part.nomen)).toBeInTheDocument();
     });
+    return {
+      getByPlaceholderText,
+      getByText,
+      queryByText,
+      inpField,
+      searchBtn,
+      submitBtn,
+      ...rest
+    };
+  };
+
+  it("cannot submit all when there are no documents to submit", async () => {
+    const { getByText } = render(<EnterReceiptPage />);
+    const submitBtn = getByText("Submit All");
+    expect(submitBtn).toHaveAttribute("disabled");
+  });
+
+  it("posts documents to api and displays success message on submit all", async () => {
+    const { submitBtn, queryByText } = await renderAndSearchForDocument();
     fetchMock.mockResolvedValue({});
     fireEvent.click(submitBtn);
     await wait(() => {
@@ -52,7 +65,11 @@ describe("EnterReceiptPage submit all process", () => {
         body: JSON.stringify([
           {
             sdn: defaultDoc.sdn,
-            status: "D6T"
+            status: "D6T",
+            quantity:
+              defaultDoc.statuses[defaultDoc.statuses.length - 1].projected_qty,
+            subinventory: defaultDoc.suppadd.subinventorys[0].code,
+            locator: defaultDoc.suppadd.subinventorys[0].locators[0].code
           }
         ])
       });
@@ -63,19 +80,7 @@ describe("EnterReceiptPage submit all process", () => {
   });
 
   it("posts documents to api and displays error on submit all failure", async () => {
-    fetchMock.mockResolvedValue(defaultApiResponse);
-    const { getByText, queryByText } = render(<EnterReceiptPage />, {
-      authContext: {
-        apiCall: fetchMock
-      }
-    });
-    const searchBtn = getByText("Search");
-    const submitBtn = getByText("Submit All");
-    fireEvent.click(searchBtn);
-    await wait(() => {
-      expect(fetchMock).toHaveBeenCalled();
-      expect(queryByText(defaultDoc.sdn)).toBeInTheDocument();
-    });
+    const { submitBtn, queryByText } = await renderAndSearchForDocument();
     fetchMock.mockRejectedValue(new Error());
     fireEvent.click(submitBtn);
     await wait(() => {
@@ -84,14 +89,13 @@ describe("EnterReceiptPage submit all process", () => {
   });
 
   it("cannot submit docs while any of them are still loading", async () => {
-    // add a 1 second load time to the api call
-    // in order to test that submit cannot be called during
-    // that time
+    // add a 1 second load time to the api call in order to
+    // test that submit cannot be called during that time
     fetchMock.mockImplementation(async () => {
-      await sleep(1000);
+      await sleep(500);
       return defaultApiResponse;
     });
-    const { getByText, queryByText, getByPlaceholderText } = render(
+    const { getByPlaceholderText, getByText, queryByText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -117,6 +121,72 @@ describe("EnterReceiptPage submit all process", () => {
         )
       ).toBeInTheDocument();
       expect(queryByText(defaultDoc.sdn)).toBeInTheDocument();
+    });
+  });
+
+  it("selects first subinventory and first locator by default", async () => {
+    const { getByPlaceholderText } = await renderAndSearchForDocument();
+    const subinventorySelect = getByPlaceholderText("Subinventory");
+    const locatorSelect = getByPlaceholderText("Locator");
+    await wait(() => {
+      expect(subinventorySelect).toHaveValue(
+        defaultDoc.suppadd.subinventorys[0].code
+      );
+      expect(locatorSelect).toHaveValue(
+        defaultDoc.suppadd.subinventorys[0].locators[0].code
+      );
+    });
+  });
+
+  it("selects corresponding locators on selecting different subinventory", async () => {
+    const { getByPlaceholderText } = await renderAndSearchForDocument();
+    const subinventorySelect = getByPlaceholderText("Subinventory");
+    const locatorSelect = getByPlaceholderText("Locator");
+    fireEvent.change(subinventorySelect, {
+      target: { value: defaultDoc.suppadd.subinventorys[1].code }
+    });
+    await wait(() => {
+      expect(subinventorySelect).toHaveValue(
+        defaultDoc.suppadd.subinventorys[1].code
+      );
+      expect(locatorSelect).toHaveValue(
+        defaultDoc.suppadd.subinventorys[1].locators[0].code
+      );
+    });
+  });
+
+  it("can change the quantitiy to a valid number", async () => {
+    const { getByPlaceholderText } = await renderAndSearchForDocument();
+    const quantityInp = getByPlaceholderText("Quantity");
+    expect(quantityInp).toHaveValue(
+      defaultDoc.statuses[
+        defaultDoc.statuses.length - 1
+      ].projected_qty.toString()
+    );
+    fireEvent.change(quantityInp, {
+      target: { value: "30" }
+    });
+    await wait(() => {
+      expect(quantityInp).toHaveValue("30");
+    });
+    fireEvent.change(quantityInp, {
+      target: { value: "not a number" }
+    });
+    await wait(() => {
+      expect(quantityInp).toHaveValue("30");
+    });
+  });
+
+  it("can select a different locator", async () => {
+    const { getByPlaceholderText } = await renderAndSearchForDocument();
+    const locatorSelect = getByPlaceholderText("Locator");
+    fireEvent.change(locatorSelect, {
+      target: { value: defaultDoc.suppadd.subinventorys[0].locators[1].code }
+    });
+    await wait(() => {
+      expect(locatorSelect).toHaveValue(
+        defaultDoc.suppadd.subinventorys[0].locators[1].code
+      );
     });
   });
 });

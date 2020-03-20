@@ -49,12 +49,6 @@ export const defaultDoc: Document = {
     id: 1,
     service_request: "12345678"
   },
-  suppadd: {
-    id: 5,
-    code: "YMTM",
-    desc: "Motor Transportation",
-    subinventorys: []
-  },
   shipper: {
     id: 4,
     address_type: {
@@ -92,13 +86,55 @@ export const defaultDoc: Document = {
     document: [1]
   },
   sdn: "M3030012341234",
+  subinventorys: [
+    {
+      id: 1,
+      code: "MTM_STGE"
+    },
+    {
+      id: 2,
+      code: "MTM_LAY"
+    }
+  ],
+  locatorsBySubinventory: {
+    MTM_LAY: [
+      {
+        id: 1,
+        code: "M9994AA",
+        desc: "",
+        subinventorys: 1
+      },
+      {
+        id: 2,
+        code: "M9995A",
+        desc: "",
+        subinventorys: 1
+      }
+    ],
+    MTM_STAGE: [
+      {
+        id: 1,
+        code: "M1234AA",
+        desc: "",
+        subinventorys: 1
+      },
+      {
+        id: 2,
+        code: "M1235A",
+        desc: "",
+        subinventorys: 1
+      }
+    ]
+  },
   commodityName: "Armory",
   loadingStatus: {
     loading: false
   },
   mostRecentStatusIdx: 1,
   enteredReceivedBy: "",
-  enteredReceivedQty: 2
+  enteredReceivedQty: 2,
+  enteredSubinventoryCode: "",
+  enteredLocatorCode: ""
 };
 
 const createFakeDocuments = (count: number = 20): Document[] => {

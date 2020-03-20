@@ -64,19 +64,28 @@ export interface ServiceRequest {
   service_request: string;
 }
 
+export interface Locator {
+  id: number;
+  code: string;
+  desc?: string;
+  subinventorys?: number;
+}
+
+export interface Subinventory {
+  id: number;
+  locators: Locator[];
+  code: string;
+  desc?: string;
+  suppadd?: number;
+}
+
+export type LocatorMap = Record<string, Locator[]>;
+
 export interface SuppAdd {
   id: number;
   code: string;
   desc: string;
-  subinventorys: any;
-}
-
-interface BaseDocument {
-  id: number;
-  sdn: string;
-  part: Part;
-  statuses: Status[];
-  suppadd: SuppAdd;
+  subinventorys: Subinventory[];
 }
 
 export interface LoadingStatus {
@@ -85,9 +94,17 @@ export interface LoadingStatus {
   message?: string;
 }
 
+interface BaseDocument {
+  id: number;
+  sdn: string;
+  part: Part;
+  statuses: Status[];
+}
+
 export interface ApiDocument extends BaseDocument {
   service_request: ServiceRequest;
   addresses: Address[];
+  suppadd: SuppAdd;
 }
 
 export interface Document extends BaseDocument {
@@ -95,10 +112,14 @@ export interface Document extends BaseDocument {
   shipper?: Address;
   receiver?: Address;
   loadingStatus: LoadingStatus;
+  subinventorys: Omit<Subinventory, "locators">[];
+  locatorsBySubinventory: LocatorMap;
   commodityName: string;
   mostRecentStatusIdx: number;
   enteredReceivedQty: number;
   enteredReceivedBy: string;
+  enteredSubinventoryCode: string;
+  enteredLocatorCode: string;
 }
 
 export interface Query<T extends object> {

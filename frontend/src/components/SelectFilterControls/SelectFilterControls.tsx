@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input } from "solo-uswds";
+import { Button, Select, Input } from "solo-uswds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
@@ -43,18 +43,19 @@ const SelectFilterControls: React.FC<SelectFilterControls> = ({
       onSubmit={onSubmitted}
     >
       <div className="grid-col-full tablet:grid-col-2 margin-x-2">
-        <select
+        <Select
           onChange={onOptionChange}
           value={currentOption}
-          className="usa-select"
           placeholder="Field"
+          defaultMargin
+          defaultOutline
         >
           {options.map(({ name, value }) => (
             <option key={value} value={value}>
               {name}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       <div className="grid-col-10 tablet:grid-col-3">
         <Input

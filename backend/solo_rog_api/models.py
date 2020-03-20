@@ -109,6 +109,9 @@ class Document(models.Model):
     )
     sdn = models.CharField(max_length=50, null=True, blank=True)
 
+    class Meta:
+        ordering = ["-sdn"]
+
     def get_aac(self) -> Optional[str]:
         return self.sdn[:6]
 
