@@ -39,7 +39,7 @@ class DocumentList(generics.ListAPIView):
     filterset_class = DocumentListFilter
     ordering_fields = [
         ("sdn", "sdn"),
-        ("service_request", "service request"),
+        ("service_request__service_request", "service request"),
         ("part__nomen", "nomenclature"),
         ("suppadd__desc", "commodity"),
         ("statuses__status_date", "last updated"),

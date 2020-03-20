@@ -188,8 +188,6 @@ exports[`StatusPage component matches snapshot 1`] = `
           <th
             colspan="1"
             role="columnheader"
-            style="cursor: pointer;"
-            title="Toggle SortBy"
           >
             <div
               class="display-flex flex-justify flex-align-center flex-no-wrap text-no-wrap"

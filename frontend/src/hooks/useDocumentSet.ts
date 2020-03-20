@@ -8,8 +8,12 @@ const useDocumentSet = () => {
 
   const updateDocuments = useCallback(
     async (query: Query<Document>) => {
-      const docs = await fetchDocuments(query);
-      setDocs(docs);
+      try {
+        const docs = await fetchDocuments(query);
+        setDocs(docs);
+      } catch (e) {
+        setDocs([]);
+      }
     },
     [fetchDocuments, setDocs]
   );

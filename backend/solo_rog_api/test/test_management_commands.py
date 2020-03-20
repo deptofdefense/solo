@@ -46,7 +46,9 @@ class CreateFakeDataTestCase(TestCase):
         populate_fake.create_fake_suppadds(1)
         self.assertEqual(SuppAdd.objects.count(), 1)
 
-    def test_creates_fake_subinventories(self) -> None:
+    @patch("solo_rog_api.management.commands.populate_fake.random.randint")
+    def test_creates_fake_subinventories(self, randint_mock: Mock) -> None:
+        randint_mock.return_value = 3
         SuppAdd.objects.create(code="testcode", desc="testdesc")
         populate_fake.create_fake_subinventorys(3)
         self.assertEqual(SubInventory.objects.count(), 3)
@@ -57,9 +59,11 @@ class CreateFakeDataTestCase(TestCase):
             3,
         )
 
-    def test_creates_fake_locators(self) -> None:
+    @patch("solo_rog_api.management.commands.populate_fake.random.randint")
+    def test_creates_fake_locators(self, randint_mock: Mock) -> None:
+        randint_mock.return_value = 3
         SubInventory.objects.create(code="testcode", desc="testdesc")
-        populate_fake.create_fake_locators(3)
+        populate_fake.create_fake_locators()
         self.assertEqual(Locator.objects.count(), 3)
         self.assertEqual(
             Locator.objects.filter(subinventorys__code="testcode").count(), 3

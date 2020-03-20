@@ -7,7 +7,6 @@ import {
   PaginatedApiResponse,
   LocatorMap
 } from "solo-types";
-import { createFakeApiDocs } from "solo-types";
 
 type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 
@@ -72,16 +71,16 @@ const useDocumentApi = () => {
     } = query;
     const params = new URLSearchParams();
     if (currentSort?.id) {
-      params.set("sort", currentSort.id);
-    }
-    if (currentSort?.desc) {
-      params.set("desc", "true");
+      const descPrefix = currentSort?.desc ? "-" : "";
+      params.set("sort", `${descPrefix}${currentSort.id}`);
     }
     if (page > 1) {
       params.set("page", page.toString());
     }
     filters.forEach(({ id, value }) => {
-      params.set(id, value);
+      if (id && value) {
+        params.set(id, value);
+      }
     });
     const queryString = params.toString();
     return queryString ? `?${queryString}` : "";
@@ -91,17 +90,12 @@ const useDocumentApi = () => {
     (query: Query<Document>) => Promise<Document[]>
   >(
     async query => {
-      try {
-        const url = `/documents${makeQueryString(query)}`;
-        const { count, results } = await apiCall<DocumentApiResponse>(url, {
-          method: "GET"
-        });
-        setPageCount(Math.ceil(count / 25));
-        return parseApiDocuments(results);
-      } catch (e) {
-        // use fake data until api is implemented
-        return parseApiDocuments(createFakeApiDocs(25));
-      }
+      const url = `/document/${makeQueryString(query)}`;
+      const { count, results } = await apiCall<DocumentApiResponse>(url, {
+        method: "GET"
+      });
+      setPageCount(Math.ceil(count / 25));
+      return parseApiDocuments(results);
     },
     [apiCall, makeQueryString]
   );

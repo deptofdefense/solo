@@ -1,6 +1,7 @@
 import React from "react";
 import StatusPage from "../StatusPage";
 import { render, wait, fireEvent } from "test-utils";
+import { defaultApiResponse } from "solo-types";
 
 afterAll(() => {
   jest.restoreAllMocks();
@@ -14,6 +15,7 @@ describe("StatusPage component filtering", () => {
   });
 
   it("refetches documents when a search is submitted based on nomenclature", async () => {
+    fakeFetch.mockResolvedValue(defaultApiResponse);
     const { getByPlaceholderText, container } = render(<StatusPage />, {
       authContext: {
         apiCall: fakeFetch
@@ -36,11 +38,12 @@ describe("StatusPage component filtering", () => {
     await wait(() => {
       // first call was on mount
       expect(fakeFetch).toHaveBeenCalledTimes(2);
-      expect(fakeFetch.mock.calls[1][0]).toEqual("/documents?nomen=bolts");
+      expect(fakeFetch.mock.calls[1][0]).toEqual("/document/?nomen=bolts");
     });
   });
 
   it("refetches documents when a search is submitted based on sdn", async () => {
+    fakeFetch.mockResolvedValue(defaultApiResponse);
     const { getByPlaceholderText, container } = render(<StatusPage />, {
       authContext: {
         apiCall: fakeFetch
@@ -63,11 +66,12 @@ describe("StatusPage component filtering", () => {
     await wait(() => {
       // first call was on mount
       expect(fakeFetch).toHaveBeenCalledTimes(2);
-      expect(fakeFetch.mock.calls[1][0]).toEqual("/documents?sdn=somesdniwant");
+      expect(fakeFetch.mock.calls[1][0]).toEqual("/document/?sdn=somesdniwant");
     });
   });
 
   it("refetches documents when a search is submitted based on commodity", async () => {
+    fakeFetch.mockResolvedValue(defaultApiResponse);
     const { getByPlaceholderText, container } = render(<StatusPage />, {
       authContext: {
         apiCall: fakeFetch
@@ -77,22 +81,20 @@ describe("StatusPage component filtering", () => {
     const search = getByPlaceholderText("Search");
     const field = getByPlaceholderText("Field");
     fireEvent.change(field, {
-      target: { value: "commodity" }
+      target: { value: "commod" }
     });
     fireEvent.change(search, {
       target: { value: "motortuh" }
     });
     await wait(() => {
-      expect(field).toHaveValue("commodity");
+      expect(field).toHaveValue("commod");
       expect(search).toHaveValue("motortuh");
     });
     fireEvent.click(btn);
     await wait(() => {
       // first call was on mount
       expect(fakeFetch).toHaveBeenCalledTimes(2);
-      expect(fakeFetch.mock.calls[1][0]).toEqual(
-        "/documents?commodity=motortuh"
-      );
+      expect(fakeFetch.mock.calls[1][0]).toEqual("/document/?commod=motortuh");
     });
   });
 });

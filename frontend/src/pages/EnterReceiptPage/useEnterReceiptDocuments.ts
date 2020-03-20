@@ -33,7 +33,7 @@ const useDocuments = () => {
     async (sdn: string) => {
       try {
         const [doc] = await fetchDocuments({
-          filters: [{ id: "sdn", value: sdn }],
+          filters: [{ id: "sdn_exact", value: sdn }],
           sort: [],
           page: 0
         });

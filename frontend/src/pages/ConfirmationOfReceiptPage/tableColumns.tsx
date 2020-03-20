@@ -44,17 +44,19 @@ const createColumns: CreateColumns = ({ onSubmitCOR }) => [
   {
     Header: "NIIN",
     accessor: "part.nsn",
-    id: "nsn"
+    id: "nsn",
+    disableSortBy: true
   },
   {
     Header: "Quantity",
     id: "quantity",
+    disableSortBy: true,
     accessor: ({ mostRecentStatusIdx, statuses }) =>
       statuses[mostRecentStatusIdx].received_qty
   },
   {
     Header: "Commodity",
-    id: "commodity",
+    id: "suppadd__desc",
     accessor: "commodityName"
   },
   {
