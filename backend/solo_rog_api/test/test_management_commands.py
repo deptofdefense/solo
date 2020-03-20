@@ -39,8 +39,8 @@ class CreateFakeDataTestCase(TestCase):
             self.assertTrue(Dic.objects.filter(code=code).exists())
 
     def test_creates_fake_parts(self) -> None:
-        populate_fake.create_fake_parts(1)
-        self.assertEqual(Part.objects.count(), 1)
+        populate_fake.create_fake_parts(2)
+        self.assertEqual(Part.objects.count(), 2)
 
     def test_creates_fake_suppadds(self) -> None:
         populate_fake.create_fake_suppadds(1)

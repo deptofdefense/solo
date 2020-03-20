@@ -55,6 +55,7 @@ def create_fake_parts(count: int = 20) -> None:
                 uom=random.choice(["EA"]),  # nosec
                 price=random.randint(1, 300),  # nosec
             )
+            for _ in range(count)
         ]
     )
 
