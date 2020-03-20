@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "corsheaders",
     "rest_framework",
+    "django_filters",
     "solo_rog_api",  # solo receipt of goods api
 ]
 
@@ -41,6 +42,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication"
     ],
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
 }
 
 # setup the domain to serve from based on environment
