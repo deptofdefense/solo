@@ -163,17 +163,17 @@ describe("StatusPage component", () => {
     });
   });
 
-  // it("renders 25 fake documents on fetch error for now", async () => {
-  //   fetchMock.mockRejectedValue(new Error());
-  //   const { getAllByTitle } = render(<StatusPage />, {
-  //     authContext: {
-  //       apiCall: fetchMock
-  //     }
-  //   });
-  //   await wait(() => {
-  //     expect(fetchMock).toHaveBeenCalled();
-  //     const allRowToggles = getAllByTitle("Toggle Row Expanded");
-  //     expect(allRowToggles.length).toEqual(25);
-  //   });
-  // });
+  it("clears documents on fetch error for now", async () => {
+    fetchMock.mockRejectedValue(new Error());
+    const { queryAllByTitle } = render(<StatusPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    await wait(() => {
+      expect(fetchMock).toHaveBeenCalled();
+      const allRowToggles = queryAllByTitle("Toggle Row Expanded");
+      expect(allRowToggles.length).toEqual(0);
+    });
+  });
 });
