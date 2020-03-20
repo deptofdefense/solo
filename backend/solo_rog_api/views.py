@@ -1,5 +1,6 @@
 from typing import Any
 from rest_framework import generics, status
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
@@ -34,5 +35,13 @@ class DocumentList(generics.ListAPIView):
 
     serializer_class = DocumentSerializer
     queryset = Document.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
     filterset_class = DocumentListFilter
+    ordering_fields = [
+        ("sdn", "sdn"),
+        ("service_request", "service request"),
+        ("part__nomen", "nomenclature"),
+        ("suppadd__desc", "commodity"),
+        ("statuses__status_date", "last updated"),
+    ]
+    ordering = ["statuses__status_date"]
