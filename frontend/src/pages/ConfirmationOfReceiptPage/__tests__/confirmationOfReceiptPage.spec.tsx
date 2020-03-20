@@ -25,6 +25,7 @@ describe("ConfirmationOfReceiptPage Component", () => {
       // wait for some data to render before snapshot test
       expect(fetchMock).toHaveBeenCalled();
       expect(queryByText(defaultDoc.sdn)).toBeInTheDocument();
+      expect(queryByText(defaultDoc.suppadd.desc)).toBeInTheDocument();
     });
     expect(asFragment()).toMatchSnapshot();
   });

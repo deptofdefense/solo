@@ -55,7 +55,7 @@ const createColumns: CreateColumns = ({ onSubmitCOR }) => [
   {
     Header: "Commodity",
     id: "commodity",
-    accessor: "suppadd.desc"
+    accessor: "commodityName"
   },
   {
     Header: "Submit COR",
