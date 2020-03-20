@@ -5,6 +5,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import override_settings
+from solo_rog_api.models import Document
 
 User = get_user_model()
 
@@ -63,21 +64,10 @@ class CeleryDebugMessageTestCase(APITestCase):
         self.assertIsInstance(data["task_id"], str)
 
 
-# class DocumentListTestCase(APITestCase):
-#
-#     def setUp(self) -> None:
-#         self.test = Document.objects.create(
-#             sdn="M3030012345678", suppadd=None, part=None, service_request=None
-#         )
-#
-#
+class TestDocumentList(APITestCase):
+    def setUp(self) -> None:
+        self.document = Document.objects.create(sdn="M3030012345678")
 
-
-# class SubInventoryStringTest(APITestCase):
-#     """ This is the test subinventory model string representation """
-#
-#     def test_representation(self) -> None:
-#         created_object = create_subinventory(
-#             **{"id": 1, "code": "M1234AA", "desc": "", "suppadd": None}
-#         )
-#         self.assertEqual(str(created_object), "M1234AA")
+    def test_document_list(self) -> None:
+        response = self.client.get(reverse("document_list"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
