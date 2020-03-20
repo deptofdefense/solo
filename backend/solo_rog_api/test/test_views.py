@@ -63,21 +63,40 @@ class CeleryDebugMessageTestCase(APITestCase):
         self.assertIsInstance(data["task_id"], str)
 
 
-# class DocumentListTestCase(APITestCase):
-#
-#     def setUp(self) -> None:
-#         self.test = Document.objects.create(
-#             sdn="M3030012345678", suppadd=None, part=None, service_request=None
-#         )
-#
-#
+base_url = reverse("document_list")
 
 
-# class SubInventoryStringTest(APITestCase):
-#     """ This is the test subinventory model string representation """
-#
-#     def test_representation(self) -> None:
-#         created_object = create_subinventory(
-#             **{"id": 1, "code": "M1234AA", "desc": "", "suppadd": None}
-#         )
-#         self.assertEqual(str(created_object), "M1234AA")
+class DocumentTests(APITestCase):
+    def test_get_documents_nofilter(self) -> None:
+        base_response = self.client.get(base_url, format="json")
+        self.assertEqual(base_response.status_code, status.HTTP_200_OK)
+
+    def test_get_documents_commodfilter(self) -> None:
+        commod_url = base_url + "?commod="
+        commod_response = self.client.get(commod_url, format="json")
+        self.assertEqual(commod_response.status_code, status.HTTP_200_OK)
+
+    def test_get_documents_sdnfilter(self) -> None:
+        sdn_url = base_url + "?sdn="
+        sdn_response = self.client.get(sdn_url, format="json")
+        self.assertEqual(sdn_response.status_code, status.HTTP_200_OK)
+
+    def test_get_documents_nomenfilter(self) -> None:
+        nomen_url = base_url + "?nomen="
+        nomen_response = self.client.get(nomen_url, format="json")
+        self.assertEqual(nomen_response.status_code, status.HTTP_200_OK)
+
+    def test_get_documents_doc_statusfilter(self) -> None:
+        doc_status_url = base_url + "?status="
+        doc_status_response = self.client.get(doc_status_url, format="json")
+        self.assertEqual(doc_status_response.status_code, status.HTTP_200_OK)
+
+    def test_get_documents_pagination(self) -> None:
+        pagination_url = base_url + "?page=1"
+        pagination_response = self.client.get(pagination_url, format="json")
+        self.assertTrue(pagination_response.status_code, status.HTTP_200_OK)
+
+    def test_get_documents_out_of_bounds(self) -> None:
+        out_of_bounds_url = base_url + "?page=1000000000"
+        out_of_bounds_response = self.client.get(out_of_bounds_url, format="json")
+        self.assertEqual(out_of_bounds_response.status_code, status.HTTP_404_NOT_FOUND)
