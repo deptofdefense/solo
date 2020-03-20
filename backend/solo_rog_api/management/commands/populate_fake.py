@@ -73,32 +73,34 @@ def create_fake_suppadds(count: int = 20) -> None:
     )
 
 
-def create_fake_subinventorys(count: int = 20) -> None:
+def create_fake_subinventorys(max_per_suppadd: int = 3) -> None:
     models.SubInventory.objects.all().delete()
     suppadds = list(models.SuppAdd.objects.all())
     models.SubInventory.objects.bulk_create(
         [
             models.SubInventory(
-                suppadd=random.choice(suppadds),  # nosec
+                suppadd=suppadd,
                 code=fake.lexify(text="???_???", letters=ascii_uppercase),
                 desc="",
             )
-            for _ in range(count)
+            for suppadd in suppadds
+            for _ in range(random.randint(1, max_per_suppadd))  # nosec
         ]
     )
 
 
-def create_fake_locators(count: int = 20) -> None:
+def create_fake_locators(max_per_subinventory: int = 3) -> None:
     models.Locator.objects.all().delete()
     subinventorys = list(models.SubInventory.objects.all())
     models.Locator.objects.bulk_create(
         [
             models.Locator(
-                subinventorys=random.choice(subinventorys),  # nosec
+                subinventorys=subinv,
                 code=fake.bothify(text="M####?", letters=ascii_uppercase),
                 desc="",
             )
-            for _ in range(count)
+            for subinv in subinventorys
+            for _ in range(random.randint(1, max_per_subinventory))  # nosec
         ]
     )
 
@@ -148,7 +150,7 @@ def create_fake_statuses_for_documents() -> None:
                 received_qty=0,
             )
             for doc in documents
-            for idx in range(random.randint(0, 5))  # nosec
+            for idx in range(random.randint(1, 5))  # nosec
         ]
     )
 
@@ -196,46 +198,46 @@ class Command(BaseCommand):
             )
             return
 
-        self.stdout.write("Creating fake users")
+        self.stdout.write("Creating fake users...")
         create_fake_users()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Populating address types")
+        self.stdout.write("Populating address types...")
         populate_address_types()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Populating Dic codes")
+        self.stdout.write("Populating Dic codes...")
         populate_dics()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake parts")
+        self.stdout.write("Creating fake parts...")
         create_fake_parts()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake suppadds")
+        self.stdout.write("Creating fake suppadds...")
         create_fake_suppadds()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake subinventorys")
+        self.stdout.write("Creating fake subinventorys...")
         create_fake_subinventorys()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake locators")
+        self.stdout.write("Creating fake locators...")
         create_fake_locators()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake service requests")
+        self.stdout.write("Creating fake service requests...")
         create_fake_service_requests()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake documents")
+        self.stdout.write("Creating fake documents...")
         create_fake_documents()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake statuses for documents")
+        self.stdout.write("Creating fake statuses for documents...")
         create_fake_statuses_for_documents()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake addresses for documents")
+        self.stdout.write("Creating fake addresses for documents...")
         create_fake_addresses_for_documents()
-        self.stdout.write(self.style.SUCCESS("Ok\n"))
+        self.stdout.write(self.style.SUCCESS("Ok"))

@@ -50,7 +50,9 @@ describe("EnterReceiptPage Component", () => {
     fireEvent.click(submit);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock.mock.calls[0][0]).toEqual("/documents?sdn=somesdn");
+      expect(fetchMock.mock.calls[0][0]).toEqual(
+        "/document/?sdn_exact=somesdn"
+      );
       expect(queryByText(defaultDoc.part.nomen)).toBeInTheDocument();
     });
   });
@@ -73,7 +75,7 @@ describe("EnterReceiptPage Component", () => {
     fireEvent.click(submit);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(queryByText(/^M30300/)).toBeInTheDocument();
+      expect(queryByText(/^badsdn/)).toBeInTheDocument();
     });
   });
 

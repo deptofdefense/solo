@@ -56,7 +56,7 @@ describe("StatusPage component", () => {
     });
     await wait(() => {
       expect(fetchMock).toHaveBeenCalled();
-      expect(fetchMock.mock.calls[0][0]).toEqual("/documents");
+      expect(fetchMock.mock.calls[0][0]).toEqual("/document/");
       expect(fetchMock.mock.calls[0][1]).toMatchObject({
         method: "GET"
       });
@@ -79,7 +79,7 @@ describe("StatusPage component", () => {
     });
   });
 
-  it("re-fetches documents on status_date table sort change", async () => {
+  it("re-fetches documents on nomenclature table sort change", async () => {
     const { getByText } = render(<StatusPage />, {
       authContext: {
         apiCall: fetchMock
@@ -88,26 +88,26 @@ describe("StatusPage component", () => {
     await wait(() => {
       expect(fetchMock).toHaveBeenCalled();
     });
-    const lastUpdatedHeader = getByText(/^Last Updated/);
+    const lastUpdatedHeader = getByText(/^Nomenclature/);
     fireEvent.click(lastUpdatedHeader);
     await wait(() => {
       // first call was on render, this is second
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock.mock.calls[1][0]).toEqual("/documents?sort=status_date");
+      expect(fetchMock.mock.calls[1][0]).toEqual("/document/?sort=part__nomen");
     });
     fireEvent.click(lastUpdatedHeader);
     await wait(() => {
       // sort by is now desc
       expect(fetchMock).toHaveBeenCalledTimes(3);
       expect(fetchMock.mock.calls[2][0]).toEqual(
-        "/documents?sort=status_date&desc=true"
+        "/document/?sort=-part__nomen"
       );
     });
     fireEvent.click(lastUpdatedHeader);
     await wait(() => {
       // sort by is undefined
       expect(fetchMock).toHaveBeenCalledTimes(4);
-      expect(fetchMock.mock.calls[3][0]).toEqual("/documents");
+      expect(fetchMock.mock.calls[3][0]).toEqual("/document/");
     });
   });
 
@@ -125,19 +125,17 @@ describe("StatusPage component", () => {
     await wait(() => {
       // first call was on render, this is second
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock.mock.calls[1][0]).toEqual("/documents?sort=sdn");
+      expect(fetchMock.mock.calls[1][0]).toEqual("/document/?sort=sdn");
     });
     fireEvent.click(sdnHeader);
     await wait(() => {
       // sort by is now desc
       expect(fetchMock).toHaveBeenCalledTimes(3);
-      expect(fetchMock.mock.calls[2][0]).toEqual(
-        "/documents?sort=sdn&desc=true"
-      );
+      expect(fetchMock.mock.calls[2][0]).toEqual("/document/?sort=-sdn");
     });
   });
 
-  it("re-fetches documents on sdn table sort change", async () => {
+  it("re-fetches documents on service_request table sort change", async () => {
     const { getByText } = render(<StatusPage />, {
       authContext: {
         apiCall: fetchMock
@@ -152,7 +150,7 @@ describe("StatusPage component", () => {
       // first call was on render, this is second
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][0]).toEqual(
-        "/documents?sort=service_request"
+        "/document/?sort=service_request__service_request"
       );
     });
     fireEvent.click(serviceReqHeader);
@@ -160,22 +158,22 @@ describe("StatusPage component", () => {
       // sort by is now desc
       expect(fetchMock).toHaveBeenCalledTimes(3);
       expect(fetchMock.mock.calls[2][0]).toEqual(
-        "/documents?sort=service_request&desc=true"
+        "/document/?sort=-service_request__service_request"
       );
     });
   });
 
-  it("renders 25 fake documents on fetch error for now", async () => {
-    fetchMock.mockRejectedValue(new Error());
-    const { getAllByTitle } = render(<StatusPage />, {
-      authContext: {
-        apiCall: fetchMock
-      }
-    });
-    await wait(() => {
-      expect(fetchMock).toHaveBeenCalled();
-    });
-    const allRowToggles = getAllByTitle("Toggle Row Expanded");
-    expect(allRowToggles.length).toEqual(25);
-  });
+  // it("renders 25 fake documents on fetch error for now", async () => {
+  //   fetchMock.mockRejectedValue(new Error());
+  //   const { getAllByTitle } = render(<StatusPage />, {
+  //     authContext: {
+  //       apiCall: fetchMock
+  //     }
+  //   });
+  //   await wait(() => {
+  //     expect(fetchMock).toHaveBeenCalled();
+  //     const allRowToggles = getAllByTitle("Toggle Row Expanded");
+  //     expect(allRowToggles.length).toEqual(25);
+  //   });
+  // });
 });

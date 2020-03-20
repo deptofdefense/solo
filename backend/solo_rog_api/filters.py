@@ -4,6 +4,7 @@ from .models import Document
 
 class DocumentListFilter(filters.FilterSet):
     sdn = filters.CharFilter(field_name="sdn", lookup_expr="icontains")
+    sdn_exact = filters.CharFilter(field_name="sdn", lookup_expr="exact")
     nomen = filters.CharFilter(field_name="part__nomen", lookup_expr="icontains")
     commod = filters.CharFilter(field_name="suppadd__desc", lookup_expr="icontains")
     status = filters.CharFilter(

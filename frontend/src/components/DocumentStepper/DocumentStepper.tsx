@@ -49,8 +49,8 @@ const DocumentStepper: React.FC<DocumentStepperProps> = ({ statuses }) => {
 
       <Step
         title="Confirmation (COR)"
-        occuredAt={statusByDic["D6T"]}
-        complete={statusByDic["D6T"]}
+        occuredAt={statusByDic["COR"]}
+        complete={statusByDic["COR"]}
         last
       />
     </div>

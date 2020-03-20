@@ -23,11 +23,11 @@ const createColumns: CreateColumns = () => [
   {
     Header: "Service Request #",
     accessor: "serviceRequest.service_request",
-    id: "service_request"
+    id: "service_request__service_request"
   },
   {
     Header: "Commodity",
-    id: "commodity",
+    id: "suppadd__desc",
     accessor: "commodityName"
   },
   {
@@ -39,12 +39,13 @@ const createColumns: CreateColumns = () => [
   },
   {
     Header: "Nomenclature",
-    id: "nomen",
+    id: "part__nomen",
     accessor: "part.nomen"
   },
   {
     Header: "Last Updated",
-    id: "status_date",
+    id: "statuses__status_date",
+    disableSortBy: true,
     accessor: ({ mostRecentStatusIdx, statuses }) =>
       `${formatDistanceToNow(
         parseISO(statuses[mostRecentStatusIdx].status_date)

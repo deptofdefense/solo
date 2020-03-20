@@ -35,7 +35,7 @@ describe("StatusPage pagination control", () => {
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][0]).toEqual(
-        "/documents?page=2" // 1 is second page
+        "/document/?page=2" // 1 is second page
       );
     });
   });
@@ -58,7 +58,7 @@ describe("StatusPage pagination control", () => {
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][0]).toEqual(
-        "/documents?page=6" // 5 is 0-indexed last page
+        "/document/?page=6" // 5 is 0-indexed last page
       );
     });
   });

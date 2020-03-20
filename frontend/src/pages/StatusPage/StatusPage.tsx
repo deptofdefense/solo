@@ -15,7 +15,7 @@ import createColumns from "./tableColumns";
 const filterable = [
   { name: "SDN", value: "sdn" },
   { name: "Nomenclature", value: "nomen" },
-  { name: "Commodity", value: "commodity" }
+  { name: "Commodity", value: "commod" }
 ];
 
 const StatusPage: React.FC = () => {
