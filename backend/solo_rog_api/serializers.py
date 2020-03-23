@@ -2,7 +2,7 @@ from typing import Dict, Any, Optional, cast
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
-from rest_framework_simplejwt.tokens import SlidingToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import (
     AddressType,
     Dic,
@@ -24,9 +24,9 @@ class TokenObtainSerializer(serializers.Serializer):
         )
         if user is None or not user.is_active:
             raise exceptions.AuthenticationFailed()
-        token = SlidingToken.for_user(user)
-        token["username"] = user.username
-        return {"token": str(token)}
+        refresh = RefreshToken.for_user(user)
+        refresh["username"] = user.username
+        return {"refresh": str(refresh), "access": str(refresh.access_token)}
 
 
 class LocatorSerializer(serializers.ModelSerializer):

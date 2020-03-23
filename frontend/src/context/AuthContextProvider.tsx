@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import {
-  TOKEN_LOCAL_STORAGE_KEY,
-  API_PROTOCOL,
-  API_DOMAIN,
+  ACCESS_TOKEN_LOCAL_STORAGE_KEY,
+  REFRESH_TOKEN_LOCAL_STORAGE_KEY,
+  BASE_URL,
   LOGIN_URL,
   REFRESH_URL
 } from "const";
@@ -10,7 +10,7 @@ import {
   AuthContext,
   User,
   unauthenticatedUser,
-  userFromToken
+  userFromTokens
 } from "./AuthContext";
 
 // to be added to every request
@@ -21,72 +21,91 @@ const baseHeaders: HeadersInit = {
 
 // before rendering, parse any existing user information
 // from token in local storage
-const existingToken = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY);
-const exisitingUser = userFromToken(existingToken);
+const existingAccessToken = localStorage.getItem(
+  ACCESS_TOKEN_LOCAL_STORAGE_KEY
+);
+const existingRefreshToken = localStorage.getItem(
+  REFRESH_TOKEN_LOCAL_STORAGE_KEY
+);
+const exisitingUser = userFromTokens(existingAccessToken, existingRefreshToken);
 
 const AuthContextProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(exisitingUser);
-  const { token, authenticated, tokenExp, refreshExp } = currentUser;
+  const {
+    accessToken,
+    refreshToken,
+    authenticated,
+    tokenExp,
+    refreshExp
+  } = currentUser;
+
+  // any time the tokens change in state, update local storage
+  useEffect(() => {
+    if (refreshToken && accessToken) {
+      localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, accessToken);
+      localStorage.setItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY, refreshToken);
+    } else {
+      localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY);
+    }
+  }, [refreshToken, accessToken]);
 
   // refresh a token and set current user based on the new token
-  const refreshToken = useCallback(async () => {
+  const refreshAuthToken = useCallback(async (refresh: string) => {
     try {
       const res = await fetch(REFRESH_URL, {
         method: "POST",
         headers: baseHeaders,
         body: JSON.stringify({
-          token
+          refresh: refresh
         })
       });
       if (!res.ok) {
-        setCurrentUser(unauthenticatedUser);
+        return {};
       } else {
-        const { token: newToken } = await res.json();
-        setCurrentUser(userFromToken(newToken));
+        return res.json();
       }
     } catch (e) {
-      setCurrentUser(unauthenticatedUser);
-      throw new Error("token refresh failed");
+      return {};
     }
-  }, [token]);
+  }, []);
 
   // return a promise that checks if the token is required to be
   // refreshed, and does the refresh prior to resolving. If the
   // current user is not authenticated, resolve immediately. This
   // should typically only apply on the first api call for a returning
   // user, otherwise tokens are automatically refreshed on an interval.
-  const requireRefresh = useCallback(async () => {
-    if (tokenExp && refreshExp) {
+  const prepareToken = useCallback(async () => {
+    if (tokenExp && refreshExp && refreshToken) {
       // expired but refreshable
       if (Date.now() > tokenExp && Date.now() < refreshExp) {
-        await refreshToken();
+        const { access, refresh } = await refreshAuthToken(refreshToken);
+        setCurrentUser(userFromTokens(access, refresh));
+        return access;
       }
     }
-  }, [tokenExp, refreshExp, refreshToken]);
+    return accessToken;
+  }, [tokenExp, refreshExp, refreshToken, accessToken, refreshAuthToken]);
 
   // any time the token changes, set-up automatic token refreshing
   // every 4 minutes.
+  /* istanbul ignore next */
   useEffect(() => {
-    if (authenticated && token) {
-      const interval = setInterval(refreshToken, 1000 * 60); // 4 minutes
+    if (authenticated && refreshToken) {
+      const interval = setInterval(async () => {
+        const { access, refresh } = await refreshAuthToken(refreshToken);
+        setCurrentUser(userFromTokens(access, refresh));
+      }, 1000 * 60 * 4); // 4 minutes
       return () => clearInterval(interval);
     }
-  }, [token, authenticated, refreshToken]);
-
-  // any time the tokens change in state, update local storage
-  useEffect(() => {
-    if (authenticated && token) {
-      localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, token);
-    } else {
-      localStorage.removeItem(TOKEN_LOCAL_STORAGE_KEY);
-    }
-  }, [authenticated, token]);
+  }, [authenticated, refreshToken, refreshAuthToken]);
 
   // add base headers and authentication header to api requests
   const makeOptions = useCallback(
-    (options: Partial<RequestInit>): Partial<RequestInit> => {
-      const authHeader = currentUser.authenticated && {
-        Authorization: `Bearer ${currentUser.token}`
+    async (options: Partial<RequestInit>): Promise<Partial<RequestInit>> => {
+      const token = await prepareToken();
+      const authHeader = token && {
+        Authorization: `Bearer ${token}`
       };
       return {
         ...options,
@@ -97,7 +116,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
         }
       };
     },
-    [currentUser.token, currentUser.authenticated]
+    [prepareToken]
   );
 
   // this function is passed to components via context. it wraps the fetch api
@@ -106,11 +125,8 @@ const AuthContextProvider: React.FC = ({ children }) => {
   // return a rejected promise
   const apiCall = useCallback(
     async <T,>(url: string, options: Partial<RequestInit> = {}): Promise<T> => {
-      await requireRefresh();
-      const res = await fetch(
-        `${API_PROTOCOL}://${API_DOMAIN}${url}`,
-        makeOptions(options)
-      );
+      const opts = await makeOptions(options);
+      const res = await fetch(`${BASE_URL}${url}`, opts);
       if (res.ok) {
         return (await res.json()) as T;
       } else if (res.status === 401) {
@@ -118,7 +134,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
       }
       return Promise.reject(res);
     },
-    [makeOptions, setCurrentUser, requireRefresh]
+    [makeOptions, setCurrentUser]
   );
 
   // during development, prompt for a username to authenticate as
@@ -145,8 +161,8 @@ const AuthContextProvider: React.FC = ({ children }) => {
       setCurrentUser(unauthenticatedUser);
       return Promise.reject(res);
     }
-    const { token } = await res.json();
-    setCurrentUser(userFromToken(token));
+    const { access, refresh } = await res.json();
+    setCurrentUser(userFromTokens(access, refresh));
   };
 
   // clear access and refresh tokens

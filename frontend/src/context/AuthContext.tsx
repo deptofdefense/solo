@@ -7,7 +7,8 @@ export interface User {
   authenticated: boolean;
   tokenExp: number | null;
   refreshExp: number | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 
 export const unauthenticatedUser: User = {
@@ -16,28 +17,29 @@ export const unauthenticatedUser: User = {
   authenticated: false,
   tokenExp: null,
   refreshExp: null,
-  token: null
+  accessToken: null,
+  refreshToken: null
 };
 
 // pull user information out of token
-export const userFromToken = (token: string | null): User => {
+export const userFromTokens = (
+  accessToken: string | null,
+  refreshToken: string | null
+): User => {
   try {
-    if (!token) {
+    if (!accessToken || !refreshToken) {
       return unauthenticatedUser;
     }
-    const {
-      username,
-      user_id: userId,
-      exp,
-      refresh_exp: refreshExp
-    } = JwtDecode(token);
+    const { username, user_id: userId, exp } = JwtDecode(accessToken);
+    const { exp: refreshExp } = JwtDecode(refreshToken);
     return {
       username: username,
       userId: userId,
       authenticated: true,
       tokenExp: exp * 1000, // convert seconds to miliseconds
       refreshExp: refreshExp * 1000, // convert seconds to miliseconds
-      token
+      accessToken,
+      refreshToken
     };
   } catch (e) {
     return unauthenticatedUser;
@@ -45,7 +47,6 @@ export const userFromToken = (token: string | null): User => {
 };
 
 export interface AuthContextType extends User {
-  token: string | null;
   apiCall: <T>(url: string, options: Partial<RequestInit>) => Promise<T>;
   apiLogin: () => Promise<void>;
   apiLogout: () => Promise<void>;

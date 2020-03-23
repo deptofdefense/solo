@@ -47,7 +47,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.SlidingToken",),
+    "ROTATE_REFRESH_TOKENS": True,
 }
 
 # setup the domain to serve from based on environment
