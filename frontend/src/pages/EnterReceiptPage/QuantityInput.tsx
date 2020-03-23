@@ -11,8 +11,9 @@ const QuantityInput: React.FC<QuantityInputProps> = ({
   onQuantitiyChange
 }) => {
   const onValueChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-    const asNum = parseInt(e.currentTarget.value);
-    if (!isNaN(asNum)) {
+    const asNum =
+      e.currentTarget.value === "" ? 0 : parseInt(e.currentTarget.value);
+    if (!Number.isNaN(asNum)) {
       onQuantitiyChange(asNum);
     }
   };

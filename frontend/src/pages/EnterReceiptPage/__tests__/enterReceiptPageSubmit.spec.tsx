@@ -177,6 +177,18 @@ describe("EnterReceiptPage submit all process", () => {
     });
   });
 
+  it("can change the quantitiy to zero", async () => {
+    const { getByPlaceholderText } = await renderAndSearchForDocument();
+    const quantityInp = getByPlaceholderText("Quantity");
+
+    fireEvent.change(quantityInp, {
+      target: { value: "" }
+    });
+    await wait(() => {
+      expect(quantityInp).toHaveValue("0");
+    });
+  });
+
   it("can select a different locator", async () => {
     const { getByPlaceholderText } = await renderAndSearchForDocument();
     const locatorSelect = getByPlaceholderText("Locator");
