@@ -41,10 +41,11 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
         locatorsBySubinventory,
         statuses,
         serviceRequest: service_request,
-        shipper: addresses.find(addy => addy.address_type.type === "Ship-To"),
-        receiver: addresses.find(
-          addy => addy.address_type.type === "Requester"
-        ),
+
+        // 1 = Holder, 2 = Ship-To, 3 = Requestor, and 4 = Bill-To
+        shipper: addresses.find(addy => addy.address_type.type === "2"),
+        receiver: addresses.find(addy => addy.address_type.type === "3"),
+
         loadingStatus: {
           loading: false
         },
