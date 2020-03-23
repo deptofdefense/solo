@@ -1,13 +1,19 @@
+from datetime import datetime
 from typing import Any
 from rest_framework import generics, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django_filters import rest_framework as filters
-from .models import Document
-from .serializers import TokenObtainSerializer, DocumentSerializer
+from .models import Document, Dic
+from .serializers import (
+    TokenObtainSerializer,
+    DocumentSerializer,
+    StatusSerializer,
+)
 from .tasks import debug_task
 from .filters import DocumentListFilter
 
@@ -45,3 +51,61 @@ class DocumentList(generics.ListAPIView):
         ("statuses__status_date", "last updated"),
     ]
     ordering = ["statuses__status_date"]
+
+
+class D6TSubmission(APIView):
+    def post(self, request):
+        response_data = []
+        serializers = []
+        if len(request.data) > 0:
+            for new_status in request.data:
+                try:
+                    document = Document.objects.get(sdn=new_status["sdn"])
+                except Document.DoesNotExist:
+                    return Response(
+                        "bad request: " + new_status["sdn"],
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                new_status["status_date"] = datetime.now()
+                new_status["dic"] = Dic.objects.get(code="D6T")
+                new_status["document"] = document.id
+                serializer = StatusSerializer(data=new_status)
+                if not serializer.is_valid():
+                    return Response(
+                        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
+                serializers.append(serializer)
+            for serializer in serializers:
+                serializer.save()
+                response_data.append(serializer.data)
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        return Response("Empty Request", status=status.HTTP_400_BAD_REQUEST)
+
+
+class CORSubmission(APIView):
+    def post(self, request):
+        response_data = []
+        serializers = []
+        if len(request.data) > 0:
+            for new_status in request.data:
+                try:
+                    document = Document.objects.get(sdn=new_status["sdn"])
+                except Document.DoesNotExist:
+                    return Response(
+                        "bad request: " + new_status["sdn"],
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                new_status["status_date"] = datetime.now()
+                new_status["dic"] = Dic.objects.get(code="COR")
+                new_status["document"] = document.id
+                serializer = StatusSerializer(data=new_status)
+                if not serializer.is_valid():
+                    return Response(
+                        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
+                serializers.append(serializer)
+            for serializer in serializers:
+                serializer.save()
+                response_data.append(serializer.data)
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        return Response("Empty Request", status=status.HTTP_400_BAD_REQUEST)

@@ -1,3 +1,4 @@
+from typing import List
 from unittest.mock import patch, Mock
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -5,6 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import override_settings
+
 
 User = get_user_model()
 
@@ -99,3 +101,35 @@ class DocumentTests(APITestCase):
         out_of_bounds_url = self.base_url + "?page=1000000000"
         out_of_bounds_response = self.client.get(out_of_bounds_url, format="json")
         self.assertEqual(out_of_bounds_response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class D6TTests(APITestCase):
+    base_url = reverse("d6t_submission")
+
+    def test_empty_bulk_post_d6t_submission(self) -> None:
+        test_data: List[str] = []
+        base_response = self.client.post(self.base_url, test_data, format="json")
+        self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # def test_bulk_post_d6t_submission(self) -> None:
+    #     test_data = [{ "sdn": "M3030081389519", "received_qty": 1}]
+    #     base_response = self.client.post(
+    #         self.base_url, test_data, format="json"
+    #     )
+    #     self.assertEqual(base_response.status_code, status.HTTP_201_CREATED)
+
+
+class CORTests(APITestCase):
+    base_url = reverse("cor_submission")
+
+    def test_empty_bulk_post_cor_submission(self) -> None:
+        test_data: List[str] = []
+        base_response = self.client.post(self.base_url, test_data, format="json")
+        self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # def test_bulk_post_cor_submission(self) -> None:
+    #     test_data = [{ "sdn": "M3030081389519", "received_qty": 1, "received_by": "Scott"}]
+    #     base_response = self.client.post(
+    #         self.base_url, test_data, format="json"
+    #     )
+    #     self.assertEqual(base_response.status_code, status.HTTP_201_CREATED)

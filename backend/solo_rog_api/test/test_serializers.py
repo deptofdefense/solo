@@ -175,6 +175,7 @@ class StatusSerializerTest(TestCase):
             projected_qty=2,
             document=None,
             dic=None,
+            received_by=None,
         )
 
     def test_status_serializer(self) -> None:
@@ -190,6 +191,7 @@ class StatusSerializerTest(TestCase):
                 "esd": "2020-03-20",
                 "projected_qty": 2,
                 "received_qty": None,
+                "received_by": None,
             },
         )
 
