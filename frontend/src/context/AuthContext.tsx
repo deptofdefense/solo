@@ -5,9 +5,9 @@ export interface User {
   username: string;
   userId: string | null;
   authenticated: boolean;
-  tokenExp: string | null;
-  accessToken: string | null;
-  refreshToken: string | null;
+  tokenExp: number | null;
+  refreshExp: number | null;
+  token: string | null;
 }
 
 export const unauthenticatedUser: User = {
@@ -15,27 +15,29 @@ export const unauthenticatedUser: User = {
   userId: null,
   authenticated: false,
   tokenExp: null,
-  accessToken: null,
-  refreshToken: null
+  refreshExp: null,
+  token: null
 };
 
-// pull user information out of a JWT access token
-export const userFromTokens = (
-  accessToken: string | null,
-  refreshToken: string | null
-): User => {
+// pull user information out of token
+export const userFromToken = (token: string | null): User => {
   try {
-    if (!accessToken) {
+    if (!token) {
       return unauthenticatedUser;
     }
-    const { username, user_id: userId, exp } = JwtDecode(accessToken);
+    const {
+      username,
+      user_id: userId,
+      exp,
+      refresh_exp: refreshExp
+    } = JwtDecode(token);
     return {
       username: username,
       userId: userId,
       authenticated: true,
-      tokenExp: exp,
-      accessToken,
-      refreshToken
+      tokenExp: exp * 1000, // convert seconds to miliseconds
+      refreshExp: refreshExp * 1000, // convert seconds to miliseconds
+      token
     };
   } catch (e) {
     return unauthenticatedUser;
@@ -43,8 +45,7 @@ export const userFromTokens = (
 };
 
 export interface AuthContextType extends User {
-  accessToken: string | null;
-  refreshToken: string | null;
+  token: string | null;
   apiCall: <T>(url: string, options: Partial<RequestInit>) => Promise<T>;
   apiLogin: () => Promise<void>;
   apiLogout: () => Promise<void>;

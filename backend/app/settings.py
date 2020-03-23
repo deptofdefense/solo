@@ -46,6 +46,10 @@ REST_FRAMEWORK = {
     "ORDERING_PARAM": "sort",
 }
 
+SIMPLE_JWT = {
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.SlidingToken",),
+}
+
 # setup the domain to serve from based on environment
 API_DOMAIN = os.environ.get("API_DOMAIN")
 AUTH_DOMAIN = os.environ.get("AUTH_DOMAIN")

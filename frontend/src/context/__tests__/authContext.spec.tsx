@@ -1,10 +1,7 @@
 import React from "react";
 import AuthContextProvider from "../AuthContextProvider";
 import { AuthContext } from "../AuthContext";
-import {
-  REFRESH_TOKEN_LOCAL_STORAGE_KEY,
-  ACCESS_TOKEN_LOCAL_STORAGE_KEY
-} from "const";
+import { TOKEN_LOCAL_STORAGE_KEY } from "const";
 import { render, fireEvent, wait } from "test-utils";
 
 interface TestConsumerProps {
@@ -41,9 +38,12 @@ const AuthContextTestConsumer: React.FC<TestConsumerProps> = ({
   </AuthContextProvider>
 );
 
-// username: testuser, userId: 70
+// username: testuser
+// user_id: 91
+// exp: 1584981996
+// refresh_exp: 1585068096
 const fakeToken =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTgyMTQ5Nzk0LCJqdGkiOiIwYjc3OTVkMmYzZjE0MjkxYWI4NzAxOGE2ODMyZjJhYiIsInVzZXJfaWQiOjcwLCJ1c2VybmFtZSI6InRlc3R1c2VyIn0.DNnc3y1r4ZMZ3uW_UkjY2jI6i4MqmjOCRAWZBaZUIiE";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoic2xpZGluZyIsImV4cCI6MTU4NDk4MTk5NiwianRpIjoiNGUzYWJhMzQ2NDcwNDA2ZWJlMzVhMjI3NDRlMWU2MTciLCJyZWZyZXNoX2V4cCI6MTU4NTA2ODA5NiwidXNlcl9pZCI6OTEsInVzZXJuYW1lIjoidGVzdHVzZXIifQ.nwClek4hg_vk2ia_wa2I5qBGMvcSaDJhcU6KR3KirVU";
 
 const makeResponse = (
   status: number = 200,
@@ -63,40 +63,45 @@ const renderAndLogin = async (Component: JSX.Element) => {
   await wait(() => {
     // okay, they're logged in
     expect(queryByTestId("authenticated")).toBeInTheDocument();
-    expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toEqual(
-      fakeToken
-    );
+    expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toEqual(fakeToken);
   });
   return rendered;
 };
 
 describe("authentication context provider", () => {
   let fakeFetch: jest.Mock;
+  let fakeDate: jest.Mock;
   let originalFetch: any;
+  let originalDate: any;
 
   // mock the fetch api
   beforeAll(() => {
     fakeFetch = jest.fn();
+    fakeDate = jest.fn();
+    originalDate = Date.now;
+    Date.now = fakeDate;
     originalFetch = window.fetch;
     window.fetch = fakeFetch;
   });
 
   beforeEach(() => {
+    // default is a non-expired token
+    fakeDate.mockReturnValue(1584980996000);
     fakeFetch.mockResolvedValue(
       makeResponse(200, {
-        access: fakeToken,
-        refresh: fakeToken
+        token: fakeToken
       })
     );
   });
 
   afterEach(() => {
+    fakeDate.mockReset();
     fakeFetch.mockReset();
-    localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY);
+    localStorage.removeItem(TOKEN_LOCAL_STORAGE_KEY);
   });
 
   afterAll(() => {
+    Date.now = originalDate;
     window.fetch = originalFetch;
   });
 
@@ -113,7 +118,7 @@ describe("authentication context provider", () => {
     fireEvent.click(loginButton);
     await wait(() => {
       expect(queryByText(/testuser/)).toBeInTheDocument();
-      expect(queryByText(/70/)).toBeInTheDocument();
+      expect(queryByText(/91/)).toBeInTheDocument();
       expect(getByTestId("authenticated")).toBeInTheDocument();
     });
   });
@@ -123,12 +128,7 @@ describe("authentication context provider", () => {
     const loginButton = getByTestId("login");
     fireEvent.click(loginButton);
     await wait(() => {
-      expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toEqual(
-        fakeToken
-      );
-      expect(localStorage.getItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY)).toEqual(
-        fakeToken
-      );
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toEqual(fakeToken);
     });
   });
 
@@ -141,27 +141,25 @@ describe("authentication context provider", () => {
     await wait(() => {
       // make sure they're logged out
       expect(queryByTestId("authenticated")).not.toBeInTheDocument();
-      expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
-      expect(localStorage.getItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
     });
   });
 
-  it("login handles an access token that does not contain the required claims", async () => {
+  it("login handles an token that does not contain the required claims", async () => {
     const { queryByTestId, getByTestId } = await renderAndLogin(
       <AuthContextTestConsumer />
     );
     const loginButton = getByTestId("login");
     fakeFetch.mockResolvedValue(
       makeResponse(200, {
-        access: "thisshouldntwork",
-        refresh: "thisshouldntwork"
+        token: "thisshouldntwork"
       })
     );
     fireEvent.click(loginButton);
     await wait(() => {
       // make sure this logs them out
       expect(queryByTestId("authenticated")).not.toBeInTheDocument();
-      expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
     });
   });
 
@@ -175,7 +173,7 @@ describe("authentication context provider", () => {
     await wait(() => {
       // make sure a 401 logs them out
       expect(queryByTestId("authenticated")).not.toBeInTheDocument();
-      expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
     });
   });
 
@@ -247,7 +245,7 @@ describe("authentication context provider", () => {
     await wait(() => {
       expect(fakeFetch).toHaveBeenCalled();
       expect(queryByTestId("authenticated")).not.toBeInTheDocument();
-      expect(localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
     });
   });
 
@@ -268,9 +266,86 @@ describe("authentication context provider", () => {
     await wait(() => {
       expect(fakeFetch).toHaveBeenCalled();
       expect(queryByTestId("authenticated")).toBeInTheDocument();
-      expect(
-        localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY)
-      ).not.toBeNull();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).not.toBeNull();
+    });
+  });
+
+  it("apiCall refreshes a token if required prior to call", async () => {
+    const onCall = (cb: CallableFunction) => {
+      cb("/test", {
+        method: "GET"
+      });
+    };
+    const { getByTestId } = await renderAndLogin(
+      <AuthContextTestConsumer apiCallCb={onCall} />
+    );
+    fakeDate.mockReturnValue(1585068000000); // refresh required
+    const apiCall = getByTestId("apiCall");
+    fireEvent.click(apiCall);
+    await wait(() => {
+      expect(fakeFetch.mock.calls[0][0]).toEqual(
+        expect.stringMatching(/\/login\/$/)
+      );
+      expect(fakeFetch.mock.calls[1][0]).toEqual(
+        expect.stringMatching(/\/login\/refresh\//)
+      );
+      expect(fakeFetch.mock.calls[2][0]).toEqual(
+        expect.stringMatching(/\/test/)
+      );
+    });
+  });
+
+  it("apiCall logs user out if refresh required and api errors", async () => {
+    const onCall = (cb: CallableFunction) => {
+      cb("/test", {
+        method: "GET"
+      }).catch(() => {
+        //vexpecting error here
+      });
+    };
+    const { getByTestId, queryByTestId } = await renderAndLogin(
+      <AuthContextTestConsumer apiCallCb={onCall} />
+    );
+    await wait(() => {
+      expect(fakeFetch).toHaveBeenCalled();
+    });
+    fakeDate.mockReturnValue(1585068000000); // refresh required
+    fakeFetch.mockResolvedValue(makeResponse(400));
+    const apiCall = getByTestId("apiCall");
+    fireEvent.click(apiCall);
+    await wait(() => {
+      expect(fakeFetch.mock.calls[1][0]).toEqual(
+        expect.stringMatching(/\/login\/refresh\/$/)
+      );
+      expect(queryByTestId("authenticated")).not.toBeInTheDocument();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
+    });
+  });
+
+  it("apiCall logs user out if refresh required network errors", async () => {
+    const onCall = (cb: CallableFunction) => {
+      cb("/test", {
+        method: "GET"
+      }).catch(() => {
+        //vexpecting error here
+      });
+    };
+    const { getByTestId, queryByTestId } = await renderAndLogin(
+      <AuthContextTestConsumer apiCallCb={onCall} />
+    );
+    await wait(() => {
+      expect(fakeFetch).toHaveBeenCalled();
+    });
+    fakeDate.mockReturnValue(1585068000000); // refresh required
+    fakeFetch.mockRejectedValue(new Error("some network error"));
+    const apiCall = getByTestId("apiCall");
+    fireEvent.click(apiCall);
+    await wait(() => {
+      expect(fakeFetch.mock.calls[1][0]).toEqual(
+        expect.stringMatching(/\/login\/refresh\/$/)
+      );
+      expect(queryByTestId("authenticated")).not.toBeInTheDocument();
+      expect(localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)).toBeNull();
     });
   });
 

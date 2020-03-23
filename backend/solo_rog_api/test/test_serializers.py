@@ -52,15 +52,14 @@ class TokenObtainSerializerTestCase(TestCase):
         serializer = TokenObtainSerializer(data={})
         self.assertTrue(serializer.is_valid())
         self.assertTrue(auth_mock.called)
-        self.assertIn("refresh", serializer.validated_data)
-        self.assertIn("access", serializer.validated_data)
+        self.assertIn("token", serializer.validated_data)
 
     def test_token_contains_username_and_id(self, auth_mock: Mock) -> None:
         auth_mock.return_value = self.user
         serializer = TokenObtainSerializer(data={})
         self.assertTrue(serializer.is_valid())
-        self.assertIn("access", serializer.validated_data)
-        access_token = serializer.validated_data.get("access")
+        self.assertIn("token", serializer.validated_data)
+        access_token = serializer.validated_data.get("token")
         data = jwt.decode(access_token, verify=False)
         self.assertDictContainsSubset(
             {"username": self.user.username, "user_id": self.user.id}, data
@@ -70,7 +69,7 @@ class TokenObtainSerializerTestCase(TestCase):
         auth_mock.return_value = self.user
         serializer = TokenObtainSerializer(data={})
         self.assertTrue(serializer.is_valid())
-        access_token = serializer.validated_data.get("access")
+        access_token = serializer.validated_data.get("token")
         jwt.decode(access_token, settings.SECRET_KEY, verify=True)
         with self.assertRaises(InvalidSignatureError):
             jwt.decode(access_token, "not secret key", verify=True)
