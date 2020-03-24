@@ -46,6 +46,10 @@ REST_FRAMEWORK = {
     "ORDERING_PARAM": "sort",
 }
 
+SIMPLE_JWT = {
+    "ROTATE_REFRESH_TOKENS": True,
+}
+
 # setup the domain to serve from based on environment
 API_DOMAIN = os.environ.get("API_DOMAIN")
 AUTH_DOMAIN = os.environ.get("AUTH_DOMAIN")

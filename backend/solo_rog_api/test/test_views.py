@@ -22,7 +22,6 @@ class ObtainTokenViewTestCase(APITestCase):
         response = self.client.post(reverse("login"))
         self.assertEqual(response.status_code, 200)
         self.assertIn("access", response.json())
-        self.assertIn("refresh", response.json())
 
     def test_unauthenticated_user_cannot_retrieve_tokens(self, auth_mock: Mock) -> None:
         auth_mock.side_effect = AuthenticationFailed()

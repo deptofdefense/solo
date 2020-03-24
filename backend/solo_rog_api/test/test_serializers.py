@@ -52,8 +52,8 @@ class TokenObtainSerializerTestCase(TestCase):
         serializer = TokenObtainSerializer(data={})
         self.assertTrue(serializer.is_valid())
         self.assertTrue(auth_mock.called)
-        self.assertIn("refresh", serializer.validated_data)
         self.assertIn("access", serializer.validated_data)
+        self.assertIn("refresh", serializer.validated_data)
 
     def test_token_contains_username_and_id(self, auth_mock: Mock) -> None:
         auth_mock.return_value = self.user

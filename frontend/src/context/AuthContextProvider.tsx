@@ -2,9 +2,9 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   ACCESS_TOKEN_LOCAL_STORAGE_KEY,
   REFRESH_TOKEN_LOCAL_STORAGE_KEY,
-  API_PROTOCOL,
-  API_DOMAIN,
-  AUTH_DOMAIN
+  BASE_URL,
+  LOGIN_URL,
+  REFRESH_URL
 } from "const";
 import {
   AuthContext,
@@ -31,24 +31,81 @@ const exisitingUser = userFromTokens(existingAccessToken, existingRefreshToken);
 
 const AuthContextProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(exisitingUser);
-  const { accessToken, refreshToken, authenticated } = currentUser;
+  const {
+    accessToken,
+    refreshToken,
+    authenticated,
+    tokenExp,
+    refreshExp
+  } = currentUser;
 
   // any time the tokens change in state, update local storage
   useEffect(() => {
-    if (authenticated && accessToken && refreshToken) {
+    if (refreshToken && accessToken) {
       localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY, accessToken);
       localStorage.setItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY, refreshToken);
     } else {
       localStorage.removeItem(ACCESS_TOKEN_LOCAL_STORAGE_KEY);
       localStorage.removeItem(REFRESH_TOKEN_LOCAL_STORAGE_KEY);
     }
-  }, [authenticated, accessToken, refreshToken]);
+  }, [refreshToken, accessToken]);
+
+  // refresh a token and set current user based on the new token
+  const refreshAuthToken = useCallback(async (refresh: string) => {
+    try {
+      const res = await fetch(REFRESH_URL, {
+        method: "POST",
+        headers: baseHeaders,
+        body: JSON.stringify({
+          refresh: refresh
+        })
+      });
+      if (!res.ok) {
+        return {};
+      } else {
+        return res.json();
+      }
+    } catch (e) {
+      return {};
+    }
+  }, []);
+
+  // return a promise that checks if the token is required to be
+  // refreshed, and does the refresh prior to resolving. If the
+  // current user is not authenticated, resolve immediately. This
+  // should typically only apply on the first api call for a returning
+  // user, otherwise tokens are automatically refreshed on an interval.
+  const prepareToken = useCallback(async () => {
+    if (tokenExp && refreshExp && refreshToken) {
+      // expired but refreshable
+      if (Date.now() > tokenExp && Date.now() < refreshExp) {
+        const { access, refresh } = await refreshAuthToken(refreshToken);
+        setCurrentUser(userFromTokens(access, refresh));
+        return access;
+      }
+    }
+    return accessToken;
+  }, [tokenExp, refreshExp, refreshToken, accessToken, refreshAuthToken]);
+
+  // any time the token changes, set-up automatic token refreshing
+  // every 4 minutes.
+  /* istanbul ignore next */
+  useEffect(() => {
+    if (authenticated && refreshToken) {
+      const interval = setInterval(async () => {
+        const { access, refresh } = await refreshAuthToken(refreshToken);
+        setCurrentUser(userFromTokens(access, refresh));
+      }, 1000 * 60 * 4); // 4 minutes
+      return () => clearInterval(interval);
+    }
+  }, [authenticated, refreshToken, refreshAuthToken]);
 
   // add base headers and authentication header to api requests
   const makeOptions = useCallback(
-    (options: Partial<RequestInit>): Partial<RequestInit> => {
-      const authHeader = currentUser.authenticated && {
-        Authorization: `Bearer ${currentUser.accessToken}`
+    async (options: Partial<RequestInit>): Promise<Partial<RequestInit>> => {
+      const token = await prepareToken();
+      const authHeader = token && {
+        Authorization: `Bearer ${token}`
       };
       return {
         ...options,
@@ -59,7 +116,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
         }
       };
     },
-    [currentUser.accessToken, currentUser.authenticated]
+    [prepareToken]
   );
 
   // this function is passed to components via context. it wraps the fetch api
@@ -68,10 +125,8 @@ const AuthContextProvider: React.FC = ({ children }) => {
   // return a rejected promise
   const apiCall = useCallback(
     async <T,>(url: string, options: Partial<RequestInit> = {}): Promise<T> => {
-      const res = await fetch(
-        `${API_PROTOCOL}://${API_DOMAIN}${url}`,
-        makeOptions(options)
-      );
+      const opts = await makeOptions(options);
+      const res = await fetch(`${BASE_URL}${url}`, opts);
       if (res.ok) {
         return (await res.json()) as T;
       } else if (res.status === 401) {
@@ -96,7 +151,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
   // will authenticate via client SSL certificates (CAC) that are automatically
   // included by the browser if available
   const apiLogin = async () => {
-    const res = await fetch(`${API_PROTOCOL}://${AUTH_DOMAIN}/login/`, {
+    const res = await fetch(LOGIN_URL, {
       headers: apiLoginHeaders(),
       method: "POST",
       body: "{}",

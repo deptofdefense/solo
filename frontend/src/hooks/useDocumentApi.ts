@@ -98,7 +98,10 @@ const useDocumentApi = () => {
       setPageCount(Math.ceil(count / 25));
       return parseApiDocuments(results);
     },
-    [apiCall, makeQueryString]
+    // we don't need to refresh documents every time a token
+    // refreshes and causes apiCall to change
+    // eslint-disable-next-line
+    [makeQueryString]
   );
 
   return {
