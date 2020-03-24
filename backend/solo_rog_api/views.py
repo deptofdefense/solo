@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django_filters import rest_framework as filters
 from .models import Document, Dic, Status
+from django.forms.models import model_to_dict
 from .serializers import (
     TokenObtainSerializer,
     DocumentSerializer,
@@ -94,17 +95,23 @@ class D6TSubmission(APIView):
                     """
                     This is to create a single status object
                     """
-                    new_status["document_id"]= document.id
-                    new_status["dic"]=d6t_code.id
-                    new_status["status_date"]=datetime.now()
-                    new_status["key_and_transmit_date"]=datetime.now()
-                    new_status["esd"]=latest_status.esd
-                    new_status["projected_qty"]=latest_status.projected_qty
+                    created_status = Status.objects.create(
+                         document_id=document.id,
+                         dic=d6t_code,
+                         status_date=datetime.now(),
+                         key_and_transmit_date=datetime.now(),
+                         projected_qty=latest_status.projected_qty,
+                         # something that is passed into from the frontend. As for now, its the same as projected_qty
+                         received_qty=new_status["received_qty"],
+                         # TODO: These two will depend on the Suppadd.
+                         # subinventory=,
+                         # locator=,
+                     )
                         # something that is passed into from the frontend. As for now, its the same as projected_qty
                         # TODO: These two will depend on the Suppadd.
                         # subinventory=,
                         # locator=,
-                    serializer = StatusSerializer(data=new_status)
+                    serializer = StatusSerializer(data=model_to_dict(created_status))
                     if not serializer.is_valid():
                         return Response(
                             serializer.errors, status=status.HTTP_400_BAD_REQUEST
@@ -152,7 +159,7 @@ class CORSubmission(APIView):
                 latest_status = document.statuses.latest("status_date")
 
                 """
-                This is an attempt to only create a new status if and only if there was no d6t code. However, I have not
+                This is an attempt to only create a new status if and only if there was no cor code. However, I have not
                 accounted for mutliple shipments.
                 """
                 if latest_status.dic.code != cor_code.code:
@@ -160,15 +167,24 @@ class CORSubmission(APIView):
                     """
                     This is to create a single status object
                     """
-                    new_status["document_id"]= document.id
-                    new_status["dic"]=cor_code.id
-                    new_status["status_date"]=datetime.now()
-                    new_status["key_and_transmit_date"]=datetime.now()
-                    new_status["esd"]=latest_status.esd
+                    created_status = Status.objects.create(
+                         document_id=document.id,
+                         dic=cor_code,
+                         status_date=datetime.now(),
+                         key_and_transmit_date=datetime.now(),
+                         projected_qty=latest_status.projected_qty,
+                         # something that is passed into from the frontend. As for now, its the same as projected_qty
+                         received_qty=new_status["received_qty"],
+                         received_by=new_status["received_by"]
+                         # TODO: These two will depend on the Suppadd.
+                         # subinventory=,
+                         # locator=,
+                     )
+                        # something that is passed into from the frontend. As for now, its the same as projected_qty
                         # TODO: These two will depend on the Suppadd.
                         # subinventory=,
                         # locator=,
-                    serializer = StatusSerializer(data=new_status)
+                    serializer = StatusSerializer(data=model_to_dict(created_status))
                     if not serializer.is_valid():
                         return Response(
                             serializer.errors, status=status.HTTP_400_BAD_REQUEST
@@ -183,4 +199,3 @@ class CORSubmission(APIView):
                 response_data.append(serializer.data)
             return Response(response_data, status=status.HTTP_201_CREATED)
         return Response("Empty Request", status=status.HTTP_400_BAD_REQUEST)
-
