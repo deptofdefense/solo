@@ -20,7 +20,10 @@ const EnterReceiptPage: React.FC = () => {
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
-      <Title>Enter Receipt</Title>
+      <div className="grid-row flex-align-start flex-justify">
+        <Title>Enter Receipt</Title>
+        <EnterReceiptStatusIndicator {...submitAllLoadingStatus} />
+      </div>
       <Table<Document>
         columns={columns}
         data={docs}
@@ -40,7 +43,6 @@ const EnterReceiptPage: React.FC = () => {
           Submit All
         </Button>
       </div>
-      <EnterReceiptStatusIndicator {...submitAllLoadingStatus} />
     </div>
   );
 };
