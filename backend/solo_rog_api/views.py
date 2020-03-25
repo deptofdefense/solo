@@ -6,6 +6,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django_filters import rest_framework as filters
@@ -15,6 +16,7 @@ from .serializers import (
     TokenObtainSerializer,
     DocumentSerializer,
     StatusSerializer,
+    UpdateStatusSerializer,
 )
 from .tasks import debug_task
 from .filters import DocumentListFilter
@@ -54,6 +56,34 @@ class DocumentList(generics.ListAPIView):
         ("statuses__status_date", "last updated"),
     ]
     ordering = ["statuses__status_date"]
+
+
+class D6TSubmissionView(CreateAPIView):
+    serializer_class = UpdateStatusSerializer
+
+    def get_serializer(self, **kwargs):
+        return super().get_serializer(many=True, allow_empty=False, **kwargs)
+
+    def get_serializer_context(self):
+        ctx = super().get_serializer_context()
+        ctx["new_status"] = "D6T"
+        ctx["document_excludes"] = {"statuses__dic__code": "D6T"}
+        ctx["document_filters"] = {"statuses__dic__code": "AS2"}
+        return ctx
+
+
+class CORSubmissionView(CreateAPIView):
+    serializer_class = UpdateStatusSerializer
+
+    def get_serializer(self, **kwargs):
+        return super().get_serializer(many=True, allow_empty=False, **kwargs)
+
+    def get_serializer_context(self):
+        ctx = super().get_serializer_context()
+        ctx["new_status"] = "COR"
+        ctx["document_excludes"] = {"statuses__code": "COR"}
+        ctx["document_filters"] = {"statuses__code": "D6T"}
+        return ctx
 
 
 class D6TSubmission(APIView):

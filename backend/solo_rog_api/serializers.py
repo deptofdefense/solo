@@ -1,4 +1,5 @@
 from typing import Dict, Any, Optional, cast
+from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
@@ -103,3 +104,66 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = "__all__"
+
+
+class UpdateStatusListSerializer(serializers.ListSerializer):
+    def create(self, validated_data):
+        statuses = [Status(**data) for data in validated_data]
+        return Status.objects.bulk_create(statuses)
+
+
+class UpdateStatusSerializer(serializers.Serializer):
+    sdn = serializers.CharField(max_length=50, required=True)
+    status_date = serializers.DateTimeField(default=timezone.now, required=False)
+    key_and_transmit_date = serializers.DateTimeField(
+        default=timezone.now, required=False
+    )
+    received_quantity = serializers.IntegerField(min_value=1)
+    subinventory = serializers.CharField(required=True, max_length=100)
+    locator = serializers.CharField(required=True, max_length=100)
+
+    class Meta:
+        list_serializer_class = UpdateStatusListSerializer
+
+    def validate(self, data):
+        new_dic = Dic.objects.get(code=self.context["new_status"])
+        validated = super().validate(data)
+
+        try:
+            document = (
+                Document.objects.exclude(**self.context.get("document_excludes", {}))
+                .filter(**self.context.get("document_filters", {}))
+                .select_related("suppadd")
+                .get(sdn=validated["sdn"])
+            )
+            subinventory = SubInventory.objects.get(
+                code=validated["subinventory"], suppadd_id=document.suppadd.id
+            )
+            locator = Locator.objects.get(
+                code=validated["locator"], subinventorys_id=subinventory.id
+            )
+            return {
+                "status_date": validated["status_date"],
+                "key_and_transmit_date": validated["key_and_transmit_date"],
+                "received_qty": validated["received_quantity"],
+                "document_id": document.id,
+                "dic": new_dic,
+                "subinventory_id": subinventory.id,
+                "locator_id": locator.id,
+            }
+        except Document.DoesNotExist:
+            raise serializers.ValidationError(
+                f"Document does not exist or is not eligible for {self.context['new_status']}"
+            )
+        except SubInventory.DoesNotExist:
+            raise serializers.ValidationError(
+                f"SubInventory {validated['subinventory']} is not valid for {validated['sdn']}"
+            )
+        except Locator.DoesNotExist:
+            raise serializers.ValidationError(
+                f"Locator {validated['locator']} is not valid for {validated['subinventory']} "
+                f"in document {validated['sdn']}"
+            )
+
+    def to_representation(self, status):
+        return StatusSerializer(instance=status).data
