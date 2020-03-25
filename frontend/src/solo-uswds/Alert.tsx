@@ -1,5 +1,6 @@
 import React from "react";
 import classNames from "classnames";
+import classes from "./Alert.module.scss";
 
 interface AlertProps extends Partial<JSX.IntrinsicElements["div"]> {
   status: "success" | "warning" | "error" | "info";
@@ -15,7 +16,12 @@ export const Alert: React.FC<AlertProps> = ({
   ...rest
 }) => (
   <div
-    className={classNames("usa-alert", `usa-alert--${status}`, className)}
+    className={classNames(
+      "usa-alert",
+      `usa-alert--${status}`,
+      className,
+      classes.extWidth
+    )}
     {...rest}
   >
     <div className="usa-alert__body">

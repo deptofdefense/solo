@@ -10,6 +10,9 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
     >
       Enter Receipt
     </h1>
+    <div
+      class="grid-row flex-justify-center flex-12 tablet:flex-10"
+    />
     <table
       class="usa-table grid-col-12 usa-table--borderless"
       role="table"
@@ -381,9 +384,6 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
         Submit All
       </button>
     </div>
-    <div
-      class="grid-row flex-justify-center flex-12 tablet:flex-10"
-    />
   </div>
 </DocumentFragment>
 `;
