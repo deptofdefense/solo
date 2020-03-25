@@ -5,18 +5,14 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
   <div
     class="tablet:margin-x-8 overflow-x-auto"
   >
-    <div
-      class="grid-row flex-align-start flex-justify"
+    <h1
+      class="usa-prose"
     >
-      <h1
-        class="usa-prose"
-      >
-        Enter Receipt
-      </h1>
-      <div
-        class="grid-row flex-justify-center flex-12 tablet:flex-10"
-      />
-    </div>
+      Enter Receipt
+    </h1>
+    <div
+      class="grid-row flex-justify-center flex-12 tablet:flex-10"
+    />
     <table
       class="usa-table grid-col-12 usa-table--borderless"
       role="table"
