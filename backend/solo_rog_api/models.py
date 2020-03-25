@@ -133,6 +133,12 @@ class Status(models.Model):
     projected_qty = models.PositiveSmallIntegerField(null=True, blank=True)
     received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
     received_by = models.CharField(max_length=50, null=True, blank=True)
+    subinventory = models.ForeignKey(
+        "SubInventory", related_name="statuses", on_delete=models.SET_NULL, null=True
+    )
+    locator = models.ForeignKey(
+        "Locator", related_name="statuses", on_delete=models.SET_NULL, null=True
+    )
 
     def status_converted_date(self) -> str:
         return parse_datetime(str(self.status_date)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
