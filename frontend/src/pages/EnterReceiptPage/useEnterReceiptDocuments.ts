@@ -37,6 +37,9 @@ const useDocuments = () => {
           sort: [],
           page: 0
         });
+        if (!doc) {
+          throw new Error("SDN not found");
+        }
         modifyDocument(sdn, {
           ...doc,
           loadingStatus: {
@@ -48,7 +51,8 @@ const useDocuments = () => {
         modifyDocument(sdn, {
           loadingStatus: {
             loading: false,
-            error: e.message || "Something went wrong"
+            message: e.message || "Something went wrong",
+            error: true
           }
         });
       }

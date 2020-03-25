@@ -12,10 +12,12 @@ const EnterReceiptPage: React.FC = () => {
     addSdn,
     submitAllLoadingStatus,
     submitAll,
-    modifyDocument
+    modifyDocument,
+    removeDocument
   } = useEnterReceiptDocuments();
-  const columns = useMemo(() => createColumns(modifyDocument), [
-    modifyDocument
+  const columns = useMemo(() => createColumns(modifyDocument, removeDocument), [
+    modifyDocument,
+    removeDocument
   ]);
 
   return (
