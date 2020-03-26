@@ -109,7 +109,7 @@ class SubmitD6TTestCase(APITestCase):
     base_url = reverse("bulk_d6t")
     now = timezone.now()
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.suppadd = SuppAdd.objects.create(code="suppa")
         self.subinv = SubInventory.objects.create(
             code="testsubinv", suppadd=self.suppadd
@@ -137,7 +137,7 @@ class SubmitD6TTestCase(APITestCase):
             }
         ]
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         Document.objects.all().delete()
         Status.objects.all().delete()
         SubInventory.objects.all().delete()
@@ -148,7 +148,7 @@ class SubmitD6TTestCase(APITestCase):
         base_response = self.client.post(self.base_url, test_data, format="json")
         self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_can_bulk_submit_d6t(self):
+    def test_can_bulk_submit_d6t_one(self) -> None:
         bulk_d6t_response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(bulk_d6t_response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(
@@ -160,55 +160,7 @@ class SubmitD6TTestCase(APITestCase):
             ).exists()
         )
 
-    def test_cannot_submit_d6t_when_document_was_already_d6t(self):
-        dic = Dic.objects.filter(code="D6T").first()
-        Status.objects.create(
-            document_id=self.document.id, dic=dic, status_date=self.now
-        )
-        response = self.client.post(self.base_url, self.data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("non_field_errors", response.data[0])
-        self.assertIn(
-            "Document does not exist or is not eligible",
-            str(response.data[0]["non_field_errors"][0]),
-        )
-
-    def test_status_cannot_submit_d6t_for_document_that_does_not_have_as2(self):
-        Status.objects.filter(dic__code="AS2", document_id=self.document.id).delete()
-        response = self.client.post(self.base_url, self.data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("non_field_errors", response.data[0])
-        self.assertIn(
-            "Document does not exist or is not eligible",
-            str(response.data[0]["non_field_errors"][0]),
-        )
-
-    def test_cannot_submit_d6t_using_invalid_subinventory(self):
-        response = self.client.post(
-            self.base_url,
-            [{**self.data[0], "subinventory": "invalidsubbinv"}],
-            format="json",
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("non_field_errors", response.data[0])
-        self.assertIn(
-            "SubInventory invalidsubbinv is not valid for testsdn",
-            str(response.data[0]["non_field_errors"][0]),
-        )
-
-    def test_invalid_locator_for_d6t_submission(self):
-        response = self.client.post(
-            self.base_url,
-            [{**self.data[0], "locator": "invalidlocator"}],
-            format="json",
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn(
-            "Locator invalidlocator is not valid for testsubinv in document testsdn",
-            str(response.data[0]["non_field_errors"][0]),
-        )
-
-    def test_can_bulk_submit_d6t(self):
+    def test_can_bulk_submit_d6t_two(self) -> None:
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = dict(response.data[0])
@@ -223,11 +175,60 @@ class SubmitD6TTestCase(APITestCase):
         )
         self.assertDictContainsSubset({"code": "D6T"}, data["dic"])
 
+    def test_cannot_submit_d6t_when_document_was_already_d6t(self) -> None:
+        dic = Dic.objects.filter(code="D6T").first()
+        Status.objects.create(
+            document_id=self.document.id, dic=dic, status_date=self.now
+        )
+        response = self.client.post(self.base_url, self.data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data[0])
+        self.assertIn(
+            "Document does not exist or is not eligible",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
+    def test_status_cannot_submit_d6t_for_document_that_does_not_have_as2(self) -> None:
+        Status.objects.filter(dic__code="AS2", document_id=self.document.id).delete()
+        response = self.client.post(self.base_url, self.data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data[0])
+        self.assertIn(
+            "Document does not exist or is not eligible",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
+    def test_cannot_submit_d6t_using_invalid_subinventory(self) -> None:
+        response = self.client.post(
+            self.base_url,
+            [{**self.data[0], "subinventory": "invalidsubbinv"}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data[0])
+        self.assertIn(
+            "SubInventory invalidsubbinv is not valid for testsdn",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
+    def test_invalid_locator_for_d6t_submission(self) -> None:
+        response = self.client.post(
+            self.base_url,
+            [{**self.data[0], "locator": "invalidlocator"}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(
+            "Locator invalidlocator is not valid for testsubinv in document testsdn",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
 
 class BulkCORTests(APITestCase):
     base_url = reverse("bulk_cor")
     now = timezone.now()
-    def setUp(self):
+
+    def setUp(self) -> None:
         self.suppadd = SuppAdd.objects.create(code="suppa")
         self.subinv = SubInventory.objects.create(
             code="testsubinv", suppadd=self.suppadd
@@ -264,12 +265,13 @@ class BulkCORTests(APITestCase):
                 "received_by": "General Phansiri",
             }
         ]
+
     def test_empty_bulk_post_cor_submission(self) -> None:
         test_data: List[str] = []
         base_response = self.client.post(self.base_url, test_data, format="json")
         self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_can_bulk_submit_cor(self):
+    def test_can_bulk_submit_cor(self) -> None:
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = dict(response.data[0])
@@ -284,7 +286,7 @@ class BulkCORTests(APITestCase):
         )
         self.assertDictContainsSubset({"code": "COR"}, data["dic"])
 
-    def test_cannot_submit_cor_when_document_was_already_cor(self):
+    def test_cannot_submit_cor_when_document_was_already_cor(self) -> None:
         dic = Dic.objects.filter(code="COR").first()
         Status.objects.create(
             document_id=self.document.id, dic=dic, status_date=self.now
@@ -297,7 +299,7 @@ class BulkCORTests(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_status_cannot_submit_cor_for_document_that_does_not_have_d6t(self):
+    def test_status_cannot_submit_cor_for_document_that_does_not_have_d6t(self) -> None:
         Status.objects.filter(dic__code="D6T", document_id=self.document.id).delete()
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -307,7 +309,7 @@ class BulkCORTests(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_cannot_submit_cor_using_invalid_subinventory(self):
+    def test_cannot_submit_cor_using_invalid_subinventory(self) -> None:
         response = self.client.post(
             self.base_url,
             [{**self.data[0], "subinventory": "invalidsubbinv"}],
@@ -320,7 +322,7 @@ class BulkCORTests(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_invalid_locator_for_cor_submission(self):
+    def test_invalid_locator_for_cor_submission(self) -> None:
         response = self.client.post(
             self.base_url,
             [{**self.data[0], "locator": "invalidlocator"}],
