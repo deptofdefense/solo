@@ -283,3 +283,51 @@ class BulkCORTests(APITestCase):
             data,
         )
         self.assertDictContainsSubset({"code": "COR"}, data["dic"])
+
+    def test_cannot_submit_cor_when_document_was_already_cor(self):
+        dic = Dic.objects.filter(code="COR").first()
+        Status.objects.create(
+            document_id=self.document.id, dic=dic, status_date=self.now
+        )
+        response = self.client.post(self.base_url, self.data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data[0])
+        self.assertIn(
+            "Document does not exist or is not eligible",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
+    def test_status_cannot_submit_cor_for_document_that_does_not_have_d6t(self):
+        Status.objects.filter(dic__code="D6T", document_id=self.document.id).delete()
+        response = self.client.post(self.base_url, self.data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data[0])
+        self.assertIn(
+            "Document does not exist or is not eligible",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
+    def test_cannot_submit_cor_using_invalid_subinventory(self):
+        response = self.client.post(
+            self.base_url,
+            [{**self.data[0], "subinventory": "invalidsubbinv"}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data[0])
+        self.assertIn(
+            "SubInventory invalidsubbinv is not valid for testsdn",
+            str(response.data[0]["non_field_errors"][0]),
+        )
+
+    def test_invalid_locator_for_cor_submission(self):
+        response = self.client.post(
+            self.base_url,
+            [{**self.data[0], "locator": "invalidlocator"}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(
+            "Locator invalidlocator is not valid for testsubinv in document testsdn",
+            str(response.data[0]["non_field_errors"][0]),
+        )
