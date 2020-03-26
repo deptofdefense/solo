@@ -137,9 +137,11 @@ class UpdateStatusSerializer(serializers.Serializer):
                 .get(sdn=validated["sdn"])
             )
             if new_dic.code == "D6T":
-                subinventory = document.suppadd.subinventorys.filter(suppadd_id=document.suppadd.id).get(code=validated["subinventory"])
+                subinventory = document.suppadd.subinventorys.filter(
+                    suppadd_id=document.suppadd.id
+                ).get(code=validated["subinventory"])
                 locator = subinventory.locators.get(code=validated["locator"])
-                received_quantity = document.statuses.get(dic__code='AS2')
+                received_quantity = document.statuses.get(dic__code="AS2")
                 return {
                     "status_date": validated["status_date"],
                     "key_and_transmit_date": validated["key_and_transmit_date"],
@@ -154,7 +156,7 @@ class UpdateStatusSerializer(serializers.Serializer):
                 # subinventory = document.suppadd.subinventorys.filter(suppadd_id=document.suppadd.id).get(
                 #     code=validated["subinventory"])
                 # locator = subinventory.locators.get(code=validated["locator"])
-                received_quantity = document.statuses.get(dic__code='D6T')
+                received_quantity = document.statuses.get(dic__code="D6T")
                 return {
                     "status_date": validated["status_date"],
                     "key_and_transmit_date": validated["key_and_transmit_date"],
