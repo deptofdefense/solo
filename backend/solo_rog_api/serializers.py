@@ -137,9 +137,10 @@ class UpdateStatusD6TSerializer(serializers.Serializer):
                 .select_related("suppadd")
                 .get(sdn=validated["sdn"])
             )
-            subinventory = document.suppadd.subinventorys.filter(
-                suppadd_id=document.suppadd.id
-            ).get(code=validated["subinventory"])
+            if document.suppadd is not None:
+                subinventory = document.suppadd.subinventorys.filter(
+                    suppadd_id=document.suppadd.id
+                ).get(code=validated["subinventory"])
             locator = subinventory.locators.get(code=validated["locator"])
             received_quantity = document.statuses.get(dic__code="AS2")
             return {
