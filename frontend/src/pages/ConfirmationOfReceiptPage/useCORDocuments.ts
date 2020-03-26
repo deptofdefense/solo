@@ -45,7 +45,7 @@ const useCORDocuments = () => {
       await sleep(Math.floor(Math.random() * 1500));
       try {
         // submit single document and remove from current list
-        await apiCall("/document/cor", {
+        await apiCall("/document/cor/", {
           method: "POST",
           body: JSON.stringify({
             sdn,
