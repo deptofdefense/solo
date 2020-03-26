@@ -226,8 +226,60 @@ class SubmitD6TTestCase(APITestCase):
 
 class BulkCORTests(APITestCase):
     base_url = reverse("bulk_cor")
-
+    now = timezone.now()
+    def setUp(self):
+        self.suppadd = SuppAdd.objects.create(code="suppa")
+        self.subinv = SubInventory.objects.create(
+            code="testsubinv", suppadd=self.suppadd
+        )
+        self.locator = Locator.objects.create(
+            code="testlocator", subinventorys=self.subinv
+        )
+        dics = [Dic.objects.create(code=code) for code in ["AE1", "AS1", "AS2"]]
+        Dic.objects.bulk_create([Dic(code=code) for code in ["D6T", "COR"]])
+        self.document = Document.objects.create(sdn="testsdn", suppadd=self.suppadd)
+        Status.objects.bulk_create(
+            [
+                Status(
+                    dic_id=dic.id, document_id=self.document.id, status_date=self.now
+                )
+                for dic in dics
+            ]
+        )
+        self.data = [
+            {
+                "sdn": self.document.sdn,
+                "received_quantity": 1,
+                "subinventory": self.subinv.code,
+                "locator": self.locator.code,
+            }
+        ]
+        self.client.post(reverse("bulk_d6t"), self.data, format="json")
+        self.data = [
+            {
+                "sdn": self.document.sdn,
+                "received_quantity": 1,
+                "subinventory": self.subinv.code,
+                "locator": self.locator.code,
+                "received_by": "General Phansiri",
+            }
+        ]
     def test_empty_bulk_post_cor_submission(self) -> None:
         test_data: List[str] = []
         base_response = self.client.post(self.base_url, test_data, format="json")
         self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_can_bulk_submit_cor(self):
+        response = self.client.post(self.base_url, self.data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = dict(response.data[0])
+        data["dic"] = dict(data["dic"])
+        self.assertDictContainsSubset(
+            {
+                "document": self.document.id,
+                "subinventory": self.subinv.id,
+                "received_qty": 1,
+            },
+            data,
+        )
+        self.assertDictContainsSubset({"code": "COR"}, data["dic"])
