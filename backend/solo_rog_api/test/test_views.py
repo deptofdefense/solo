@@ -279,8 +279,8 @@ class BulkCORTests(APITestCase):
         self.assertDictContainsSubset(
             {
                 "document": self.document.id,
-                "subinventory": self.subinv.id,
                 "received_qty": 1,
+                "received_by": "General Phansiri",
             },
             data,
         )
@@ -309,27 +309,27 @@ class BulkCORTests(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_cannot_submit_cor_using_invalid_subinventory(self) -> None:
-        response = self.client.post(
-            self.base_url,
-            [{**self.data[0], "subinventory": "invalidsubbinv"}],
-            format="json",
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("non_field_errors", response.data[0])
-        self.assertIn(
-            "SubInventory invalidsubbinv is not valid for testsdn",
-            str(response.data[0]["non_field_errors"][0]),
-        )
+    # def test_cannot_submit_cor_using_invalid_subinventory(self) -> None:
+    #     response = self.client.post(
+    #         self.base_url,
+    #         [{**self.data[0], "subinventory": "invalidsubbinv"}],
+    #         format="json",
+    #     )
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    #     self.assertIn("non_field_errors", response.data[0])
+    #     self.assertIn(
+    #         "SubInventory invalidsubbinv is not valid for testsdn",
+    #         str(response.data[0]["non_field_errors"][0]),
+    #     )
 
-    def test_invalid_locator_for_cor_submission(self) -> None:
-        response = self.client.post(
-            self.base_url,
-            [{**self.data[0], "locator": "invalidlocator"}],
-            format="json",
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn(
-            "Locator invalidlocator is not valid for testsubinv in document testsdn",
-            str(response.data[0]["non_field_errors"][0]),
-        )
+    # def test_invalid_locator_for_cor_submission(self) -> None:
+    #     response = self.client.post(
+    #         self.base_url,
+    #         [{**self.data[0], "locator": "invalidlocator"}],
+    #         format="json",
+    #     )
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    #     self.assertIn(
+    #         "Locator invalidlocator is not valid for testsubinv in document testsdn",
+    #         str(response.data[0]["non_field_errors"][0]),
+    #     )
