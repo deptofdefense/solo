@@ -11,6 +11,7 @@ server {
     include /etc/nginx/snippets/ssh-params.conf;
     ssl_certificate /etc/nginx/Certificate.pem;
     ssl_certificate_key /etc/nginx/Key.pem;
+    ssl_trusted_certificate /etc/nginx/snippets/chain.pem;
 
     charset     utf-8;
     client_max_body_size 75M;
@@ -31,6 +32,7 @@ server {
     include /etc/nginx/snippets/ssh-params.conf;
     ssl_certificate /etc/nginx/Certificate.pem;
     ssl_certificate_key /etc/nginx/Key.pem;
+    ssl_trusted_certificate /etc/nginx/snippets/chain.pem;
 
     charset     utf-8;
     client_max_body_size 75M;
@@ -60,6 +62,7 @@ server {
     include /etc/nginx/snippets/ssh-params.conf;
     ssl_certificate /etc/nginx/Certificate.pem;
     ssl_certificate_key /etc/nginx/Key.pem;
+    ssl_trusted_certificate /etc/nginx/snippets/chain.pem;
 
     # Request and validate client certificate
     ssl_verify_client on;
