@@ -47,11 +47,13 @@ const useCORDocuments = () => {
         // submit single document and remove from current list
         await apiCall("/document/cor/", {
           method: "POST",
-          body: JSON.stringify({
-            sdn,
-            received_by,
-            status: "COR"
-          })
+          body: JSON.stringify([
+            {
+              sdn,
+              received_by,
+              status: "COR"
+            }
+          ])
         });
         removeDocument(sdn);
       } catch (e) {
@@ -77,7 +79,7 @@ const useCORDocuments = () => {
       await sleep(Math.floor(Math.random() * 1500));
       try {
         // submit bulk documents and remove from list
-        await apiCall("/document/cor/bulk/", {
+        await apiCall("/document/cor/", {
           method: "POST",
           body: JSON.stringify(
             sdns.map(sdn => ({

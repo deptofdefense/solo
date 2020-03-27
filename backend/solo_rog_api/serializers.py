@@ -127,13 +127,13 @@ class UpdateStatusD6TSerializer(serializers.Serializer):
         list_serializer_class = UpdateStatusListSerializer
 
     def validate(self, attrs: Any) -> Dict[str, Any]:
-        new_dic = Dic.objects.get(code=self.context["new_status"])
+        new_dic = Dic.objects.get(code="D6T")
         validated = super().validate(attrs)  # type: ignore
 
         try:
             document = (
-                Document.objects.exclude(**self.context.get("document_excludes", {}))
-                .filter(**self.context.get("document_filters", {}))
+                Document.objects.exclude(statuses__dic__code="D6T")
+                .filter(statuses__dic__code="AS2")
                 .select_related("suppadd")
                 .get(sdn=validated["sdn"])
             )
@@ -155,7 +155,7 @@ class UpdateStatusD6TSerializer(serializers.Serializer):
             }
         except Document.DoesNotExist:
             raise serializers.ValidationError(
-                f"Document does not exist or is not eligible for {self.context['new_status']}"
+                f"Document does not exist or is not eligible for D6T"
             )
         except SubInventory.DoesNotExist:
             raise serializers.ValidationError(
@@ -185,14 +185,13 @@ class UpdateStatusCORSerializer(serializers.Serializer):
         list_serializer_class = UpdateStatusListSerializer
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
-        new_dic = Dic.objects.get(code=self.context["new_status"])
+        new_dic = Dic.objects.get(code="COR")
         validated = super().validate(attrs)  # type: ignore
 
         try:
             document = (
-                Document.objects.exclude(**self.context.get("document_excludes", {}))
-                .filter(**self.context.get("document_filters", {}))
-                .select_related("suppadd")
+                Document.objects.exclude(statuses__dic__code="COR")
+                .filter(statuses__dic__code="D6T")
                 .get(sdn=validated["sdn"])
             )
             received_quantity = document.statuses.get(dic__code="D6T")
@@ -207,7 +206,7 @@ class UpdateStatusCORSerializer(serializers.Serializer):
             }
         except Document.DoesNotExist:
             raise serializers.ValidationError(
-                f"Document does not exist or is not eligible for {self.context['new_status']}"
+                f"Document does not exist or is not eligible for COR"
             )
 
     def to_representation(

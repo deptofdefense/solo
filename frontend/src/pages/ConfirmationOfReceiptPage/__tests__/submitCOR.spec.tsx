@@ -80,11 +80,13 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
       expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor/");
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "POST",
-        body: JSON.stringify({
-          sdn: defaultDoc.sdn,
-          received_by: "Private Casarotto, Stuart",
-          status: "COR"
-        })
+        body: JSON.stringify([
+          {
+            sdn: defaultDoc.sdn,
+            received_by: "Private Casarotto, Stuart",
+            status: "COR"
+          }
+        ])
       });
       expect(queryByText("Private Casarotto, Stuart")).not.toBeInTheDocument();
       expect(queryByText(defaultDoc.sdn)).not.toBeInTheDocument();
@@ -173,7 +175,7 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
     fireEvent.click(submitAll);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor/bulk/");
+      expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor/");
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "POST",
         body: JSON.stringify([

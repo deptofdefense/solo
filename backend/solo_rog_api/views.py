@@ -1,4 +1,4 @@
-from typing import Any, Union, Dict
+from typing import Any, Union
 from rest_framework import generics, status
 from rest_framework.serializers import BaseSerializer
 from rest_framework.filters import OrderingFilter
@@ -63,13 +63,6 @@ class D6TSubmissionView(CreateAPIView):
     ) -> Union[BaseSerializer, BaseSerializer]:
         return super().get_serializer(many=True, allow_empty=False, **kwargs)
 
-    def get_serializer_context(self) -> Dict[str, Any]:
-        ctx = super().get_serializer_context()
-        ctx["new_status"] = "D6T"
-        ctx["document_excludes"] = {"statuses__dic__code": "D6T"}
-        ctx["document_filters"] = {"statuses__dic__code": "AS2"}
-        return ctx
-
 
 class CORSubmissionView(CreateAPIView):
     serializer_class = UpdateStatusCORSerializer
@@ -78,10 +71,3 @@ class CORSubmissionView(CreateAPIView):
         self, *args: Any, **kwargs: Any
     ) -> Union[BaseSerializer, BaseSerializer]:
         return super().get_serializer(many=True, allow_empty=False, **kwargs)
-
-    def get_serializer_context(self) -> Dict[str, Any]:
-        ctx = super().get_serializer_context()
-        ctx["new_status"] = "COR"
-        ctx["document_excludes"] = {"statuses__dic__code": "COR"}
-        ctx["document_filters"] = {"statuses__dic__code": "D6T"}
-        return ctx
