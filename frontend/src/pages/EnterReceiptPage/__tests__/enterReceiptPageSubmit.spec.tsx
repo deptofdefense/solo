@@ -59,14 +59,14 @@ describe("EnterReceiptPage submit all process", () => {
     fireEvent.click(submitBtn);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock.mock.calls[1][0]).toEqual("/documents/d6t");
+      expect(fetchMock.mock.calls[1][0]).toEqual("/document/d6t/");
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "POST",
         body: JSON.stringify([
           {
             sdn: defaultDoc.sdn,
             status: "D6T",
-            quantity:
+            received_quantity:
               defaultDoc.statuses[defaultDoc.statuses.length - 1].projected_qty,
             subinventory: defaultDoc.suppadd.subinventorys[0].code,
             locator: defaultDoc.suppadd.subinventorys[0].locators[0].code

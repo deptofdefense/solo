@@ -175,12 +175,12 @@ class StatusSerializerTest(TestCase):
             projected_qty=2,
             document=None,
             dic=None,
+            received_by=None,
         )
 
     def test_status_serializer(self) -> None:
         serial_object = StatusSerializer(self.test)
-        self.assertEqual(
-            serial_object.data,
+        self.assertDictContainsSubset(
             {
                 "id": 1,
                 "document": None,
@@ -190,7 +190,9 @@ class StatusSerializerTest(TestCase):
                 "esd": "2020-03-20",
                 "projected_qty": 2,
                 "received_qty": None,
+                "received_by": None,
             },
+            serial_object.data,
         )
 
     def test_status_serializer_serialization(self) -> None:
