@@ -38,7 +38,9 @@ describe("ConfirmationOfReceiptPage Component", () => {
     });
     await wait(() => {
       expect(fetchMock).toHaveBeenCalled();
-      expect(fetchMock.mock.calls[0][0]).toEqual("/document/?status=D6T");
+      expect(fetchMock.mock.calls[0][0]).toEqual(
+        "/document/?status=D6T&exclude_status=COR"
+      );
       expect(fetchMock.mock.calls[0][1]).toMatchObject({
         method: "GET"
       });
@@ -69,7 +71,7 @@ describe("ConfirmationOfReceiptPage Component", () => {
       // first call was on render
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][0]).toEqual(
-        "/document/?sdn=usersdnfilter&status=D6T"
+        "/document/?sdn=usersdnfilter&status=D6T&exclude_status=COR"
       );
     });
   });
@@ -89,7 +91,7 @@ describe("ConfirmationOfReceiptPage Component", () => {
       // first call was on render
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][0]).toEqual(
-        "/document/?page=2&status=D6T"
+        "/document/?page=2&status=D6T&exclude_status=COR"
       );
     });
   });
