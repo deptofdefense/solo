@@ -134,18 +134,3 @@ export interface PaginatedApiResponse<T> {
   next: number;
   previous: number;
 }
-
-// /documents?page=3
-
-/*
-
-{
-  results: [
-    Doc, Doc, Doc x25
-  ],
-  count: 3560
-}
-
-3560 // 25
-
-*/

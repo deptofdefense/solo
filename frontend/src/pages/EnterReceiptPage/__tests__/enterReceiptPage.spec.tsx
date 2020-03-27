@@ -58,7 +58,7 @@ describe("EnterReceiptPage Component", () => {
   });
 
   it("removes row from table when selecting remove button", async () => {
-    const { getByPlaceholderText, getByText, container } = render(
+    const { getByPlaceholderText, getByText, container, queryByText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -75,10 +75,14 @@ describe("EnterReceiptPage Component", () => {
       expect(inputField).toHaveValue("wrongsdn");
     });
     fireEvent.click(submit);
+    await wait(() => {
+      expect(getByText("wrongsdn")).toBeInTheDocument();
+    });
     const removeIcon = container.querySelector("button.usa-button") as Element;
     fireEvent.click(removeIcon);
     await wait(() => {
       expect(removeIcon).not.toBeInTheDocument();
+      expect(queryByText("wrongsdn")).not.toBeInTheDocument();
     });
   });
 
