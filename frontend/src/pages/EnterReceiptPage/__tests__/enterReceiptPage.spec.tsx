@@ -57,6 +57,31 @@ describe("EnterReceiptPage Component", () => {
     });
   });
 
+  it("removes row from table when selecting remove button", async () => {
+    const { getByPlaceholderText, getByText, container } = render(
+      <EnterReceiptPage />,
+      {
+        authContext: {
+          apiCall: fetchMock
+        }
+      }
+    );
+    const inputField = getByPlaceholderText("SDN");
+    const submit = getByText("Search");
+    fireEvent.change(inputField, {
+      target: { value: "wrongsdn" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("wrongsdn");
+    });
+    fireEvent.click(submit);
+    const removeIcon = container.querySelector("button.usa-button") as Element;
+    fireEvent.click(removeIcon);
+    await wait(() => {
+      expect(removeIcon).not.toBeInTheDocument();
+    });
+  });
+
   it("keeps sdn in table on fetch error", async () => {
     fetchMock.mockRejectedValue(new Error());
     const { queryByText, getByPlaceholderText, getByText } = render(
@@ -76,6 +101,36 @@ describe("EnterReceiptPage Component", () => {
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(queryByText(/^badsdn/)).toBeInTheDocument();
+    });
+  });
+
+  it("handles sdn not found or empty response from api", async () => {
+    fetchMock.mockResolvedValue({
+      ...defaultApiResponse,
+      results: []
+    });
+    const { getByText, getByPlaceholderText, queryByText, container } = render(
+      <EnterReceiptPage />,
+      {
+        authContext: {
+          apiCall: fetchMock
+        }
+      }
+    );
+    const inputField = getByPlaceholderText("SDN");
+    fireEvent.change(inputField, {
+      target: { value: "badsdn" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("badsdn");
+    });
+    const submit = getByText("Search");
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(queryByText("badsdn")).toBeInTheDocument();
+      const errorIcon = container.querySelector("svg.fa-exclamation-circle");
+      expect(errorIcon).toBeInTheDocument();
     });
   });
 
