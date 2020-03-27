@@ -51,7 +51,7 @@ describe("EnterReceiptPage Component", () => {
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock.mock.calls[0][0]).toEqual(
-        "/document/?sdn_exact=somesdn"
+        "/document/?sdn_exact=somesdn&exclude_status=D6T"
       );
       expect(queryByText(defaultDoc.part.nomen)).toBeInTheDocument();
     });

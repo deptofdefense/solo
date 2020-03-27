@@ -29,7 +29,6 @@ const useCORDocuments = () => {
             id: "status",
             value: "D6T"
           },
-          ...query.filters,
           {
             id: "exclude_status",
             value: "COR"
