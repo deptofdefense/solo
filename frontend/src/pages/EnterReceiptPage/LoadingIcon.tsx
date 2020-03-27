@@ -7,7 +7,7 @@ import {
   faCheck
 } from "@fortawesome/free-solid-svg-icons";
 import { LoadingStatus } from "solo-types";
-import classes from "./LoadingIcon.module.scss";
+import classes from "./EnterReceiptPage.module.scss";
 
 const LoadingIcon: React.FC<LoadingStatus> = ({ loading, error }) => (
   <span>
