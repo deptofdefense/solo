@@ -77,12 +77,12 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
     fireEvent.click(submitBtn);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor");
+      expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor/");
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "POST",
         body: JSON.stringify({
           sdn: defaultDoc.sdn,
-          receivedBy: "Private Casarotto, Stuart",
+          received_by: "Private Casarotto, Stuart",
           status: "COR"
         })
       });
@@ -173,13 +173,13 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
     fireEvent.click(submitAll);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(2);
-      expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor/bulk");
+      expect(fetchMock.mock.calls[1][0]).toEqual("/document/cor/bulk/");
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "POST",
         body: JSON.stringify([
-          { sdn: "SDNINDEX-0", receivedBy: "person receiving", status: "COR" },
-          { sdn: "SDNINDEX-1", receivedBy: "person receiving", status: "COR" },
-          { sdn: "SDNINDEX-2", receivedBy: "person receiving", status: "COR" }
+          { sdn: "SDNINDEX-0", received_by: "person receiving", status: "COR" },
+          { sdn: "SDNINDEX-1", received_by: "person receiving", status: "COR" },
+          { sdn: "SDNINDEX-2", received_by: "person receiving", status: "COR" }
         ])
       });
       // // all rows submitted and removed from table
@@ -233,7 +233,7 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "POST",
         body: JSON.stringify([
-          { sdn: "SDNINDEX-0", receivedBy: "person receiving", status: "COR" }
+          { sdn: "SDNINDEX-0", received_by: "person receiving", status: "COR" }
         ])
       });
       // row not removed from table and error is rendered

@@ -84,14 +84,14 @@ const useDocuments = () => {
     const data = docs.map(doc => ({
       sdn: doc.sdn,
       status: "D6T",
-      quantity: doc.enteredReceivedQty,
+      received_quantity: doc.enteredReceivedQty,
       subinventory: doc.enteredSubinventoryCode,
       locator: doc.enteredLocatorCode
     }));
 
     try {
       // submit documents
-      await apiCall<{}>("/documents/d6t", {
+      await apiCall<{}>("/document/d6t/", {
         method: "POST",
         body: JSON.stringify(data)
       });
