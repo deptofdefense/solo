@@ -15,7 +15,7 @@ exports[`uswds Header component matches snapshot 1`] = `
 exports[`uswds HeaderLogo component matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="usa-logo"
+    class="usa-logo logoHeader"
   >
     <em
       class="usa-logo__text"
@@ -25,7 +25,11 @@ exports[`uswds HeaderLogo component matches snapshot 1`] = `
         class="active"
         href="/"
       >
-        test
+        <img
+          alt="test"
+          class="logoImg"
+          src="solo.png"
+        />
       </a>
     </em>
   </div>
