@@ -2,21 +2,44 @@ import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
 import { LoadingIcon } from "components";
+import { Button } from "solo-uswds";
 import QuantityInput from "./QuantityInput";
 import { SubinventorySelector, LocatorSelector } from "./SubinventorySelector";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 type CreateColumns = (
-  modifyDocument: (sdn: string, data: Partial<Document>) => void
+  modifyDocument: (sdn: string, data: Partial<Document>) => void,
+  removeDocument: (sdn: string) => void
 ) => Column<Document>[];
 
-const createColumns: CreateColumns = modifyDocument => [
+const createColumns: CreateColumns = (modifyDocument, removeDocument) => [
   {
-    Header: "Loading",
+    Header: "",
+    id: "removeRow",
+    Cell: ({
+      row: {
+        original: { sdn }
+      }
+    }) => (
+      <Button onClick={() => removeDocument(sdn)} unstyled>
+        <FontAwesomeIcon icon={faTimes} />
+      </Button>
+    )
+  },
+  {
+    Header: <div className="width-full text-center">Loading</div>,
+    id: "loadingStatus",
+    disableSortBy: true,
     Cell: ({
       row: {
         original: { loadingStatus }
       }
-    }) => <LoadingIcon {...loadingStatus} />
+    }) => (
+      <div className="text-center">
+        <LoadingIcon {...loadingStatus} />
+      </div>
+    )
   },
   {
     Header: "SDN",
@@ -36,14 +59,16 @@ const createColumns: CreateColumns = modifyDocument => [
     Header: "Quantity",
     id: "quantity",
     accessor: ({ sdn, enteredReceivedQty }) => (
-      <QuantityInput
-        enteredQuantity={enteredReceivedQty}
-        onQuantitiyChange={value =>
-          modifyDocument(sdn, {
-            enteredReceivedQty: value
-          })
-        }
-      />
+      <div className="maxw-8">
+        <QuantityInput
+          enteredQuantity={enteredReceivedQty}
+          onQuantitiyChange={value =>
+            modifyDocument(sdn, {
+              enteredReceivedQty: value
+            })
+          }
+        />
+      </div>
     )
   },
   {

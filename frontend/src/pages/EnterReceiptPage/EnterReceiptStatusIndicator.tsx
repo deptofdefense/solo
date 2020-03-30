@@ -11,7 +11,7 @@ const EnterReceiptStatusIndicator: React.FC<LoadingStatus> = ({
     {!loading && message && (
       <Alert
         status={error ? "error" : "success"}
-        className="margin-top-4"
+        className="margin-top-1"
         heading={message}
       />
     )}

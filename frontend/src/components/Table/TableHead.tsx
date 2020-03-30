@@ -23,13 +23,15 @@ const TableHead = <T extends object>({
               <th {...rest} key={key}>
                 <div className="display-flex flex-justify flex-align-center flex-no-wrap text-no-wrap">
                   {column.render("Header")}
-                  <FontAwesomeIcon
-                    icon={column.isSortedDesc ? faChevronDown : faChevronUp}
-                    style={{
-                      visibility: column.isSorted ? "visible" : "hidden"
-                    }}
-                    className="margin-left-05"
-                  />
+                  {!column.disableSortBy && (
+                    <FontAwesomeIcon
+                      icon={column.isSortedDesc ? faChevronDown : faChevronUp}
+                      style={{
+                        visibility: column.isSorted ? "visible" : "hidden"
+                      }}
+                      className="margin-left-05"
+                    />
+                  )}
                 </div>
               </th>
             );

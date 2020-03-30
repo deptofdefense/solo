@@ -1,3 +1,10 @@
 .navContainer {
   max-width: none !important;
+  margin-top: 2rem;
+  align-items: flex-start !important;
+}
+@media only screen and (max-width: 64em) {
+  div.navContainer {
+    margin-top: 0rem;
+  }
 }

@@ -37,6 +37,9 @@ const useDocuments = () => {
           sort: [],
           page: 0
         });
+        if (!doc) {
+          throw new Error("SDN not found");
+        }
         modifyDocument(sdn, {
           ...doc,
           loadingStatus: {
@@ -48,7 +51,8 @@ const useDocuments = () => {
         modifyDocument(sdn, {
           loadingStatus: {
             loading: false,
-            error: e.message || "Something went wrong"
+            message: e.message || "Something went wrong",
+            error: true
           }
         });
       }
@@ -84,14 +88,14 @@ const useDocuments = () => {
     const data = docs.map(doc => ({
       sdn: doc.sdn,
       status: "D6T",
-      quantity: doc.enteredReceivedQty,
+      received_quantity: doc.enteredReceivedQty,
       subinventory: doc.enteredSubinventoryCode,
       locator: doc.enteredLocatorCode
     }));
 
     try {
       // submit documents
-      await apiCall<{}>("/documents/d6t", {
+      await apiCall<{}>("/document/d6t/", {
         method: "POST",
         body: JSON.stringify(data)
       });

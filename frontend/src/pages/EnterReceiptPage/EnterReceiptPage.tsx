@@ -12,15 +12,18 @@ const EnterReceiptPage: React.FC = () => {
     addSdn,
     submitAllLoadingStatus,
     submitAll,
-    modifyDocument
+    modifyDocument,
+    removeDocument
   } = useEnterReceiptDocuments();
-  const columns = useMemo(() => createColumns(modifyDocument), [
-    modifyDocument
+  const columns = useMemo(() => createColumns(modifyDocument, removeDocument), [
+    modifyDocument,
+    removeDocument
   ]);
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
       <Title>Enter Receipt</Title>
+      <EnterReceiptStatusIndicator {...submitAllLoadingStatus} />
       <Table<Document>
         columns={columns}
         data={docs}
@@ -40,7 +43,6 @@ const EnterReceiptPage: React.FC = () => {
           Submit All
         </Button>
       </div>
-      <EnterReceiptStatusIndicator {...submitAllLoadingStatus} />
     </div>
   );
 };

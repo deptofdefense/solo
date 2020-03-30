@@ -35,7 +35,7 @@ const useCORDocuments = () => {
   );
 
   const submitCOR = useCallback(
-    async (sdn: string, receivedBy: string) => {
+    async (sdn: string, received_by: string) => {
       modifyDocument(sdn, {
         loadingStatus: {
           loading: true
@@ -45,13 +45,15 @@ const useCORDocuments = () => {
       await sleep(Math.floor(Math.random() * 1500));
       try {
         // submit single document and remove from current list
-        await apiCall("/document/cor", {
+        await apiCall("/document/cor/", {
           method: "POST",
-          body: JSON.stringify({
-            sdn,
-            receivedBy,
-            status: "COR"
-          })
+          body: JSON.stringify([
+            {
+              sdn,
+              received_by,
+              status: "COR"
+            }
+          ])
         });
         removeDocument(sdn);
       } catch (e) {
@@ -69,7 +71,7 @@ const useCORDocuments = () => {
   );
 
   const submitBulkCOR = useCallback(
-    async (sdns: string[], receivedBy: string) => {
+    async (sdns: string[], received_by: string) => {
       setBulkSubmitStatus({
         loading: true
       });
@@ -77,12 +79,12 @@ const useCORDocuments = () => {
       await sleep(Math.floor(Math.random() * 1500));
       try {
         // submit bulk documents and remove from list
-        await apiCall("/document/cor/bulk", {
+        await apiCall("/document/cor/", {
           method: "POST",
           body: JSON.stringify(
             sdns.map(sdn => ({
               sdn,
-              receivedBy,
+              received_by,
               status: "COR"
             }))
           )

@@ -1,14 +1,21 @@
-from typing import Any
+from typing import Any, Union
 from rest_framework import generics, status
+from rest_framework.serializers import BaseSerializer
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django_filters import rest_framework as filters
 from .models import Document
-from .serializers import TokenObtainSerializer, DocumentSerializer
+from .serializers import (
+    TokenObtainSerializer,
+    DocumentSerializer,
+    UpdateStatusD6TSerializer,
+    UpdateStatusCORSerializer,
+)
 from .tasks import debug_task
 from .filters import DocumentListFilter
 
@@ -46,3 +53,21 @@ class DocumentList(generics.ListAPIView):
         ("statuses__status_date", "last updated"),
     ]
     ordering = ["statuses__status_date"]
+
+
+class D6TSubmissionView(CreateAPIView):
+    serializer_class = UpdateStatusD6TSerializer
+
+    def get_serializer(
+        self, *args: Any, **kwargs: Any
+    ) -> Union[BaseSerializer, BaseSerializer]:
+        return super().get_serializer(many=True, allow_empty=False, **kwargs)
+
+
+class CORSubmissionView(CreateAPIView):
+    serializer_class = UpdateStatusCORSerializer
+
+    def get_serializer(
+        self, *args: Any, **kwargs: Any
+    ) -> Union[BaseSerializer, BaseSerializer]:
+        return super().get_serializer(many=True, allow_empty=False, **kwargs)

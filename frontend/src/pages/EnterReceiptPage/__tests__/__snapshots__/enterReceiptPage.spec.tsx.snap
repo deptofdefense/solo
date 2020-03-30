@@ -10,6 +10,9 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
     >
       Enter Receipt
     </h1>
+    <div
+      class="grid-row flex-justify-center flex-12 tablet:flex-10"
+    />
     <table
       class="usa-table grid-col-12 usa-table--borderless"
       role="table"
@@ -25,7 +28,6 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
             <div
               class="display-flex flex-justify flex-align-center flex-no-wrap text-no-wrap"
             >
-              Loading
               <svg
                 aria-hidden="true"
                 class="svg-inline--fa fa-chevron-up fa-w-14 margin-left-05"
@@ -42,6 +44,20 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
                   fill="currentColor"
                 />
               </svg>
+            </div>
+          </th>
+          <th
+            colspan="1"
+            role="columnheader"
+          >
+            <div
+              class="display-flex flex-justify flex-align-center flex-no-wrap text-no-wrap"
+            >
+              <div
+                class="width-full text-center"
+              >
+                Loading
+              </div>
             </div>
           </th>
           <th
@@ -252,23 +268,51 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            <span>
+            <button
+              class="usa-button usa-button--unstyled"
+            >
               <svg
                 aria-hidden="true"
-                class="svg-inline--fa fa-check fa-w-16 "
-                data-icon="check"
+                class="svg-inline--fa fa-times fa-w-11 "
+                data-icon="times"
                 data-prefix="fas"
                 focusable="false"
                 role="img"
-                viewBox="0 0 512 512"
+                viewBox="0 0 352 512"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+                  d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
                   fill="currentColor"
                 />
               </svg>
-            </span>
+            </button>
+          </td>
+          <td
+            class="td"
+            role="cell"
+          >
+            <div
+              class="text-center"
+            >
+              <span>
+                <svg
+                  aria-hidden="true"
+                  class="svg-inline--fa fa-check fa-w-16 "
+                  data-icon="check"
+                  data-prefix="fas"
+                  focusable="false"
+                  role="img"
+                  viewBox="0 0 512 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </div>
           </td>
           <td
             class="td"
@@ -292,11 +336,15 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            <input
-              class="usa-input noMargin noOutline"
-              placeholder="Quantity"
-              value="2"
-            />
+            <div
+              class="maxw-8"
+            >
+              <input
+                class="usa-input noMargin noOutline"
+                placeholder="Quantity"
+                value="2"
+              />
+            </div>
           </td>
           <td
             class="td"
@@ -381,9 +429,6 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
         Submit All
       </button>
     </div>
-    <div
-      class="grid-row flex-justify-center flex-12 tablet:flex-10"
-    />
   </div>
 </DocumentFragment>
 `;
