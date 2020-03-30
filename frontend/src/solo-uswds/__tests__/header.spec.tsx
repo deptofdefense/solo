@@ -28,13 +28,13 @@ describe("uswds HeaderLogo component", () => {
     expect(asFragment()).toMatchSnapshot();
   });
   it("includes link when text is passed", () => {
-    const { getByText } = render(<HeaderLogo text="test" />);
-    expect(getByText("test")).toBeInTheDocument();
+    const { getByAltText } = render(<HeaderLogo text="test" />);
+    expect(getByAltText("test")).toBeInTheDocument();
   });
 
   it("excludes link when text is not passed", () => {
-    const { queryByText } = render(<HeaderLogo />);
-    expect(queryByText("test")).not.toBeInTheDocument();
+    const { queryByAltText } = render(<HeaderLogo />);
+    expect(queryByAltText("test")).not.toBeInTheDocument();
   });
 });
 
