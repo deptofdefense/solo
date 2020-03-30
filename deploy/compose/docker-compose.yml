@@ -1,9 +1,9 @@
-version: '3.4'
+version: "3.4"
 
 services:
   db:
     image: postgres
-    env_file: 
+    env_file:
       - ./.env
 
   migrate:
@@ -13,16 +13,16 @@ services:
         sleep 3;
         python manage.py migrate
       "
-    env_file: 
+    env_file:
       - ./.env
     depends_on:
       - db
 
   backend:
     build: ../../backend
-    env_file: 
+    env_file:
       - ./.env
-    depends_on: 
+    depends_on:
       - migrate
     environment:
       - DEBUG=
@@ -30,17 +30,27 @@ services:
   worker:
     build: ../../backend
     command: "celery -A app worker -l info"
-    env_file: 
+    env_file:
       - ./.env
-    depends_on: 
+    depends_on:
       - backend
-    environment: 
+    environment:
+      - DEBUG=
+
+  worker-scheduler:
+    build: ../../backend
+    command: "celery -A app beat -l info"
+    env_file:
+      - ./.env
+    depends_on:
+      - backend
+    environment:
       - DEBUG=
 
   frontend:
     build:
       context: ../../frontend
-      args: 
+      args:
         - API_DOMAIN=$API_DOMAIN
         - API_PROTOCOL=https
         - AUTH_DOMAIN=$AUTH_DOMAIN
@@ -49,6 +59,5 @@ services:
       - "80:80"
     depends_on:
       - backend
-    env_file: 
+    env_file:
       - ./.env
-      
