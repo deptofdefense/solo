@@ -44,7 +44,7 @@ const useWarehouseUsers = () => {
       // })
     }
     // eslint-disable-next-line
-  }, [setLoadingStatus, setUsers, apiCall])
+  }, [setLoadingStatus, setUsers, apiCall]);
 
   useEffect(() => {
     fetchWarehouseUsers();
@@ -52,10 +52,11 @@ const useWarehouseUsers = () => {
 
   const modifyWarehouseUser = useCallback(
     (userId: number, data: Partial<WarehouseUser>) => {
-      console.log(userId, data);
       setUsers(
         users.map(user =>
-          user.userId === userId ? { ...user, ...data, hasModified: true } : user
+          user.userId === userId
+            ? { ...user, ...data, hasModified: true }
+            : user
         )
       );
     },
@@ -90,7 +91,7 @@ const useWarehouseUsers = () => {
         modifyWarehouseUser(userId, {
           loading: false,
           error: true,
-          message: e.message ?? "Something went wrong"
+          message: e.message || "Something went wrong"
         });
       }
     },

@@ -1,10 +1,7 @@
 import React from "react";
 import AdminPage from "../AdminPage";
 import { render, fireEvent, wait } from "test-utils";
-import { defaultUserApiResponse } from "solo-types";
-//import { fireEvent } from "@testing-library/react";
-//import { queryByAttribute, queryByTitle } from "@testing-library/react";
-//import { wait } from "@testing-library/react";
+import { defaultUserApiResponse, WarehouseUser } from "solo-types";
 
 describe("AdminPage Component", () => {
   const fetchMock = jest.fn();
@@ -18,165 +15,198 @@ describe("AdminPage Component", () => {
     fetchMock.mockReset();
   });
 
-  it("matches snapshot", async () => {
-    const { asFragment, queryByText } = render(<AdminPage />, {
+  const renderAndWaitForData = async () => {
+    const { queryByText, ...rest } = render(<AdminPage />, {
       authContext: {
         apiCall: fetchMock
       }
     });
     await wait(() => {
       expect(fetchMock).toHaveBeenCalled();
+      expect(fetchMock.mock.calls[0][0]).toEqual("/warehouse/users/");
+      expect(fetchMock.mock.calls[0][1]).toMatchObject({
+        method: "GET"
+      });
       expect(queryByText(defaultUser.username)).toBeInTheDocument();
-      expect(queryByText(defaultUser.aac)).toBeInTheDocument();
     });
+    return {
+      queryByText,
+      ...rest
+    };
+  };
+
+  it("matches snapshot", async () => {
+    const { asFragment } = await renderAndWaitForData();
     expect(asFragment()).toMatchSnapshot();
-  });
-
-  /*
-
-      fetchUsers errors
-          error state in document
-      
-      fetchUsers success
-          table loaded with data
-      
-      sumitUsers errors
-          ^table must be loaded with at least 1 row
-          error state for table row
-      
-      submitUsers succeeds
-          ^table must be loaded with at least 1 row
-          success state for table row
-
-  */
-
-  it("fetches users and places them in a table", async () => {
-   fetchMock.mockResolvedValue({
-     ...defaultUserApiResponse
-   });
-   const { queryByText } = render(<AdminPage />, {
-     authContext: {
-       apiCall: fetchMock
-     }
-   });
-   await wait(() => {
-     expect(fetchMock).toHaveBeenCalled();
-     expect(fetchMock.mock.calls[0][0]).toEqual("/warehouse/users/");
-     expect(fetchMock.mock.calls[0][1]).toMatchObject({
-       method: "GET"
-     });
-     expect(queryByText(defaultUser.username)).toBeInTheDocument()
-   });
   });
 
   it("fails to fetch users due to network error", async () => {
     fetchMock.mockRejectedValue(new Error("network error"));
-    render(<AdminPage />, {
+    const { queryAllByTestId } = render(<AdminPage />, {
       authContext: {
         apiCall: fetchMock
       }
     });
     await wait(() => {
       expect(fetchMock).toHaveBeenCalled();
-      // add check here once api is integrated
+      // update checks here once api is integrated
+      expect(queryAllByTestId("has-cor-checkbox").length).toBeGreaterThan(0);
     });
   });
 
   it("click on checkboxes and change permissions", async () => {
     fetchMock.mockResolvedValue({
       ...defaultUserApiResponse,
-      results: [{
-        ...defaultUser,
-        canD6T: false,
-        canCOR: false,
-      }]
+      results: [
+        {
+          ...defaultUser,
+          canD6T: false,
+          canCOR: false
+        }
+      ]
     });
-    const { getByTestId, getByText, queryByText, container } = render(<AdminPage />, {
-      authContext: {
-        apiCall: fetchMock
-      } 
-    });
-
+    const { getByTestId, getByText, container } = await renderAndWaitForData();
     await wait(() => {
-      expect(fetchMock).toHaveBeenCalled()
-      expect(queryByText(defaultUser.username)).toBeInTheDocument()
-    })
-    const submit = getByText("Submit")
-    expect(submit).toBeDisabled();
-
-    const corCheckbox = getByTestId("has-cor-checkbox");
-    const d6tCheckbox = getByTestId("has-d6t-checkbox")
-    fireEvent.change(corCheckbox, {
-      target: { checked: true }
-    }); 
-    fireEvent.change(d6tCheckbox, {
-      target: { checked: true }
-    }); 
-    await wait(() => {
-      expect(corCheckbox).toBeChecked() 
-      expect(d6tCheckbox).toBeChecked()
+      expect(getByTestId("has-cor-checkbox")).not.toBeChecked();
+      expect(getByTestId("has-d6t-checkbox")).not.toBeChecked();
+      expect(getByText("Submit")).toBeDisabled();
     });
-
+    fireEvent.click(getByTestId("has-cor-checkbox"));
+    fireEvent.click(getByTestId("has-d6t-checkbox"));
+    await wait(() => {
+      expect(getByTestId("has-cor-checkbox")).toBeChecked();
+      expect(getByTestId("has-d6t-checkbox")).toBeChecked();
+      expect(getByText("Submit")).not.toBeDisabled();
+    });
     fetchMock.mockResolvedValue({});
-    fireEvent.click(submit);
+    fireEvent.click(getByText("Submit"));
     await wait(() => {
-      expect(fetchMock).toHaveBeenCalledTimes(2)
-      expect(fetchMock.mock.calls[1][0]).toEqual(`/warehouse/users/${defaultUser.id}`)
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(fetchMock.mock.calls[1][0]).toEqual(
+        `/warehouse/users/${defaultUser.userId}/`
+      );
       expect(fetchMock.mock.calls[1][1]).toMatchObject({
         method: "PATCH",
         body: JSON.stringify({
           canD6T: true,
           canCOR: true
         })
-      })
-      expect(container.querySelector("svg.fa-check")).toBeInTheDocument()
+      });
+      expect(container.querySelector("svg.fa-check")).toBeInTheDocument();
     });
   });
 
+  it("submit user permissions network error shows error indicator icon", async () => {
+    fetchMock.mockResolvedValue({
+      ...defaultUserApiResponse,
+      results: [
+        {
+          ...defaultUser,
+          canD6T: false,
+          canCOR: false
+        }
+      ]
+    });
+    const { getByTestId, getByText, container } = render(<AdminPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    await wait(() => {
+      expect(getByTestId("has-cor-checkbox")).not.toBeChecked();
+      expect(getByTestId("has-d6t-checkbox")).not.toBeChecked();
+      expect(getByText("Submit")).toBeDisabled();
+    });
+    fireEvent.click(getByTestId("has-cor-checkbox"));
+    fireEvent.click(getByTestId("has-d6t-checkbox"));
+    await wait(() => {
+      expect(getByTestId("has-cor-checkbox")).toBeChecked();
+      expect(getByTestId("has-d6t-checkbox")).toBeChecked();
+      expect(getByText("Submit")).not.toBeDisabled();
+    });
+    fetchMock.mockRejectedValue(new Error());
+    fireEvent.click(getByText("Submit"));
+    await wait(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(
+        container.querySelector("svg.fa-exclamation-circle")
+      ).toBeInTheDocument();
+    });
+  });
 
-  // it("modifies a user permission and submits causing an api call to backend", async () => {
-  //   // setup fetch to return appropriate response
-  //   // fetchMoock.mockResolved/Rejected value for initial data fetch
-  //   // e.g. fetchMock.mockResolvedValue(defaultUserWarehouseApiResponse);
-  //   // e.g. fetchMock.mockRejectedValue(new Error("network error"));
+  it("submit user permissions network error with message shows error indicator icon", async () => {
+    fetchMock.mockResolvedValue({
+      ...defaultUserApiResponse,
+      results: [
+        {
+          ...defaultUser,
+          canD6T: false,
+          canCOR: false
+        }
+      ]
+    });
+    const { getByTestId, getByText, container } = render(<AdminPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    await wait(() => {
+      expect(getByTestId("has-cor-checkbox")).not.toBeChecked();
+      expect(getByTestId("has-d6t-checkbox")).not.toBeChecked();
+      expect(getByText("Submit")).toBeDisabled();
+    });
+    fireEvent.click(getByTestId("has-cor-checkbox"));
+    fireEvent.click(getByTestId("has-d6t-checkbox"));
+    await wait(() => {
+      expect(getByTestId("has-cor-checkbox")).toBeChecked();
+      expect(getByTestId("has-d6t-checkbox")).toBeChecked();
+      expect(getByText("Submit")).not.toBeDisabled();
+    });
+    const err = new Error();
+    err.message = "some error message";
+    fetchMock.mockRejectedValue(err);
+    fireEvent.click(getByText("Submit"));
+    await wait(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(
+        container.querySelector("svg.fa-exclamation-circle")
+      ).toBeInTheDocument();
+    });
+  });
 
-  //   // render component
-  //     // expect stuff to look right
-
-  //   // grab checkboxes you want 
-  //     // checkbox = getAllBySomething
-
-  //   // fireEvents on checkboxes you want
-  //     // fireEvent.click checkboxes
-
-  //   // expect checkboxes to be checked
-  //     // await wait ( .... expect(checkox).toBeChecked()) 
-      
-
-  //   //fetchMock.mockResolved/rejected value
-  
-  //   // click submit
-  //     // fireEvent.click(getBySomething('submit'))
-    
-
-  //   // expect api call / error state / success state
-  //     // awaait wait (() expect(fetchMock).toHAveBeenCalledTimes(2))
-  //     // expect(fetchMock.mock.calls[1][0]).toEqual('/modify/user/endpoint')
-  //     // expect(fetchMock.mock.calls[1][1]).toMatchObject({
-  //     //  userId: 1,
-  //     //  permissions: ['D6T', 'COR', or whatever the data should look like sent to api]
-  //     // })
-  //     // expect(checkIcon).toBeInthedocument()
-  //     //  or
-  //     // expect(errorIcon).tobeinthedocument()
-  //     // or
-  //     // expect(loadingIcon).tobeinthedocument()
-
-  //   // 
-  // });
-
-
-
-
-
+  it("checking permission options only updates user for that row", async () => {
+    const user: WarehouseUser = {
+      ...defaultUser,
+      canD6T: false,
+      canCOR: false
+    };
+    fetchMock.mockResolvedValue({
+      ...defaultUserApiResponse,
+      results: [
+        {
+          ...user,
+          userId: 5
+        },
+        {
+          ...user,
+          username: "someotheruser",
+          userId: 42
+        }
+      ]
+    });
+    const { getAllByTestId, getAllByText } = await renderAndWaitForData();
+    await wait(() => {
+      expect(getAllByTestId("has-cor-checkbox")).toHaveLength(2);
+      expect(getAllByTestId("has-cor-checkbox")[0]).not.toBeChecked();
+      expect(getAllByTestId("has-cor-checkbox")[1]).not.toBeChecked();
+      expect(getAllByText("Submit")).toHaveLength(2);
+      expect(getAllByText("Submit")[0]).toBeDisabled();
+      expect(getAllByText("Submit")[1]).toBeDisabled();
+    });
+    fireEvent.click(getAllByTestId("has-cor-checkbox")[0]);
+    await wait(() => {
+      expect(getAllByTestId("has-cor-checkbox")[0]).toBeChecked();
+      expect(getAllByText("Submit")[0]).not.toBeDisabled();
+    });
+  });
 });

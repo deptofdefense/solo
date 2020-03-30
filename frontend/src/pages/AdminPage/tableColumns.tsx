@@ -46,7 +46,6 @@ const createColumns: CreateColumns = (
             data-testid="has-d6t-checkbox"
             checked={canD6T}
             onChange={e => {
-              console.log("D6T CHANGE")
               modifyWarehouseUser(userId, {
                 canD6T: e.target.checked
               });

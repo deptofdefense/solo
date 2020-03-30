@@ -1,6 +1,6 @@
-import React from 'react';
-import { render } from 'test-utils';
-import { LoadingIcon } from '../LoadingIcon';
+import React from "react";
+import { render } from "test-utils";
+import { LoadingIcon } from "../LoadingIcon";
 
 describe("LoadingIcon component", () => {
   it("renders loading icon when loading", async () => {
