@@ -202,6 +202,7 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
       queryByText,
       queryAllByTitle,
       getByText,
+
       getByPlaceholderText
     } = await render(<ConfirmationOfReceiptPage />, {
       authContext: {

@@ -1,8 +1,8 @@
 import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
+import { LoadingIcon } from "components";
 import { Button } from "solo-uswds";
-import LoadingIcon from "./LoadingIcon";
 import QuantityInput from "./QuantityInput";
 import { SubinventorySelector, LocatorSelector } from "./SubinventorySelector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -8,3 +8,4 @@ export { default as SelectFilterControls } from "./SelectFilterControls";
 export { default as Paginator } from "./Paginator";
 export { default as SdnInputForm } from "./SdnInputForm";
 export { default as CORInputForm } from "./CORInputForm";
+export { LoadingIcon } from "./LoadingIcon";
