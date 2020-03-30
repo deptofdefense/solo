@@ -7,6 +7,9 @@ RUN cp -r GCSS-XSD ./target;
 
 
 FROM maven:latest
-WORKDIR /root/
+RUN useradd -u 8877 app
+# Change to non-root privilege
+USER app
+WORKDIR /app/
 COPY --from=builder /EXML-converter-service/target .
 CMD ["java","-jar", "./EfficientXMLServer.jar" ]
