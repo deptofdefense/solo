@@ -209,13 +209,6 @@ describe("ConfirmationOfReceiptPage component submit COR functionality", () => {
     await wait(() => {
       expect(queryByText("SDNINDEX-0")).toBeInTheDocument();
     });
-    const checkboxes = queryAllByTitle("Toggle Row Selected");
-    // 5 rows plus select all
-    expect(checkboxes.length).toEqual(3);
-    fireEvent.click(checkboxes[0]);
-    await wait(() => {
-      expect(queryByText("Submit 1 Cors")).toBeInTheDocument();
-    });
     const bulkInput = getByPlaceholderText("Rank Lastname, Firstname MI");
     const submitAll = getByText("Submit 1 Cors");
     expect(submitAll).toHaveAttribute("disabled");

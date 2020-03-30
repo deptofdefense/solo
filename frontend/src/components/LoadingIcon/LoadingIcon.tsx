@@ -9,7 +9,7 @@ import {
 import { LoadingStatus } from "solo-types";
 import classes from "./LoadingIcon.module.scss";
 
-const LoadingIcon: React.FC<LoadingStatus> = ({ loading, error }) => (
+export const LoadingIcon: React.FC<LoadingStatus> = ({ loading, error }) => (
   <span>
     <FontAwesomeIcon
       spin={loading}
@@ -20,5 +20,3 @@ const LoadingIcon: React.FC<LoadingStatus> = ({ loading, error }) => (
     />
   </span>
 );
-
-export default LoadingIcon;

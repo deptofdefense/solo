@@ -4,6 +4,7 @@ export {
   defaultApiDoc,
   defaultApiResponse
 } from "./apiDoc";
+export * from "./warehouseUsers";
 export { default as createFakeDocs, defaultDoc } from "./doc";
 
 export interface Part {
@@ -88,12 +89,6 @@ export interface SuppAdd {
   subinventorys: Subinventory[];
 }
 
-export interface LoadingStatus {
-  loading: boolean;
-  error?: boolean;
-  message?: string;
-}
-
 interface BaseDocument {
   id: number;
   sdn: string;
@@ -122,6 +117,12 @@ export interface Document extends BaseDocument {
   enteredLocatorCode: string;
 }
 
+export interface LoadingStatus {
+  loading: boolean;
+  error?: boolean;
+  message?: string;
+}
+
 export interface Query<T extends object> {
   sort: SortingRule<T>[];
   page: number;
@@ -133,4 +134,13 @@ export interface PaginatedApiResponse<T> {
   count: number;
   next: number;
   previous: number;
+}
+
+export interface WarehouseUser extends LoadingStatus {
+  userId: number;
+  username: string;
+  canD6T: boolean;
+  canCOR: boolean;
+  aac: string;
+  hasModified?: boolean;
 }

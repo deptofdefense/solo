@@ -1,7 +1,7 @@
 import React from "react";
 import { Column } from "react-table";
 import { Document } from "solo-types";
-import LoadingIcon from "./LoadingIcon";
+import { LoadingIcon } from "components";
 import QuantityInput from "./QuantityInput";
 import { SubinventorySelector, LocatorSelector } from "./SubinventorySelector";
 
