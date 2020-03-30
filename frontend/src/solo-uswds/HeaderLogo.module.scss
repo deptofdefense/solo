@@ -1,0 +1,15 @@
+div.logoHeader{
+    margin-top: 0;
+}
+.logoImg {
+    max-height: 6rem;
+}
+@media only screen and (max-width: 64em) {
+    div.logoHeader{
+        margin-bottom: .2rem;
+        margin-top: .5rem;
+    }
+    .logoImg {
+        max-height: 3rem;
+    }
+}
