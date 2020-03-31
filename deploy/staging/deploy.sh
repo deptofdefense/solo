@@ -26,6 +26,13 @@ pushBackendToECR(){
     docker push 187588058266.dkr.ecr.us-gov-west-1.amazonaws.com/solo-stage-backend:latest;
     cd ../deploy/staging;
 }
+pushCompressionServiceToECR(){
+    cd ../../compression-service;
+    docker build -t solo-stage-compression-service .;
+    docker tag solo-stage-compression-service:latest 187588058266.dkr.ecr.us-gov-west-1.amazonaws.com/solo-stage-compression-service:latest;
+    docker push 187588058266.dkr.ecr.us-gov-west-1.amazonaws.com/solo-stage-compression-service:latest;
+    cd ../deploy/staging;
+}
 runTerraform(){
     local dir_name=$1;
     cd $dir_name;
@@ -54,6 +61,7 @@ terraform --version;
 configureAWS;
 pushFrontendToECR;
 pushBackendToECR;
+pushCompressionServiceToECR;
 createInfrastructure;
 createPlatform;
 createDatabase;
