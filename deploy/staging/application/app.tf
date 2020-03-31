@@ -121,6 +121,8 @@ data "template_file" "worker_task_def_template" {
     POSTGRES_PASSWORD = data.aws_ssm_parameter.POSTGRES_PASSWORD.arn
     POSTGRES_HOST     = data.aws_ssm_parameter.POSTGRES_HOST.arn
     SECRET_KEY        = data.aws_ssm_parameter.SECRET_KEY.arn
+    GCSS_PRIVATE_KEY  = data.aws_ssm_parameter.GCSS_PRIVATE_KEY.arn
+    GCSS_PUBLIC_CERT  = data.aws_ssm_parameter.GCSS_PUBLIC_CERT.arn
   }
 }
 
