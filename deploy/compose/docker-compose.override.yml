@@ -16,14 +16,6 @@ services:
     environment:
       - DEBUG=True
 
-  worker-scheduler:
-    volumes:
-      - ../../backend:/backend/
-    environment:
-      - DEBUG=True
-    extra_hosts:
-      - "gcssmc-dv-int.dev.gcssmc.sde:$GCSS_DEV_IP"
-
   frontend:
     build:
       target: build_stage

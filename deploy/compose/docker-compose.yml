@@ -37,16 +37,6 @@ services:
     environment:
       - DEBUG=
 
-  worker-scheduler:
-    build: ../../backend
-    command: "celery -A app beat -l info"
-    env_file:
-      - ./.env
-    depends_on:
-      - backend
-    environment:
-      - DEBUG=
-
   frontend:
     build:
       context: ../../frontend
