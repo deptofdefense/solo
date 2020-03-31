@@ -24,7 +24,7 @@
 			<artifactId>efx-license</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/agiledelta/EfficientXML/lib/efxsdklic.jar</systemPath>
+			<systemPath>${basedir}/agiledelta/EfficientXML/lib/efxlic.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.agiledelta.efx</groupId>
