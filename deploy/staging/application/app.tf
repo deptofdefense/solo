@@ -213,7 +213,7 @@ resource "aws_ecs_service" "worker_service" {
 resource "aws_cloudwatch_event_rule" "data_pull_documents_event_rule" {
   name                = "${var.data_pull_service_name}-documents-event-rule"
   schedule_expression = "cron(0,15,30,45 * * * ? *)"
-  role_arn            = data.aws_iam_role.ecs_task_role.arn
+  role_arn            = data.aws_iam_role.ecs_task_exe_role.arn
 
   tags = {
     Name    = "${var.data_pull_service_name}-documents-event-rule"
@@ -224,11 +224,16 @@ resource "aws_cloudwatch_event_rule" "data_pull_documents_event_rule" {
 resource "aws_cloudwatch_event_target" "data_pull_documents_scheduled_task" {
   arn      = data.terraform_remote_state.platform_stage.outputs.ecs_cluter
   rule     = aws_cloudwatch_event_rule.data_pull_documents_event_rule.name
-  role_arn = data.aws_iam_role.ecs_task_role.arn
+  role_arn = data.aws_iam_role.ecs_task_exe_role.arn
 
   ecs_target {
     task_count          = 1
+    launch_type         = "FARGATE"
     task_definition_arn = aws_ecs_task_definition.worker_task_def.arn
+    network_configuration {
+      subnets         = [data.terraform_remote_state.platform_stage.outputs.private_subnet_1a_id]
+      security_groups = [data.terraform_remote_state.platform_stage.outputs.security_group_app]
+    }
   }
 
   input = <<DOC

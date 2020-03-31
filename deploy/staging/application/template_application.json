@@ -40,6 +40,7 @@
     ]
   },
   {
+    "name": "${application_service_name}-api",
     "image": "${backend_image_url}@${backend_digest}",
     "essential": true,
     "dockerLabels": {
