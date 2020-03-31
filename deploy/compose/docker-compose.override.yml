@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   backend:
@@ -13,7 +13,7 @@ services:
   worker:
     volumes:
       - ../../backend:/app/
-    environment: 
+    environment:
       - DEBUG=True
 
   frontend:

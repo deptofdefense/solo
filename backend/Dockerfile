@@ -1,8 +1,7 @@
 FROM python:3.8-alpine
 
 
-# build dependencies for psycopg2 postgres driver
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev libxml2 libxslt-dev xmlsec-dev
 
 COPY ./requirements/requirements.txt /requirements.txt
 RUN pip install --upgrade pip && pip install -r /requirements.txt

@@ -1,19 +1,19 @@
-output "task_def_id" {
-  value = aws_ecs_task_definition.ecs_td_application.id
+output "app_task_def_id" {
+  value = aws_ecs_task_definition.app_task_def.id
 }
 
-output "ecs_service_id" {
-  value = aws_ecs_service.ecs_service.id
+output "app_service_id" {
+  value = aws_ecs_service.app_service.id
 }
 
 output "cloudwatch_backend_id" {
-  value = aws_cloudwatch_log_group.backend_cw_lg.id
+  value = aws_cloudwatch_log_group.application_cw_lg.id
 }
 
 output "cloudwatch_frontend_id" {
-  value = aws_cloudwatch_log_group.frontend_cw_lg.id
+  value = aws_cloudwatch_log_group.worker_cw_lg.id
 }
 
 output "cloudwatch_worker_id" {
-  value = aws_cloudwatch_log_group.worker_cw_lg.id
+  value = aws_cloudwatch_log_group.data_pull_cw_lg.id
 }

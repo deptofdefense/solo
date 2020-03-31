@@ -1,27 +1,20 @@
 [
   {
-    "name": "${backend_container}-worker",
+    "name": "${worker_service_name}",
     "image": "${backend_image_url}@${backend_digest}",
     "essential": true,
     "dockerLabels": {
-      "Project": "SOLO"
+      "Project": "${project}"
     },
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "${ecs_worker_service}_worker_logGroup",
+        "awslogs-group": "${worker_service_name}",
         "awslogs-region": "${region}",
-        "awslogs-stream-prefix": "${ecs_worker_service}_worker_logGroup_stream"
+        "awslogs-stream-prefix": "${worker_service_name}"
       }
     },
-    "command": [
-      "celery",
-      "-A",
-      "app",
-      "worker",
-      "-l",
-      "info"
-    ],
+    "command": ["celery", "-A", "app", "worker", "-l", "info"],
     "workingDirectory": "/backend",
     "secrets": [
       {
@@ -43,6 +36,14 @@
       {
         "name": "SECRET_KEY",
         "valueFrom": "${SECRET_KEY}"
+      },
+      {
+        "name": "GCSS_PRIVATE_KEY",
+        "valueFrom": "${GCSS_PRIVATE_KEY}"
+      },
+      {
+        "name": "GCSS_PUBLIC_CERT",
+        "valueFrom": "${GCSS_PUBLIC_CERT}"
       }
     ]
   }

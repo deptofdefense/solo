@@ -1,11 +1,8 @@
 from typing import Any, Union
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.serializers import BaseSerializer
 from rest_framework.filters import OrderingFilter
-from rest_framework.response import Response
-from rest_framework.request import Request
 from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django_filters import rest_framework as filters
@@ -16,20 +13,7 @@ from .serializers import (
     UpdateStatusD6TSerializer,
     UpdateStatusCORSerializer,
 )
-from .tasks import debug_task
 from .filters import DocumentListFilter
-
-
-class CeleryDebugTaskView(generics.CreateAPIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
-
-    def create(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        username = request.user.username
-        user_msg = request.data.get("msg", "debug msg")
-        task = debug_task.delay(f"[{username}]: {user_msg}")
-        return Response({"task_id": task.id}, status=status.HTTP_200_OK)
 
 
 class ObtainTokenView(TokenObtainPairView):
