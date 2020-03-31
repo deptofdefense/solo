@@ -117,13 +117,6 @@ CELERY_BROKER_URL = (
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 
-# Other Celery settings
-CELERY_BEAT_SCHEDULE = {
-    "update-documents": {
-        "task": "solo_rog_api.tasks.update_documents",
-        "schedule": crontab(),
-    }
-}
 
 TEMPLATES = [
     {
