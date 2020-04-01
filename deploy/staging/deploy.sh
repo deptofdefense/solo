@@ -61,7 +61,7 @@ terraform --version;
 configureAWS;
 pushFrontendToECR;
 pushBackendToECR;
-pushCompressionServiceToECR;
+# pushCompressionServiceToECR;
 createInfrastructure;
 createPlatform;
 createDatabase;
