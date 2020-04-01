@@ -12,6 +12,8 @@ from .serializers import (
     DocumentSerializer,
     UpdateStatusD6TSerializer,
     UpdateStatusCORSerializer,
+    UserSerializer,
+    AACSerializer,
 )
 from .filters import DocumentListFilter
 
@@ -55,3 +57,17 @@ class CORSubmissionView(CreateAPIView):
         self, *args: Any, **kwargs: Any
     ) -> Union[BaseSerializer, BaseSerializer]:
         return super().get_serializer(many=True, allow_empty=False, **kwargs)
+
+class WarehouseUsersList(generics.ListAPIView):
+    """
+    Find AAC's associated with a user, find all users associated with those AAC's
+    """
+    username = None
+
+    if request.user.is_authenticated():
+        username = request.user.username
+    user_id = User.objects.get(username=username)
+    aacs = AAC.obects.filter()
+
+
+     

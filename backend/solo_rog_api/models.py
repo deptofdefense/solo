@@ -5,7 +5,19 @@ from django.utils.dateparse import parse_datetime
 
 
 class User(AbstractUser):
-    pass
+    AAC = models.ForeignKey(
+        "AAC",
+        related_name="AACs",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+  
+
+class AAC(models.Model):
+    aac_id = models.CharField(max_length=50)
+    cor_permissions =  models.BooleanField(default=False)
+    d6t_permissions = models.BooleanField(default=False)
 
 
 class Part(models.Model):
