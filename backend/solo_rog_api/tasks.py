@@ -6,6 +6,7 @@ from typing import Any, Iterator, Union
 
 import urllib3
 from django.conf import settings
+from celery import shared_task
 from celery.task import BaseTask
 
 from zeep import Client
@@ -13,6 +14,9 @@ from zeep.transports import Transport
 from zeep.wsse.signature import BinarySignature as Signature
 from zeep.wsse import utils
 from requests import Session
+
+from solo_rog_api.models import Document
+
 
 # GCSS dev environment certificate is not trusted
 # TODO: explicitly trust their public cert
@@ -105,3 +109,15 @@ class RetrieveDataTaskBase(BaseTask):
         for page in self.pages():
             for item in page:
                 yield item
+
+
+class DocHistoryTask(RetrieveDataTaskBase):
+    service_name = "br2MerDocHistory"
+
+
+@shared_task(bind=True, base=DocHistoryTask)
+def update_documents(self: DocHistoryTask) -> None:
+    for item in self.items():
+        doc, _ = Document.objects.get_or_create(sdn=item.T)
+        # add other stuff to document
+        doc.save()

@@ -119,8 +119,8 @@ CELERY_TASK_SERIALIZER = "json"
 
 CELERY_BEAT_SCHEDULE = {
     "gcss-update-documents": {
-        "task": "solo_rog_api.tasks.gcss_update.update_documents",
-        "schedule": 60 * 20,  # 20 minutes
+        "task": "solo_rog_api.tasks.update_documents",
+        "schedule": 60 * 10,  # 10 minutes
     },
 }
 
