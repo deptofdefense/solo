@@ -12,7 +12,13 @@ services:
 
   worker:
     volumes:
-      - ../../backend:/app/
+      - ../../backend:/backend/
+    environment:
+      - DEBUG=True
+
+  scheduler:
+    volumes:
+      - ../../backend:/backend/
     environment:
       - DEBUG=True
 

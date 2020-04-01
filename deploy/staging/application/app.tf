@@ -23,7 +23,7 @@ variable "frontend_container_repo" { description = "ECR backend repo name" }
 
 variable "application_service_name" { description = "ECS application service name" }
 variable "worker_service_name" { description = "ECS worker service name" }
-variable "data_pull_service_name" { description = "ECS scheduled data transfer service name" }
+variable "scheduler_service_name" { description = "ECS scheduled data transfer service name" }
 
 variable "ecs_task_role" { description = "ECS task role" }
 variable "ecs_task_exe_role" { description = "ECS task execution role" }
@@ -126,6 +126,23 @@ data "template_file" "worker_task_def_template" {
   }
 }
 
+data "template_file" "scheduler_task_def_template" {
+  template = "${file("template_scheduler.json")}"
+  vars = {
+    region                 = var.region
+    project                = var.project
+    scheduler_service_name = var.worker_service_name
+    backend_image_url      = data.aws_ecr_repository.backend_repo.repository_url
+    backend_digest         = data.aws_ecr_image.backend_digest.image_digest
+
+    POSTGRES_DB       = data.aws_ssm_parameter.POSTGRES_DB.arn
+    POSTGRES_USER     = data.aws_ssm_parameter.POSTGRES_USER.arn
+    POSTGRES_PASSWORD = data.aws_ssm_parameter.POSTGRES_PASSWORD.arn
+    POSTGRES_HOST     = data.aws_ssm_parameter.POSTGRES_HOST.arn
+    SECRET_KEY        = data.aws_ssm_parameter.SECRET_KEY.arn
+  }
+}
+
 
 /////////////////////////////////////////////////////////
 //
@@ -166,6 +183,22 @@ resource "aws_ecs_task_definition" "worker_task_def" {
   }
 }
 
+resource "aws_ecs_task_definition" "scheduler_task_def" {
+  container_definitions = data.template_file.scheduler_task_def_template.rendered
+  family                = var.worker_service_name
+  network_mode          = "awsvpc"
+
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = 512
+  memory                   = 2048
+  task_role_arn            = data.aws_iam_role.ecs_task_role.arn
+  execution_role_arn       = data.aws_iam_role.ecs_task_exe_role.arn
+
+  tags = {
+    Name    = var.scheduler_service_name
+    Project = var.project
+  }
+}
 
 /////////////////////////////////////////////////////////
 //
@@ -202,52 +235,20 @@ resource "aws_ecs_service" "worker_service" {
     subnets         = [data.terraform_remote_state.platform_stage.outputs.private_subnet_1a_id]
     security_groups = [data.terraform_remote_state.platform_stage.outputs.security_group_app]
   }
-
 }
 
-/////////////////////////////////////////////////////////
-//
-//  4. CREATE SCHEDULED TASKS THROUGH CLOUDWATCH
-//
-/////////////////////////////////////////////////////////
-resource "aws_cloudwatch_event_rule" "data_pull_documents_event_rule" {
-  name                = "${var.data_pull_service_name}-documents-event-rule"
-  schedule_expression = "cron(0,15,30,45 * * * ? *)"
-  role_arn            = data.aws_iam_role.ecs_task_exe_role.arn
+resource "aws_ecs_service" "scheduler_service" {
+  name            = var.scheduler_service_name
+  task_definition = aws_ecs_task_definition.scheduler_task_def.arn
+  cluster         = data.terraform_remote_state.platform_stage.outputs.ecs_cluter
+  desired_count   = 1
+  launch_type     = "FARGATE"
 
-  tags = {
-    Name    = "${var.data_pull_service_name}-documents-event-rule"
-    Project = var.project
+  network_configuration {
+    subnets         = [data.terraform_remote_state.platform_stage.outputs.private_subnet_1a_id]
+    security_groups = [data.terraform_remote_state.platform_stage.outputs.security_group_app]
   }
 }
-
-resource "aws_cloudwatch_event_target" "data_pull_documents_scheduled_task" {
-  arn      = data.terraform_remote_state.platform_stage.outputs.ecs_cluter
-  rule     = aws_cloudwatch_event_rule.data_pull_documents_event_rule.name
-  role_arn = data.aws_iam_role.ecs_task_exe_role.arn
-
-  ecs_target {
-    task_count          = 1
-    launch_type         = "FARGATE"
-    task_definition_arn = aws_ecs_task_definition.worker_task_def.arn
-    network_configuration {
-      subnets         = [data.terraform_remote_state.platform_stage.outputs.private_subnet_1a_id]
-      security_groups = [data.terraform_remote_state.platform_stage.outputs.security_group_app]
-    }
-  }
-
-  input = <<DOC
-    {
-      "containerOverrides": [
-        {
-          "name": ${var.worker_service_name},
-          "command": ["python", "manage.py", "log_something"]
-        }
-      ]
-    }
-    DOC
-}
-
 
 /////////////////////////////////////////////////////////
 //
@@ -272,11 +273,11 @@ resource "aws_cloudwatch_log_group" "worker_cw_lg" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "data_pull_cw_lg" {
-  name = var.data_pull_service_name
+resource "aws_cloudwatch_log_group" "scheduler_cw_lg" {
+  name = var.scheduler_service_name
 
   tags = {
-    Name    = var.data_pull_service_name
+    Name    = var.scheduler_service_name
     Project = var.project
   }
 }

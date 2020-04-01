@@ -8,7 +8,7 @@ ecs_task_exe_role = "soloStageTaskExeRole"
 
 application_service_name = "solo-stage-app"
 worker_service_name      = "solo-stage-worker"
-data_pull_service_name   = "solo-stage-data-pull"
+scheduler_service_name   = "solo-stage-scheduler"
 
 backend_container_repo  = "solo-stage-backend"
 frontend_container_repo = "solo-stage-frontend"
