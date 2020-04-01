@@ -1,0 +1,42 @@
+[
+  {
+    "name": "${scheduler_service_name}",
+    "image": "${backend_image_url}@${backend_digest}",
+    "essential": true,
+    "dockerLabels": {
+      "Project": "${project}"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${scheduler_service_name}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${scheduler_service_name}"
+      }
+    },
+    "command": ["celery", "-A", "app", "beat", "-l", "info"],
+    "workingDirectory": "/backend",
+    "secrets": [
+      {
+        "name": "POSTGRES_DB",
+        "valueFrom": "${POSTGRES_DB}"
+      },
+      {
+        "name": "POSTGRES_USER",
+        "valueFrom": "${POSTGRES_USER}"
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "valueFrom": "${POSTGRES_PASSWORD}"
+      },
+      {
+        "name": "POSTGRES_HOST",
+        "valueFrom": "${POSTGRES_HOST}"
+      },
+      {
+        "name": "SECRET_KEY",
+        "valueFrom": "${SECRET_KEY}"
+      }
+    ]
+  }
+]

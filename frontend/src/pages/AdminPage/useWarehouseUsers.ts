@@ -37,17 +37,17 @@ const useWarehouseUsers = () => {
       setLoadingStatus({
         loading: false
       });
-      // setLoadingStatus({
-      //   loading: false,
-      //   error: true,
-      //   message: e.message || "Something went wrong"
-      // })
     }
-    // eslint-disable-next-line
+    // setLoadingStatus({
+    //   loading: false,
+    //   error: true,
+    //   message: e.message || "Something went wrong"
+    // })
   }, [setLoadingStatus, setUsers, apiCall]);
 
   useEffect(() => {
     fetchWarehouseUsers();
+    // eslint-disable-next-line
   }, []);
 
   const modifyWarehouseUser = useCallback(
@@ -95,7 +95,7 @@ const useWarehouseUsers = () => {
         });
       }
     },
-    [apiCall, setUsers, users]
+    [apiCall, getUserById, modifyWarehouseUser]
   );
 
   return {

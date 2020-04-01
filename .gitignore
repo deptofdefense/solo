@@ -52,6 +52,7 @@ local-ci.yml
 
 # binary file created by celery beat
 celerybeat-schedule
+celerybeat.pid
 
 .mypy_cache/
 

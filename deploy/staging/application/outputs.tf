@@ -15,5 +15,5 @@ output "cloudwatch_frontend_id" {
 }
 
 output "cloudwatch_worker_id" {
-  value = aws_cloudwatch_log_group.data_pull_cw_lg.id
+  value = aws_cloudwatch_log_group.scheduler_cw_lg.id
 }
