@@ -185,7 +185,7 @@ resource "aws_ecs_task_definition" "worker_task_def" {
 
 resource "aws_ecs_task_definition" "scheduler_task_def" {
   container_definitions = data.template_file.scheduler_task_def_template.rendered
-  family                = var.worker_service_name
+  family                = var.scheduler_service_name
   network_mode          = "awsvpc"
 
   requires_compatibilities = ["FARGATE"]

@@ -14,7 +14,24 @@
         "awslogs-stream-prefix": "${scheduler_service_name}"
       }
     },
-    "command": ["celery", "-A", "app", "beat", "-l", "info"],
+    "extraHosts": [
+      {
+        "Hostname": "gcssmc-dv-int.dev.gcssmc.sde",
+        "IpAddress": "216.14.17.186"
+      }
+    ],
+    "command": [
+      "celery",
+      "-A",
+      "app",
+      "beat",
+      "-l",
+      "info",
+      "-s",
+      "/home/backendUser/celerybeat-schedule",
+      "--pidfile",
+      "/home/backendUser/celerybeat.pid"
+    ],
     "workingDirectory": "/backend",
     "secrets": [
       {

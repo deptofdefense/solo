@@ -10,3 +10,4 @@ omit =
     *settings.py
     */apps.py
     *__init__.py
+    */tasks/*

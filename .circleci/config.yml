@@ -13,24 +13,23 @@ jobs:
           path: ~/solo
       - restore_cache:
           keys:
-             - frontend-dependencies-v1-{{ checksum "package-lock.json" }}
+            - frontend-dependencies-v1-{{ checksum "package-lock.json" }}
       - run:
           name: Installing Frontend Dependencies
-          command: 'npm ci'
+          command: "npm ci"
       - save_cache:
           paths:
-              - /node_modules
+            - /node_modules
           key: frontend-dependencies-v1-{{ checksum "package-lock.json" }}
       - run:
           name: Running Frontend Linting and Style Checking
-          command: 'npm run lint'
+          command: "npm run lint"
       - run:
           name: Running Frontend Typechecking
-          command: 'npm run typecheck'
+          command: "npm run typecheck"
       - run:
           name: Running Unit Tests and Validating Coverage
-          command: 'npm run test:ci'
-      
+          command: "npm run test:ci"
 
   backend_tests:
     docker:
@@ -39,59 +38,58 @@ jobs:
     steps:
       - checkout:
           path: ~/solo
+      - run: sudo apt-get install -y libxml2-dev libxmlsec1-dev
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
       - restore_cache:
           keys:
-             - backend-dependencies-v1-{{ checksum "requirements/requirements.dev.txt" }}
+            - backend-dependencies-v1-{{ checksum "requirements/requirements.dev.txt" }}
       - run:
           name: Installing Backend Dependencies
-          command: 'pip install -U "pip>20.0.1" && pip install -r requirements/requirements.dev.txt --user'
+          command: 'pip install -U "pip>20.0.1" && pip install -q -r requirements/requirements.dev.txt --user'
       - save_cache:
           paths:
-              - /usr/local/lib/python3.8/site-packages
+            - /usr/local/lib/python3.8/site-packages
           key: backend-dependencies-v1-{{ checksum "requirements/requirements.dev.txt" }}
       - run:
           name: Running Backend Linting
-          command: 'pylint backend'
+          command: "pylint backend"
       - run:
           name: Running Backend Style Checking
-          command: 'black --check .'
+          command: "black --check ."
       - run:
           name: Running Unit Tests and Validating Coverage
-          command: 'coverage run && coverage report --fail-under=80'
+          command: "coverage run && coverage report --fail-under=80"
       - run:
           name: Running Static Type Checker
-          command: 'mypy'
-      -  run:
-          name: Running Backend Static Code Security Analysis 
-          command: 'bandit -s B101 -r ./'
+          command: "mypy"
+      - run:
+          name: Running Backend Static Code Security Analysis
+          command: "bandit -s B101 -r ./"
 
   deploy_to_staging:
     docker:
-        - image: circleci/python:3.8
+      - image: circleci/python:3.8
     working_directory: ~/solo/deploy/staging
     steps:
-       - setup_remote_docker
-       - checkout:
-            path: ~/solo
-       - run: 
-            name: Installing AWS CLI
-            command: 'pip install -U "pip>20.0.1" && pip install -r requirements.txt --user'
-       - run: 
-            name: Making deploy script executable
-            command: 'sudo chmod +x deploy.sh'
-       - run:
-            name: Installing Terraform and Running AWS Deployment Script
-            command:  './deploy.sh'
-          
+      - setup_remote_docker
+      - checkout:
+          path: ~/solo
+      - run:
+          name: Installing AWS CLI
+          command: 'pip install -U "pip>20.0.1" && pip install -r requirements.txt --user'
+      - run:
+          name: Making deploy script executable
+          command: "sudo chmod +x deploy.sh"
+      - run:
+          name: Installing Terraform and Running AWS Deployment Script
+          command: "./deploy.sh"
+
 workflows:
   build_and_test:
     jobs:
-        - frontend_tests
-        - backend_tests
-        - deploy_to_staging:
-            filters:
-              branches:
-                only: master
-
-
+      - frontend_tests
+      - backend_tests
+      - deploy_to_staging:
+          filters:
+            branches:
+              only: master

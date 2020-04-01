@@ -118,9 +118,9 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 
 CELERY_BEAT_SCHEDULE = {
-    "log-something every 2 minutes": {
-        "task": "solo_rog_api.tasks.log_something",
-        "schedule": 60 * 2,  # 2 minutes
+    "gcss-update-documents": {
+        "task": "solo_rog_api.tasks.gcss_update.update_documents",
+        "schedule": 60 * 20,  # 20 minutes
     },
 }
 
