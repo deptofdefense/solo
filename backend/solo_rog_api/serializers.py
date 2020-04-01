@@ -16,8 +16,21 @@ from .models import (
     Document,
     Status,
     Address,
+    AAC,
+    User
 )
+  
 
+class AACSerializer(serializers.Serializer):
+    class Meta:
+        model = AAC
+        fields = "__all__"
+
+class UserSerializer(serializers.Serializer):
+    AACs = AACSerializer(many=True, read_only=True)
+    class Meta:
+        model = User
+        fields = "__all__"
 
 class TokenObtainSerializer(serializers.Serializer):
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
