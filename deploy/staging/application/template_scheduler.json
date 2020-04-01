@@ -14,12 +14,6 @@
         "awslogs-stream-prefix": "${scheduler_service_name}"
       }
     },
-    "extraHosts": [
-      {
-        "Hostname": "gcssmc-dv-int.dev.gcssmc.sde",
-        "IpAddress": "216.14.17.186"
-      }
-    ],
     "command": [
       "celery",
       "-A",

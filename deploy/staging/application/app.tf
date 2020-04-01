@@ -41,6 +41,7 @@ data "aws_ssm_parameter" "POSTGRES_HOST" { name = "/solo/stage/POSTGRES_HOST" }
 data "aws_ssm_parameter" "POSTGRES_DB" { name = "/solo/stage/POSTGRES_DB" }
 data "aws_ssm_parameter" "GCSS_PRIVATE_KEY" { name = "/solo/stage/GCSS_PRIVATE_KEY" }
 data "aws_ssm_parameter" "GCSS_PUBLIC_CERT" { name = "/solo/stage/GCSS_PUBLIC_CERT" }
+data "aws_ssm_parameter" "GCSS_HOST" { name = "/solo/stage/GCSS_HOST" }
 
 data "aws_iam_role" "ecs_task_role" { name = var.ecs_task_role }
 data "aws_iam_role" "ecs_task_exe_role" { name = var.ecs_task_exe_role }
@@ -123,6 +124,7 @@ data "template_file" "worker_task_def_template" {
     SECRET_KEY        = data.aws_ssm_parameter.SECRET_KEY.arn
     GCSS_PRIVATE_KEY  = data.aws_ssm_parameter.GCSS_PRIVATE_KEY.arn
     GCSS_PUBLIC_CERT  = data.aws_ssm_parameter.GCSS_PUBLIC_CERT.arn
+    GCSS_HOST         =  data.aws_ssm_parameter.GCSS_HOST.arn
   }
 }
 

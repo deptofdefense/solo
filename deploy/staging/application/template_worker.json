@@ -44,6 +44,10 @@
       {
         "name": "GCSS_PUBLIC_CERT",
         "valueFrom": "${GCSS_PUBLIC_CERT}"
+      },
+      {
+        "name": "GCSS_HOST",
+        "valueFrom": "${GCSS_HOST}"
       }
     ]
   }
