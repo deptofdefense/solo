@@ -16,12 +16,6 @@ services:
     environment:
       - DEBUG=True
 
-  scheduler:
-    volumes:
-      - ../../backend:/backend/
-    environment:
-      - DEBUG=True
-
   frontend:
     build:
       target: build_stage
