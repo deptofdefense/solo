@@ -28,6 +28,7 @@ pushBackendToECR(){
 }
 pushCompressionServiceToECR(){
     cd ../../compression-service;
+    sh EXML-converter-service/pull-proprietary-code.sh;
     docker build -t solo-stage-compression-service .;
     docker tag solo-stage-compression-service:latest 187588058266.dkr.ecr.us-gov-west-1.amazonaws.com/solo-stage-compression-service:latest;
     docker push 187588058266.dkr.ecr.us-gov-west-1.amazonaws.com/solo-stage-compression-service:latest;
@@ -61,7 +62,7 @@ terraform --version;
 configureAWS;
 pushFrontendToECR;
 pushBackendToECR;
-# pushCompressionServiceToECR;
+pushCompressionServiceToECR;
 createInfrastructure;
 createPlatform;
 createDatabase;
