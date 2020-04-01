@@ -42,6 +42,7 @@ class RetrieveDataTaskBase(BaseTask):
     public_cert_filename = "/home/backendUser/selfsigned.crt"
     private_key_filename = "/home/backendUser/selfsigned.key"
     service_name: Union[str, None] = None
+    gcss_host = os.environ.get("GCSS_HOST") or "216.14.17.186"
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -51,7 +52,7 @@ class RetrieveDataTaskBase(BaseTask):
         gcss_cert = os.environ.get("GCSS_PUBLIC_CERT")
         gcss_key = os.environ.get("GCSS_PRIVATE_KEY")
         if gcss_cert is None or gcss_key is None:
-            print("NO GCSS KEYS FOUND")
+            print("NO GCSS KEYS FOUND", flush=True)
             sys.exit(1)
         with open(self.public_cert_filename, "w") as f:
             f.write(gcss_cert)
@@ -65,7 +66,7 @@ class RetrieveDataTaskBase(BaseTask):
         session.verify = False
         # client constructor fetches wsdl
         client = Client(
-            f"https://gcssmc-dv-int.dev.gcssmc.sde/gateway/services/{self.service_name}?wsdl",
+            f"https://{self.gcss_host}/gateway/services/{self.service_name}?wsdl",
             transport=Transport(session=session),
             wsse=GCSSWsseSignature(
                 self.private_key_filename, self.public_cert_filename
