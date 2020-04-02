@@ -111,6 +111,7 @@ class RetrieveDataTaskBase(BaseTask):
         response = None
         with self.get_client() as client:
             while current_page == 0 or self.should_next_page(response):
+                print(f"[*] {self.service_name}: page {current_page}", flush=True)
                 response = client.service.process(
                     outputType="SOAP",
                     nullElements="yes",
@@ -174,3 +175,15 @@ def update_documents(self: DocHistoryTask) -> None:
             addr.name = item.V
             addr.save()
         doc.save()
+
+
+class ItemMasterTask(RetrieveDataTaskBase):
+    service_name = "br2MerItemMaster"
+
+
+@shared_task(bind=True, base=ItemMasterTask)
+def update_parts(self: DocHistoryTask) -> None:
+    for item in self.items():
+        part, _ = Part.objects.get_or_create(nsn=item.A, uom=item.E)
+        part.nomen = item.D
+        part.save()
