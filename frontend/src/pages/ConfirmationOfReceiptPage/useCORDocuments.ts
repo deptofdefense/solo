@@ -28,6 +28,10 @@ const useCORDocuments = () => {
           {
             id: "status",
             value: "D6T"
+          },
+          {
+            id: "exclude_status",
+            value: "COR"
           }
         ]
       }),
