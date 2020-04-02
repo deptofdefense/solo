@@ -47,6 +47,18 @@
       {
         "name": "SECRET_KEY",
         "valueFrom": "${SECRET_KEY}"
+      },
+      {
+        "name": "GCSS_PRIVATE_KEY",
+        "valueFrom": "${GCSS_PRIVATE_KEY}"
+      },
+      {
+        "name": "GCSS_PUBLIC_CERT",
+        "valueFrom": "${GCSS_PUBLIC_CERT}"
+      },
+      {
+        "name": "GCSS_HOST",
+        "valueFrom": "${GCSS_HOST}"
       }
     ]
   }

@@ -1,5 +1,4 @@
-import os
-import sys
+import socket
 from datetime import datetime, timedelta
 from contextlib import contextmanager
 from typing import Any, Iterator, Union
@@ -23,6 +22,32 @@ from solo_rog_api.models import Document
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
+# monkey patch dns resolution at this level
+#
+#  1. Fargate tasks don't support the extraHosts docker option
+#  2. zeep needs to crawl wsdl references to xsd's, so
+#     statically using an ip for the wsdl doesn't work
+#
+system_get_addr_info = socket.getaddrinfo
+
+
+def patched_getaddrinfo(hostname: str, port: int, *args: Any) -> Any:
+    if hostname == settings.GCSS_HOST:
+        return [
+            (
+                socket.AddressFamily.AF_INET,
+                socket.SocketKind.SOCK_STREAM,
+                socket.getprotobyname("tcp"),  # TCP
+                "",
+                (settings.GCSS_IP, 443),
+            )
+        ]
+    return system_get_addr_info(hostname, port, *args)
+
+
+socket.getaddrinfo = patched_getaddrinfo  # type: ignore
+
+
 class GCSSWsseSignature(Signature):
     def apply(self, envelope: str, headers: Any) -> Any:
         security = utils.get_security_header(envelope)
@@ -43,38 +68,18 @@ class GCSSWsseSignature(Signature):
 
 
 class RetrieveDataTaskBase(BaseTask):
-    public_cert_filename = "/home/backendUser/selfsigned.crt"
-    private_key_filename = "/home/backendUser/selfsigned.key"
     service_name: Union[str, None] = None
-    gcss_host = os.environ.get("GCSS_HOST") or "216.14.17.186"
-
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-        self.write_keys()
-
-    def write_keys(self) -> None:
-        gcss_cert = os.environ.get("GCSS_PUBLIC_CERT")
-        gcss_key = os.environ.get("GCSS_PRIVATE_KEY")
-        if gcss_cert is None or gcss_key is None:
-            print("NO GCSS KEYS FOUND", flush=True)
-            sys.exit(1)
-        with open(self.public_cert_filename, "w") as f:
-            f.write(gcss_cert)
-        with open(self.private_key_filename, "w") as f:
-            f.write(gcss_key)
 
     @contextmanager
     def get_client(self) -> Iterator[Client]:
         session = Session()
-        session.cert = (self.public_cert_filename, self.private_key_filename)
+        session.cert = (settings.GCSS_CERT_PATH, settings.GCSS_KEY_PATH)
         session.verify = False
         # client constructor fetches wsdl
         client = Client(
-            f"https://{self.gcss_host}/gateway/services/{self.service_name}?wsdl",
+            f"https://{settings.GCSS_HOST}/gateway/services/{self.service_name}?wsdl",
             transport=Transport(session=session),
-            wsse=GCSSWsseSignature(
-                self.private_key_filename, self.public_cert_filename
-            ),
+            wsse=GCSSWsseSignature(settings.GCSS_KEY_PATH, settings.GCSS_CERT_PATH),
         )
         yield client
         session.close()
