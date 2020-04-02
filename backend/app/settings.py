@@ -125,6 +125,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "solo_rog_api.tasks.update_documents",
         "schedule": crontab(minute=30, hour=23),  # daily at 23:30
     },
+    "gcss-update-parts": {
+        "task": "solo_rog_api.tasks.update_parts",
+        "schedule": crontab(minute=30, hour=0),  # daily at 00:30
+    },
 }
 
 # GCSS connection
