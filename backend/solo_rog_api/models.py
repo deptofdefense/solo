@@ -25,7 +25,7 @@ class Dic(models.Model):
 
 
 class Part(models.Model):
-    nsn = models.CharField(max_length=13, null=True, unique=True)
+    nsn = models.CharField(max_length=13, null=True)
     nomen = models.CharField(max_length=50, null=True)
     uom = models.CharField(max_length=5, null=True)
     price = models.IntegerField(null=True)
@@ -35,6 +35,9 @@ class Part(models.Model):
     recoverability_code = models.CharField(max_length=2, null=True)
     shelf_life_code = models.IntegerField(null=True)
     controlled_inv_item_code = models.CharField(max_length=2, null=True)
+
+    class Meta:
+        unique_together = ("nsn", "uom")
 
     def get_niin(self) -> str:
         return self.nsn[4:]
@@ -47,7 +50,7 @@ class Part(models.Model):
 
 
 class SuppAdd(models.Model):
-    code = models.CharField(max_length=5)
+    code = models.CharField(max_length=50)
     desc = models.CharField(max_length=40, blank=True)
 
     def __str__(self) -> str:
@@ -130,8 +133,8 @@ class Status(models.Model):
     status_date = models.DateTimeField()
     key_and_transmit_date = models.DateTimeField(null=True, blank=True)
     esd = models.DateField(null=True, blank=True)
-    projected_qty = models.PositiveSmallIntegerField(null=True, blank=True)
-    received_qty = models.PositiveSmallIntegerField(null=True, blank=True)
+    projected_qty = models.IntegerField(null=True, blank=True)
+    received_qty = models.IntegerField(null=True, blank=True)
     received_by = models.CharField(max_length=50, null=True, blank=True)
     subinventory = models.ForeignKey(
         "SubInventory", related_name="statuses", on_delete=models.SET_NULL, null=True

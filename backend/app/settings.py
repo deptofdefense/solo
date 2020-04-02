@@ -3,6 +3,8 @@ import sys
 import string
 from urllib.parse import quote
 from django.utils.crypto import get_random_string
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -102,7 +104,7 @@ DATABASES = {
 
 # Use sqlite3 for unit tests until usage diverges enough
 # that postgres is neccessary for unit testing
-if "test" in sys.argv or DEBUG:
+if "test" in sys.argv:
     DATABASES["default"]["ENGINE"] = "django.db.backends.sqlite3"
     DATABASES["default"]["NAME"] = "solo.sqlite3"
 
@@ -121,7 +123,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
     "gcss-update-documents": {
         "task": "solo_rog_api.tasks.update_documents",
-        "schedule": 60 * 5,  # 1 hour
+        "schedule": crontab(minute=30, hour=23),  # daily at 23:30
     },
 }
 
@@ -134,10 +136,10 @@ GCSS_CERT_PATH = os.environ.get("GCSS_CERT_PATH", "/home/backendUser/selfsigned.
 GCSS_KEY_PATH = os.environ.get("GCSS_KEY_PATH", "/home/backendUser/selfsigned.key")
 if GCSS_CERT is not None:
     with open(GCSS_CERT_PATH, "w") as f:
-        f.write(GCSS_CERT)
+        f.write(GCSS_CERT.replace("\\n", "\n"))
 if GCSS_KEY is not None:
     with open(GCSS_KEY_PATH, "w") as f:
-        f.write(GCSS_KEY)
+        f.write(GCSS_KEY.replace("\\n", "\n"))
 
 TEMPLATES = [
     {
