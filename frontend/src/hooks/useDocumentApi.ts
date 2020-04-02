@@ -5,21 +5,38 @@ import {
   ApiDocument,
   Query,
   PaginatedApiResponse,
-  LocatorMap
+  LocatorMap,
+  SuppAdd,
+  ServiceRequest,
+  Part
 } from "solo-types";
 
 type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 
+const nullSuppadd: SuppAdd = {
+  id: 0,
+  desc: "",
+  subinventorys: [],
+  code: ""
+};
+
+const nullServiceRequest: ServiceRequest = {
+  id: 0,
+  service_request: ""
+};
+
+const nullPart: Part = {
+  id: 0,
+  nsn: "",
+  nomen: "",
+  uom: "EA"
+};
+
 // covert api returned document to frontend friendly Document
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
   apiDocs.map(
-    ({
-      addresses,
-      suppadd: { desc: commodityName, subinventorys },
-      service_request,
-      statuses,
-      ...apiDoc
-    }) => {
+    ({ addresses, suppadd, service_request, statuses, part, ...apiDoc }) => {
+      const { desc: commodityName, subinventorys } = suppadd || nullSuppadd;
       const mostRecentStatusIdx = statuses.length - 1;
       const enteredReceivedQty = statuses[mostRecentStatusIdx].projected_qty;
       const locatorsBySubinventory: LocatorMap = subinventorys.reduce(
@@ -32,15 +49,22 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
       const flattenedSubinventorys = subinventorys.map(
         ({ locators, ...rest }) => ({ ...rest })
       );
-      const enteredSubinventoryCode = flattenedSubinventorys[0].code;
-      const enteredLocatorCode =
-        locatorsBySubinventory[enteredSubinventoryCode][0].code;
+
+      let enteredSubinventoryCode = "";
+      let enteredLocatorCode = "";
+      if (flattenedSubinventorys.length > 0) {
+        enteredSubinventoryCode = flattenedSubinventorys[0].code;
+        enteredLocatorCode =
+          locatorsBySubinventory[enteredSubinventoryCode][0].code;
+      }
+
       return {
         ...apiDoc,
         subinventorys: flattenedSubinventorys,
         locatorsBySubinventory,
         statuses,
-        serviceRequest: service_request,
+        serviceRequest: service_request ?? nullServiceRequest,
+        part: part ?? nullPart,
 
         // 1 = Holder, 2 = Ship-To, 3 = Requestor, and 4 = Bill-To
         shipper: addresses.find(addy => addy.address_type.type === "2"),

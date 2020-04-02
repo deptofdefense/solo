@@ -12,13 +12,13 @@ export interface Part {
   nsn: string;
   nomen: string;
   uom: string;
-  price: number;
-  sac: number;
-  serial_control_flag: string;
-  lot_control_flag: string;
-  recoverability_code: string;
-  shelf_life_code: number;
-  controlled_inv_item_code: string;
+  price?: number;
+  sac?: number;
+  serial_control_flag?: string;
+  lot_control_flag?: string;
+  recoverability_code?: string;
+  shelf_life_code?: number;
+  controlled_inv_item_code?: string;
 }
 
 export interface Dic {

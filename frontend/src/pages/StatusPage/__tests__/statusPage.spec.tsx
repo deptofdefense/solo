@@ -1,6 +1,6 @@
 import React from "react";
 import { render, wait, fireEvent } from "test-utils";
-import { defaultApiResponse } from "solo-types";
+import { defaultApiResponse, defaultApiDoc } from "solo-types";
 import StatusPage from "../StatusPage";
 
 jest.mock("components/DocumentDetails", () => () => <div>testdetails</div>);
@@ -60,6 +60,29 @@ describe("StatusPage component", () => {
       expect(fetchMock.mock.calls[0][1]).toMatchObject({
         method: "GET"
       });
+    });
+  });
+
+  it("handles null data", async () => {
+    fetchMock.mockResolvedValue({
+      ...defaultApiResponse,
+      results: [
+        {
+          ...defaultApiDoc,
+          sdn: "somesdn",
+          suppadd: null,
+          part: null,
+          service_request: null
+        }
+      ]
+    });
+    const { queryByText } = render(<StatusPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    await wait(() => {
+      expect(queryByText("somesdn")).toBeInTheDocument();
     });
   });
 
