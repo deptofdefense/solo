@@ -91,8 +91,7 @@ export const defaultApiDoc: ApiDocument = {
         suppadd: 1
       }
     ],
-    code: "YMTM",
-    desc: "Motor Transportation"
+    code: "YMTM"
   },
   part: {
     id: 2,

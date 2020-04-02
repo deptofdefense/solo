@@ -15,7 +15,6 @@ type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
 
 const nullSuppadd: SuppAdd = {
   id: 0,
-  desc: "",
   subinventorys: [],
   code: ""
 };
@@ -36,7 +35,7 @@ const nullPart: Part = {
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
   apiDocs.map(
     ({ addresses, suppadd, service_request, statuses, part, ...apiDoc }) => {
-      const { desc: commodityName, subinventorys } = suppadd || nullSuppadd;
+      const { code: commodityName, subinventorys } = suppadd || nullSuppadd;
       const mostRecentStatusIdx = statuses.length - 1;
       const enteredReceivedQty = statuses[mostRecentStatusIdx].projected_qty;
       const locatorsBySubinventory: LocatorMap = subinventorys.reduce(

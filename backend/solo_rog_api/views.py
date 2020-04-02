@@ -33,7 +33,7 @@ class DocumentList(generics.ListAPIView):
         ("sdn", "sdn"),
         ("service_request__service_request", "service request"),
         ("part__nomen", "nomenclature"),
-        ("suppadd__desc", "commodity"),
+        ("suppadd__code", "commodity"),
         ("statuses__status_date", "last updated"),
     ]
     ordering = ["statuses__status_date"]
