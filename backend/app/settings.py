@@ -121,15 +121,15 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
     "gcss-update-documents": {
         "task": "solo_rog_api.tasks.update_documents",
-        "schedule": 60 * 60,  # 1 hour
+        "schedule": 60 * 5,  # 1 hour
     },
 }
 
 # GCSS connection
 GCSS_HOST = os.environ.get("GCSS_HOST", "gcssmc-dv-int.dev.gcssmc.sde")
 GCSS_IP = os.environ.get("GCSS_IP", "216.14.17.186")
-GCSS_CERT = os.environ.get("GCSS_CERT")
-GCSS_KEY = os.environ.get("GCSS_KEY")
+GCSS_CERT = os.environ.get("GCSS_PUBLIC_CERT")
+GCSS_KEY = os.environ.get("GCSS_PRIVATE_KEY")
 GCSS_CERT_PATH = os.environ.get("GCSS_CERT_PATH", "/home/backendUser/selfsigned.crt")
 GCSS_KEY_PATH = os.environ.get("GCSS_KEY_PATH", "/home/backendUser/selfsigned.key")
 if GCSS_CERT is not None:
