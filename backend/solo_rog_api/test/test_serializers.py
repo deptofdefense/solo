@@ -6,10 +6,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from solo_rog_api.models import (
-    AddressType,
-    Dic,
     Part,
-    ServiceRequest,
     SuppAdd,
     SubInventory,
     Locator,
@@ -19,10 +16,7 @@ from solo_rog_api.models import (
 )
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
-    AddressTypeSerializer,
-    DicSerializer,
     PartSerializer,
-    ServiceRequestSerializer,
     SuppAddSerializer,
     SubInventorySerializer,
     LocatorSerializer,
@@ -88,41 +82,6 @@ class TokenObtainSerializerTestCase(TestCase):
             serializer.is_valid()
 
 
-class AddressTypeSerializerTest(TestCase):
-    """ Test Address Type creation of a serializer from model """
-
-    def setUp(self) -> None:
-        self.test = AddressType.objects.create(type="Ship-to", desc="Ship it")
-
-    def test_address_type_serializer(self) -> None:
-        serial_object = AddressTypeSerializer(self.test)
-        self.assertEqual(
-            serial_object.data, {"id": 1, "type": "Ship-to", "desc": "Ship it"}
-        )
-
-
-class ServiceRequestSerializerTest(TestCase):
-    """ Test ServiceRequest creation of a serializer from model """
-
-    def setUp(self) -> None:
-        self.test = ServiceRequest.objects.create(service_request="12345678")
-
-    def test_servicerequest_serializer(self) -> None:
-        serial_object = ServiceRequestSerializer(self.test)
-        self.assertEqual(serial_object.data, {"id": 1, "service_request": "12345678"})
-
-
-class DicSerializerTest(TestCase):
-    """ Test Dic creation of a serializer from model """
-
-    def setUp(self) -> None:
-        self.test = Dic.objects.create(code="AB1", desc="")
-
-    def test_dic_serializer(self) -> None:
-        serial_object = DicSerializer(self.test)
-        self.assertEqual(serial_object.data, {"id": 1, "code": "AB1", "desc": ""})
-
-
 class SuppAddSerializerTest(TestCase):
     """ Test SuppAdd creation of a serializer from model """
 
@@ -174,7 +133,7 @@ class StatusSerializerTest(TestCase):
             esd="2020-03-20",
             projected_qty=2,
             document=None,
-            dic=None,
+            dic="D6T",
             received_by=None,
         )
 
@@ -184,7 +143,7 @@ class StatusSerializerTest(TestCase):
             {
                 "id": 1,
                 "document": None,
-                "dic": None,
+                "dic": "D6T",
                 "status_date": "2020-03-01T21:47:13-05:00",
                 "key_and_transmit_date": None,
                 "esd": "2020-03-20",
@@ -196,9 +155,7 @@ class StatusSerializerTest(TestCase):
         )
 
     def test_status_serializer_serialization(self) -> None:
-        data = {
-            "status_date": "2020-03-01T21:47:13-05:00",
-        }
+        data = {"status_date": "2020-03-01T21:47:13-05:00", "dic": "COR"}
         serializer = StatusSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         status = serializer.save()
@@ -261,8 +218,9 @@ class DocumentSerializerTest(TestCase):
                 "suppadd": None,
                 "part": None,
                 "service_request": None,
-                "addresses": [],
                 "sdn": "M1234AA",
+                "ship_to": None,
+                "holder": None,
             },
         )
 
@@ -272,7 +230,6 @@ class AddressSerializerTest(TestCase):
 
     def setUp(self) -> None:
         self.test = Address.objects.create(
-            address_type=None,
             name="AAC-M30300",
             ric="SMS",
             addy1="addy1",
@@ -290,8 +247,6 @@ class AddressSerializerTest(TestCase):
             serial_object.data,
             {
                 "id": 1,
-                "document": [],
-                "address_type": None,
                 "name": "AAC-M30300",
                 "ric": "SMS",
                 "addy1": "addy1",

@@ -13,7 +13,7 @@ const DocumentStepper: React.FC<DocumentStepperProps> = ({ statuses }) => {
       statuses.reduce(
         (allDics, newStat) => ({
           ...allDics,
-          [newStat.dic.code]: newStat.status_date
+          [newStat.dic]: newStat.status_date
         }),
         {}
       ),

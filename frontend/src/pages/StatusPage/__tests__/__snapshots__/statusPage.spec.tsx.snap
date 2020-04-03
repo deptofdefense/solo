@@ -234,7 +234,7 @@ exports[`StatusPage component matches snapshot 1`] = `
             class="td"
             role="cell"
           >
-            received
+            AS1
           </td>
           <td
             class="td"

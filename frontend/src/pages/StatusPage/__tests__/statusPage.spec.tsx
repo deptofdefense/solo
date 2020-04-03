@@ -72,7 +72,9 @@ describe("StatusPage component", () => {
           sdn: "somesdn",
           suppadd: null,
           part: null,
-          service_request: null
+          service_request: null,
+          ship_to: null,
+          holder: null
         }
       ]
     });
@@ -173,7 +175,7 @@ describe("StatusPage component", () => {
       // first call was on render, this is second
       expect(fetchMock).toHaveBeenCalledTimes(2);
       expect(fetchMock.mock.calls[1][0]).toEqual(
-        "/document/?sort=service_request__service_request"
+        "/document/?sort=service_request"
       );
     });
     fireEvent.click(serviceReqHeader);
@@ -181,7 +183,7 @@ describe("StatusPage component", () => {
       // sort by is now desc
       expect(fetchMock).toHaveBeenCalledTimes(3);
       expect(fetchMock.mock.calls[2][0]).toEqual(
-        "/document/?sort=-service_request__service_request"
+        "/document/?sort=-service_request"
       );
     });
   });

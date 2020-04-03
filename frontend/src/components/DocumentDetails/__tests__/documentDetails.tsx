@@ -11,7 +11,7 @@ jest.mock("date-fns", () => ({
 }));
 
 describe("DocumentDetails Component", () => {
-  const { statuses, shipper, receiver, part } = defaultDoc;
+  const { statuses, shipTo: shipper, holder: receiver, part } = defaultDoc;
 
   afterAll(() => {
     jest.restoreAllMocks();

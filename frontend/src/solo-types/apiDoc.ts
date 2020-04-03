@@ -1,16 +1,27 @@
-import { ApiDocument, Status, PaginatedApiResponse } from "solo-types";
+import {
+  BaseDocument,
+  PaginatedApiResponse,
+  Part,
+  SuppAdd,
+  Address,
+  ApiDocument
+} from "solo-types";
 import * as faker from "faker";
 
-export const defaultApiDoc: ApiDocument = {
+interface CompleteAPIDoc extends BaseDocument {
+  service_request: string;
+  part: Part;
+  suppadd: SuppAdd;
+  ship_to: Address;
+  holder: Address;
+}
+
+export const defaultApiDoc: CompleteAPIDoc = {
   id: 1,
   statuses: [
     {
       id: 1,
-      dic: {
-        id: 1,
-        code: "AE1",
-        desc: "in transit"
-      },
+      dic: "AE1",
       status_date: "2020-03-01T21:47:13-05:00",
       key_and_transmit_date: null,
       esd: "2020-03-20",
@@ -20,11 +31,7 @@ export const defaultApiDoc: ApiDocument = {
     },
     {
       id: 2,
-      dic: {
-        id: 2,
-        code: "AS1",
-        desc: "received"
-      },
+      dic: "AS1",
       status_date: "2020-03-05T21:47:56-05:00",
       key_and_transmit_date: null,
       esd: null,
@@ -106,180 +113,64 @@ export const defaultApiDoc: ApiDocument = {
     shelf_life_code: 0,
     controlled_inv_item_code: "u"
   },
-  service_request: {
-    id: 1,
-    service_request: "12345678"
+  service_request: "12345678",
+  ship_to: {
+    id: 4,
+    name: "AAC-M30300",
+    ric: "SMS"
   },
-  addresses: [
-    {
-      id: 4,
-      address_type: {
-        id: 4,
-        type: "Bill-To",
-        desc: null
-      },
-      name: "AAC-M30300",
-      ric: "SMS",
-      addy1: "addy1",
-      addy2: "addy2",
-      addy3: "bldg 24006 Montezuma",
-      city: "Arlington",
-      state: "VA",
-      zip: "22202",
-      country: "United States",
-      document: [1]
-    },
-    {
-      id: 3,
-      address_type: {
-        id: 3,
-        type: "Requester",
-        desc: null
-      },
-      name: "requestor",
-      ric: "5E3",
-      addy1: "addy1",
-      addy2: "addy2",
-      addy3: "addy3",
-      city: "Arlington",
-      state: "VA",
-      zip: "22202",
-      country: "United States",
-      document: [1]
-    },
-    {
-      id: 2,
-      address_type: {
-        id: 2,
-        type: "Ship-To",
-        desc: null
-      },
-      name: "ship to",
-      ric: "SMS",
-      addy1: "addy1",
-      addy2: "addy2",
-      addy3: "addy3",
-      city: "Arlington",
-      state: "VA",
-      zip: "22202",
-      country: "United States",
-      document: [1]
-    },
-    {
-      id: 1,
-      address_type: {
-        id: 1,
-        type: "Holder",
-        desc: null
-      },
-      name: "AAC-M30300",
-      ric: "SMS",
-      addy1: "addy1",
-      addy2: "addy2",
-      addy3: "addy3",
-      city: "Arlington",
-      state: "VA",
-      zip: "22202",
-      country: "United States",
-      document: [1]
-    }
-  ],
+  holder: {
+    id: 3,
+    name: "requestor",
+    ric: "5E3"
+  },
   sdn: "M3030012341234"
 };
 
-export const defaultApiResponse: PaginatedApiResponse<ApiDocument[]> = {
+export const defaultApiResponse: PaginatedApiResponse<CompleteAPIDoc[]> = {
   results: [defaultApiDoc],
   count: 100,
   next: 1,
   previous: 2
 };
 
-const idxToStatus = (idx: number): Status => {
-  const base: Omit<Status, "dic"> = {
-    id: Math.floor(Math.random() * 2000),
-    status_date: faker.date.recent().toISOString(),
-    key_and_transmit_date: null,
-    esd: "2020-03-20",
-    projected_qty: 20,
-    received_qty: faker.random.number(20),
-    document: 1
-  };
-  switch (idx) {
-    case 0:
-      return {
-        ...base,
-        dic: {
-          id: 1,
-          code: "AE1",
-          desc: "in transit"
-        }
-      };
-    case 1:
-      return {
-        ...base,
-        dic: {
-          id: 2,
-          code: "AS1",
-          desc: "shipped"
-        }
-      };
-    case 2:
-      return {
-        ...base,
-        dic: {
-          id: 3,
-          code: "AS2",
-          desc: "in transit"
-        }
-      };
-    case 3:
-      return {
-        ...base,
-        dic: {
-          id: 4,
-          code: "D6T",
-          desc: "received"
-        }
-      };
-    default:
-      return {
-        ...base,
-        dic: {
-          id: 5,
-          code: "COR",
-          desc: "confirmed"
-        }
-      };
-  }
-};
+const dics = ["AE1", "AS1", "AS2", "D6T", "COR"];
 
 const createFakeApiDocuments = (count: number = 20): ApiDocument[] => {
   return Array.from({ length: count }).map(() => ({
     ...defaultApiDoc,
     statuses: Array.from({
       length: faker.random.number({ min: 1, max: 5 })
-    }).map((_, idx) => idxToStatus(idx)),
-    service_request: {
-      id: faker.random.number(50),
-      service_request: faker.random.alphaNumeric(8).toUpperCase()
-    },
+    }).map((_, idx) => ({
+      id: Math.floor(Math.random() * 2000),
+      status_date: faker.date.recent().toISOString(),
+      key_and_transmit_date: null,
+      esd: "2020-03-20",
+      projected_qty: 20,
+      received_qty: faker.random.number(20),
+      document: 1,
+      dic: dics[idx]
+    })),
+    service_request: faker.random.alphaNumeric(8).toUpperCase(),
     part: {
       ...defaultApiDoc.part,
-      nomen: faker.commerce.productName()
+      nomen: faker.commerce.productName(),
+      id: faker.random.number(1000),
+      nsn: faker.random.alphaNumeric(8),
+      uom: "EA"
     },
-    suppadd: {
-      ...defaultApiDoc.suppadd,
-      desc: faker.random.arrayElement([
-        "Motor Transportation",
-        "Armory",
-        "Communications",
-        "Electronics Maintenence"
-      ])
+    ship_to: {
+      ...defaultApiDoc.ship_to,
+      name: faker.company.companyName(),
+      id: faker.random.number(1000),
+      ric: faker.random.alphaNumeric(3)
     },
-    addresses: defaultApiDoc.addresses.map(addy => ({
-      ...addy,
-      name: faker.company.companyName()
-    })),
+    holder: {
+      ...defaultApiDoc.holder,
+      name: faker.company.companyName(),
+      id: faker.random.number(1000),
+      ric: faker.random.alphaNumeric(3)
+    },
     sdn: `M30300${faker.finance.account(8)}`
   }));
 };

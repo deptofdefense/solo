@@ -22,29 +22,6 @@ def create_fake_users(count: int = 10) -> None:
     )
 
 
-def populate_address_types() -> None:
-    models.AddressType.objects.all().delete()
-    # 1 = Holder, 2 = Ship-To, 3 = Requestor, and 4 = Bill-To
-    types = (("1", "Holder"), ("2", "Ship-To"), ("3", "Requestor"), ("4", "Bill-To"))
-    models.AddressType.objects.bulk_create(
-        [models.AddressType(type=type, desc=desc) for type, desc in types]
-    )
-
-
-def populate_dics() -> None:
-    models.Dic.objects.all().delete()
-    types = (
-        ("AE1", "Requested"),
-        ("AS1", "Shipped"),
-        ("AS2", "In-Transit"),
-        ("D6T", "Received"),
-        ("COR", "Confirmed"),
-    )
-    models.Dic.objects.bulk_create(
-        [models.Dic(code=code, desc=desc) for code, desc in types]
-    )
-
-
 def create_fake_parts(count: int = 20) -> None:
     models.Part.objects.all().delete()
     models.Part.objects.bulk_create(
@@ -105,67 +82,10 @@ def create_fake_locators(max_per_subinventory: int = 3) -> None:
     )
 
 
-def create_fake_service_requests(count: int = 20) -> None:
-    models.ServiceRequest.objects.all().delete()
-    models.ServiceRequest.objects.bulk_create(
-        [
-            models.ServiceRequest(service_request=fake.numerify(text="########"))
-            for _ in range(count)
-        ]
-    )
-
-
-def create_fake_documents(count: int = 100) -> None:
-    models.Document.objects.all().delete()
-    service_requests = list(models.ServiceRequest.objects.all())
-    suppadds = list(models.SuppAdd.objects.all())
-    parts = list(models.Part.objects.all())
-    models.Document.objects.bulk_create(
-        [
-            models.Document(
-                service_request=random.choice(service_requests),  # nosec
-                suppadd=random.choice(suppadds),  # nosec
-                part=random.choice(parts),  # nosec
-                sdn=fake.numerify("M30300########"),
-            )
-            for _ in range(count)
-        ]
-    )
-
-
-def create_fake_statuses_for_documents() -> None:
-    models.Status.objects.all().delete()
-    dics = {dic.code: dic for dic in list(models.Dic.objects.all())}
-    dic_map = {0: "AE1", 1: "AS1", 2: "AS2", 3: "D6T", 4: "COR"}
-    documents = list(models.Document.objects.all())
-    models.Status.objects.bulk_create(
-        [
-            models.Status(
-                document=doc,
-                dic=dics[dic_map[idx]],
-                status_date=fake.date_time_this_month(tzinfo=pytz.UTC),
-                key_and_transmit_date=fake.date_time_this_month(tzinfo=pytz.UTC),
-                esd=fake.date_this_month(),
-                projected_qty=random.randint(1, 40),  # nosec
-                received_qty=0,
-            )
-            for doc in documents
-            for idx in range(random.randint(1, 5))  # nosec
-        ]
-    )
-
-
-def create_fake_addresses_for_documents(address_count: int = 100) -> None:
-    models.Address.objects.all().delete()
-    address_types = {
-        address_type.type: address_type
-        for address_type in list(models.AddressType.objects.all())
-    }
-    documents = list(models.Document.objects.all())
+def create_fake_addresses(address_count: int = 100) -> None:
     models.Address.objects.bulk_create(
         [
             models.Address(
-                address_type=address_types[str(random.randint(1, 4))],  # nosec
                 name=fake.company(),
                 ric=fake.numerify(text="###"),
                 addy1=fake.street_address(),
@@ -177,15 +97,47 @@ def create_fake_addresses_for_documents(address_count: int = 100) -> None:
             for _ in range(address_count)
         ]
     )
-    addresses = {
-        1: list(models.Address.objects.filter(address_type=address_types["1"].id)),
-        2: list(models.Address.objects.filter(address_type=address_types["2"].id)),
-        3: list(models.Address.objects.filter(address_type=address_types["3"].id)),
-        4: list(models.Address.objects.filter(address_type=address_types["4"].id)),
-    }
-    for doc in documents:
-        doc.addresses.set([random.choice(addresses[i]) for i in range(1, 5)])  # nosec
-        doc.save()
+
+
+def create_fake_documents(count: int = 100) -> None:
+    models.Document.objects.all().delete()
+    suppadds = list(models.SuppAdd.objects.all())
+    parts = list(models.Part.objects.all())
+    addresses = list(models.Address.objects.all())
+    models.Document.objects.bulk_create(
+        [
+            models.Document(
+                service_request=fake.numerify(text="########"),  # nosec
+                suppadd=random.choice(suppadds),  # nosec
+                part=random.choice(parts),  # nosec
+                sdn=fake.numerify("M30300########"),
+                ship_to=random.choice(addresses),  # nosec
+                holder=random.choice(addresses),  # nosec
+            )
+            for _ in range(count)
+        ]
+    )
+
+
+def create_fake_statuses_for_documents() -> None:
+    models.Status.objects.all().delete()
+    dics = ["AE1", "AS1", "AS2", "D6T", "COR"]
+    documents = list(models.Document.objects.all())
+    models.Status.objects.bulk_create(
+        [
+            models.Status(
+                document=doc,
+                dic=dics[idx],
+                status_date=fake.date_time_this_month(tzinfo=pytz.UTC),
+                key_and_transmit_date=fake.date_time_this_month(tzinfo=pytz.UTC),
+                esd=fake.date_this_month(),
+                projected_qty=random.randint(1, 40),  # nosec
+                received_qty=0,
+            )
+            for doc in documents
+            for idx in range(random.randint(1, 5))  # nosec
+        ]
+    )
 
 
 class Command(BaseCommand):
@@ -200,14 +152,6 @@ class Command(BaseCommand):
 
         self.stdout.write("Creating fake users...")
         create_fake_users()
-        self.stdout.write(self.style.SUCCESS("Ok"))
-
-        self.stdout.write("Populating address types...")
-        populate_address_types()
-        self.stdout.write(self.style.SUCCESS("Ok"))
-
-        self.stdout.write("Populating Dic codes...")
-        populate_dics()
         self.stdout.write(self.style.SUCCESS("Ok"))
 
         self.stdout.write("Creating fake parts...")
@@ -226,8 +170,8 @@ class Command(BaseCommand):
         create_fake_locators()
         self.stdout.write(self.style.SUCCESS("Ok"))
 
-        self.stdout.write("Creating fake service requests...")
-        create_fake_service_requests()
+        self.stdout.write("Creating fake addresses...")
+        create_fake_addresses()
         self.stdout.write(self.style.SUCCESS("Ok"))
 
         self.stdout.write("Creating fake documents...")
@@ -236,8 +180,4 @@ class Command(BaseCommand):
 
         self.stdout.write("Creating fake statuses for documents...")
         create_fake_statuses_for_documents()
-        self.stdout.write(self.style.SUCCESS("Ok"))
-
-        self.stdout.write("Creating fake addresses for documents...")
-        create_fake_addresses_for_documents()
         self.stdout.write(self.style.SUCCESS("Ok"))

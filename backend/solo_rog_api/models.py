@@ -8,22 +8,6 @@ class User(AbstractUser):
     pass
 
 
-class AddressType(models.Model):
-    type = models.CharField(max_length=25)
-    desc = models.CharField(max_length=50, null=True, blank=True)
-
-    def __str__(self) -> str:
-        return self.type
-
-
-class Dic(models.Model):
-    code = models.CharField(max_length=4, blank=True, unique=True)
-    desc = models.CharField(max_length=40, blank=True)
-
-    def __str__(self) -> str:
-        return self.code.upper()
-
-
 class Part(models.Model):
     nsn = models.CharField(max_length=13, null=True)
     nomen = models.CharField(max_length=50, null=True)
@@ -89,31 +73,22 @@ class Locator(models.Model):
 
 
 class Document(models.Model):
-    service_request = models.ForeignKey(
-        "ServiceRequest",
-        related_name="documents",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
     suppadd = models.ForeignKey(
-        "SuppAdd",
-        related_name="documents",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        "SuppAdd", related_name="documents", on_delete=models.CASCADE, null=True
     )
     part = models.ForeignKey(
-        "Part",
-        related_name="documents",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        "Part", related_name="documents", on_delete=models.CASCADE, null=True
     )
-    sdn = models.CharField(max_length=50, null=True, blank=True)
+    ship_to = models.ForeignKey("Address", on_delete=models.CASCADE, null=True)
+    holder = models.ForeignKey(
+        "Address", related_name="holding_documents", on_delete=models.CASCADE, null=True
+    )
+    service_request = models.CharField(max_length=50, null=True)
+    sdn = models.CharField(max_length=50, unique=True)
 
     class Meta:
         ordering = ["-sdn"]
+        unique_together = ("service_request", "sdn")
 
     def get_aac(self) -> Optional[str]:
         return self.sdn[:6]
@@ -129,13 +104,13 @@ class Status(models.Model):
     document = models.ForeignKey(
         "Document", related_name="statuses", null=True, on_delete=models.CASCADE
     )
-    dic = models.ForeignKey("Dic", on_delete=models.CASCADE, null=True, blank=True)
+    dic = models.CharField(max_length=20, null=False, blank=False)
     status_date = models.DateTimeField()
-    key_and_transmit_date = models.DateTimeField(null=True, blank=True)
-    esd = models.DateField(null=True, blank=True)
-    projected_qty = models.IntegerField(null=True, blank=True)
-    received_qty = models.IntegerField(null=True, blank=True)
-    received_by = models.CharField(max_length=50, null=True, blank=True)
+    key_and_transmit_date = models.DateTimeField(null=True)
+    esd = models.DateField(null=True)
+    projected_qty = models.IntegerField(null=True)
+    received_qty = models.IntegerField(null=True)
+    received_by = models.CharField(max_length=50, null=True)
     subinventory = models.ForeignKey(
         "SubInventory", related_name="statuses", on_delete=models.SET_NULL, null=True
     )
@@ -147,18 +122,10 @@ class Status(models.Model):
         return parse_datetime(str(self.status_date)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
     def __str__(self) -> str:
-        return "{}: {}".format(self.document.sdn, self.dic.code)
+        return "{}: {}".format(self.document.sdn, self.dic)
 
 
 class Address(models.Model):
-    document = models.ManyToManyField("Document", related_name="addresses", blank=True)
-    address_type = models.ForeignKey(
-        "AddressType",
-        related_name="addresses",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-    )
     name = models.CharField(max_length=50)
     ric = models.CharField(max_length=20)
     addy1 = models.CharField(max_length=50, null=True, blank=True)
@@ -170,11 +137,4 @@ class Address(models.Model):
     country = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.address_type.type
-
-
-class ServiceRequest(models.Model):
-    service_request = models.CharField(max_length=50, null=True, blank=True)
-
-    def __str__(self) -> str:
-        return str(self.service_request)
+        return self.name

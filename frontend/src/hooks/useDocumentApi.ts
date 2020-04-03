@@ -7,8 +7,8 @@ import {
   PaginatedApiResponse,
   LocatorMap,
   SuppAdd,
-  ServiceRequest,
-  Part
+  Part,
+  Address
 } from "solo-types";
 
 type DocumentApiResponse = PaginatedApiResponse<ApiDocument[]>;
@@ -19,11 +19,6 @@ const nullSuppadd: SuppAdd = {
   code: ""
 };
 
-const nullServiceRequest: ServiceRequest = {
-  id: 0,
-  service_request: ""
-};
-
 const nullPart: Part = {
   id: 0,
   nsn: "",
@@ -31,10 +26,24 @@ const nullPart: Part = {
   uom: "EA"
 };
 
+const nullAddress: Address = {
+  id: 0,
+  name: "",
+  ric: ""
+};
+
 // covert api returned document to frontend friendly Document
 export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
   apiDocs.map(
-    ({ addresses, suppadd, service_request, statuses, part, ...apiDoc }) => {
+    ({
+      suppadd,
+      service_request,
+      statuses,
+      part,
+      ship_to,
+      holder,
+      ...apiDoc
+    }) => {
       const { code: commodityName, subinventorys } = suppadd || nullSuppadd;
       const mostRecentStatusIdx = statuses.length - 1;
       const enteredReceivedQty = statuses[mostRecentStatusIdx].projected_qty;
@@ -62,12 +71,10 @@ export const parseApiDocuments = (apiDocs: ApiDocument[]): Document[] =>
         subinventorys: flattenedSubinventorys,
         locatorsBySubinventory,
         statuses,
-        serviceRequest: service_request ?? nullServiceRequest,
+        serviceRequest: service_request ?? "",
         part: part ?? nullPart,
-
-        // 1 = Holder, 2 = Ship-To, 3 = Requestor, and 4 = Bill-To
-        shipper: addresses.find(addy => addy.address_type.type === "2"),
-        receiver: addresses.find(addy => addy.address_type.type === "3"),
+        shipTo: ship_to ?? nullAddress,
+        holder: holder ?? nullAddress,
 
         loadingStatus: {
           loading: false
