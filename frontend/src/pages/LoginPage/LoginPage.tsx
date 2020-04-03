@@ -29,7 +29,7 @@ const LoginPage: React.FC = props => {
       </div>
       {loginError && (
         <div>
-          <span className="text-red">{loginError}</span>
+          <span className={classes.errorMsg}>{loginError}</span>
         </div>
       )}
     </div>
