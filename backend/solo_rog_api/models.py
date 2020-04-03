@@ -4,6 +4,10 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.dateparse import parse_datetime
 
 
+class User(AbstractUser):
+    pass
+
+
 class AAC(models.Model):
     aac = models.CharField(max_length=6, verbose_name="aac")
     cor_permissions = models.BooleanField(default=False, verbose_name="cor permissions")
@@ -11,16 +15,6 @@ class AAC(models.Model):
     user = models.ForeignKey(
         "User", related_name="aacs", on_delete=models.SET_NULL, null=True, blank=True
     )
-
-
-class User(AbstractUser):
-    pass
-    # AAC = models.ForeignKey(
-    #     "AAC", related_name="users", on_delete=models.SET_NULL, null=True, blank=True,
-    # )
-
-    class Meta:
-        db_table = "auth_user"
 
 
 class AddressType(models.Model):

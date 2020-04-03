@@ -21,18 +21,25 @@ from .models import (
 )
 
 
-class AACSerializer(serializers.Serializer):
+class AACSerializer(serializers.ModelSerializer):
     class Meta:
         model = AAC
         fields = "__all__"
 
 
-class UserSerializer(serializers.Serializer):
-    AACs = AACSerializer(many=True, read_only=True)
+class UserSerializer(serializers.ModelSerializer):
+    aacs = AACSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = "__all__"
+        fields = (
+            "aacs",
+            "username",
+            "is_superuser",
+            "is_active",
+            "is_staff",
+            "last_login",
+        )
 
 
 class TokenObtainSerializer(serializers.Serializer):

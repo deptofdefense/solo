@@ -2,19 +2,19 @@ from typing import Any, Union
 from rest_framework.serializers import BaseSerializer
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.request import Request
-from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+# from rest_framework.permissions import IsAdminUser
+
+
 from django_filters import rest_framework as filters
-from .models import Document, User, AAC
+from .models import Document, User
 from .serializers import (
     TokenObtainSerializer,
     DocumentSerializer,
     UpdateStatusD6TSerializer,
     UpdateStatusCORSerializer,
     UserSerializer,
-    AACSerializer,
 )
 from .filters import DocumentListFilter
 
@@ -66,12 +66,5 @@ class WarehouseUsersList(ListAPIView):
     """
 
     serializer_class = UserSerializer
-
-    # this will not work
     queryset = User.objects.all()
-
-    # if request.user.is_authenticated():
-    #     username = request.user.username
-    # response = User.objects.get(username=username)
-    # user = User.objects.get(username=username)
-    # aacs = AAC.obects.filter()
+    # permission_classes = [IsAdminUser]
