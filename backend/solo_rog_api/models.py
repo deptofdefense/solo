@@ -4,6 +4,10 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.dateparse import parse_datetime
 
 
+class User(AbstractUser):
+    pass
+
+
 class AAC(models.Model):
     aac = models.CharField(max_length=6, verbose_name="aac")
     cor_permissions = models.BooleanField(default=False, verbose_name="cor permissions")
@@ -13,6 +17,7 @@ class AAC(models.Model):
     )
 
 
+<<<<<<< HEAD
 class User(AbstractUser):
     pass
     # AAC = models.ForeignKey(
@@ -21,6 +26,22 @@ class User(AbstractUser):
 
     class Meta:
         db_table = "auth_user"
+=======
+class AddressType(models.Model):
+    type = models.CharField(max_length=25)
+    desc = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.type
+
+
+class Dic(models.Model):
+    code = models.CharField(max_length=4, blank=True, unique=True)
+    desc = models.CharField(max_length=40, blank=True)
+
+    def __str__(self) -> str:
+        return self.code.upper()
+>>>>>>> wip - working warehouse/user api endpoint but need to apply filter
 
 
 class Part(models.Model):
