@@ -85,7 +85,6 @@ export type LocatorMap = Record<string, Locator[]>;
 export interface SuppAdd {
   id: number;
   code: string;
-  desc: string;
   subinventorys: Subinventory[];
 }
 
