@@ -5,11 +5,7 @@ export const defaultDoc: Document = {
   statuses: [
     {
       id: 1,
-      dic: {
-        id: 1,
-        code: "AS1",
-        desc: ""
-      },
+      dic: "AS1",
       status_date: "2020-03-01T21:47:13-05:00",
       key_and_transmit_date: null,
       esd: "2020-03-20",
@@ -19,11 +15,7 @@ export const defaultDoc: Document = {
     },
     {
       id: 2,
-      dic: {
-        id: 2,
-        code: "AB1",
-        desc: ""
-      },
+      dic: "AB1",
       status_date: "2020-03-05T21:47:56-05:00",
       key_and_transmit_date: null,
       esd: null,
@@ -45,45 +37,16 @@ export const defaultDoc: Document = {
     shelf_life_code: 0,
     controlled_inv_item_code: "u"
   },
-  serviceRequest: {
-    id: 1,
-    service_request: "12345678"
-  },
-  shipper: {
+  serviceRequest: "12345678",
+  shipTo: {
     id: 4,
-    address_type: {
-      id: 4,
-      type: "Bill-To",
-      desc: null
-    },
     name: "AAC-M30300",
-    ric: "SMS",
-    addy1: "addy1",
-    addy2: "addy2",
-    addy3: "bldg 24006 Montezuma",
-    city: "Arlington",
-    state: "VA",
-    zip: "22202",
-    country: "United States",
-    document: [1]
+    ric: "SMS"
   },
-  receiver: {
+  holder: {
     id: 3,
-    address_type: {
-      id: 3,
-      type: "Requester",
-      desc: null
-    },
     name: "requestor",
-    ric: "5E3",
-    addy1: "addy1",
-    addy2: "addy2",
-    addy3: "addy3",
-    city: "Arlington",
-    state: "VA",
-    zip: "22202",
-    country: "United States",
-    document: [1]
+    ric: "5E3"
   },
   sdn: "M3030012341234",
   subinventorys: [

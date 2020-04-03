@@ -15,16 +15,7 @@ from zeep.wsse.signature import BinarySignature as Signature
 from zeep.wsse import utils
 from requests import Session
 
-from solo_rog_api.models import (
-    Document,
-    Dic,
-    Status,
-    ServiceRequest,
-    Part,
-    SuppAdd,
-    Address,
-    AddressType,
-)
+from solo_rog_api.models import Document, Status, Part, SuppAdd, Address
 
 
 # GCSS dev environment certificate is not trusted
@@ -134,46 +125,34 @@ class DocHistoryTask(RetrieveDataTaskBase):
 @shared_task(bind=True, base=DocHistoryTask)
 def update_documents(self: DocHistoryTask) -> None:
     for item in self.items():
-        doc, _ = Document.objects.get_or_create(sdn=item.T)
+        defaults = {}
+        if item.BD:
+            sup, _ = SuppAdd.objects.get_or_create(code=item.BD)
+            defaults["suppadd"] = sup
+        if item.AZ and item.BC:
+            part, _ = Part.objects.get_or_create(nsn=item.AI, uom=item.BC)
+            defaults["part"] = part  # type: ignore
+        if item.W:
+            ship_to, _ = Address.objects.get_or_create(name=item.W)
+            defaults["ship_to"] = ship_to  # type: ignore
+        if item.V:
+            holder, _ = Address.objects.get_or_create(name=item.V)
+            defaults["holder"] = holder  # type: ignore
+        doc, _ = Document.objects.update_or_create(
+            sdn=item.T.strip(), defaults=defaults
+        )
         if item.S:
-            dic, _ = Dic.objects.get_or_create(code=item.S)
             status_date = timezone.make_aware(item.AA) if item.AA else timezone.now()
             esd = timezone.make_aware(item.X) if item.X else timezone.now()
-            status, _ = Status.objects.get_or_create(
-                document_id=doc.id, dic_id=dic.id, status_date=status_date
+            Status.objects.update_or_create(
+                document_id=doc.id,
+                dic=item.S.strip(),
+                defaults={
+                    "status_date": status_date,
+                    "esd": esd,
+                    "projected_qty": item.BA,
+                },
             )
-            status.esd = esd
-            status.projected_qty = item.BA
-            status.save()
-        if item.Z:
-            sr, _ = ServiceRequest.objects.get_or_create(service_request=item.Z)
-            doc.service_request = sr
-        if item.BD:
-            suppadd, _ = SuppAdd.objects.get_or_create(code=item.BD)
-            doc.suppadd = suppadd
-        if item.AI and item.BC:
-            part, _ = Part.objects.get_or_create(nsn=item.AI, uom=item.BC)
-            doc.part = part
-        if item.W:
-            # types = (("1", "Holder"), ("2", "Ship-To"), ("3", "Requestor"), ("4", "Bill-To"))
-            ship_addr_type, _ = AddressType.objects.get_or_create(
-                type="2", desc="Ship-To"
-            )
-            addr, _ = Address.objects.get_or_create(
-                document__id=doc.id, address_type_id=ship_addr_type.id
-            )
-            addr.name = item.W
-            addr.save()
-        if item.V:
-            #  types = (("1", "Holder"), ("2", "Ship-To"), ("3", "Requestor"), ("4", "Bill-To"))
-            holder_addr_type, _ = AddressType.objects.get_or_create(
-                type="1", desc="Holder"
-            )
-            addr, _ = Address.objects.get_or_create(
-                document__id=doc.id, address_type_id=holder_addr_type.id
-            )
-            addr.name = item.V
-            addr.save()
         doc.save()
 
 
@@ -184,6 +163,6 @@ class ItemMasterTask(RetrieveDataTaskBase):
 @shared_task(bind=True, base=ItemMasterTask)
 def update_parts(self: DocHistoryTask) -> None:
     for item in self.items():
-        part, _ = Part.objects.get_or_create(nsn=item.A, uom=item.E)
-        part.nomen = item.D
-        part.save()
+        Part.objects.update_or_create(
+            nsn=item.A, uom=item.E, defaults={"nomen": item.D}
+        )

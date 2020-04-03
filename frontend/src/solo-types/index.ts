@@ -21,48 +21,27 @@ export interface Part {
   controlled_inv_item_code?: string;
 }
 
-export interface Dic {
-  id: number;
-  code: string;
-  desc: string;
-}
-
 export interface Status {
   id: number;
-  dic: Dic;
+  dic: string;
   status_date: string;
   key_and_transmit_date?: string | null;
   esd?: string | null;
   received_qty: number | null;
   projected_qty: number;
+  received_by?: string | null;
+  subinventory?: string | null;
+  locator?: string | null;
   document: number;
   user?: number | null;
 }
 
-export interface AddressType {
-  id: number;
-  type: string;
-  desc?: string | null;
-}
-
 export interface Address {
   id: number;
-  address_type: AddressType;
   name: string;
   ric: string;
-  addy1: string;
-  addy2: string;
-  addy3: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-  document: number[];
-}
-
-export interface ServiceRequest {
-  id: number;
-  service_request: string;
+  city?: string;
+  state?: string;
 }
 
 export interface Locator {
@@ -88,23 +67,26 @@ export interface SuppAdd {
   subinventorys: Subinventory[];
 }
 
-interface BaseDocument {
+export interface BaseDocument {
   id: number;
   sdn: string;
-  part: Part;
   statuses: Status[];
 }
 
 export interface ApiDocument extends BaseDocument {
-  service_request: ServiceRequest;
-  addresses: Address[];
-  suppadd: SuppAdd;
+  service_request: string | null;
+  part: Part | null;
+  suppadd: SuppAdd | null;
+  ship_to: Address | null;
+  holder: Address | null;
 }
 
 export interface Document extends BaseDocument {
-  serviceRequest: ServiceRequest;
-  shipper?: Address;
-  receiver?: Address;
+  serviceRequest: string;
+  part: Part;
+  shipTo: Address;
+  holder: Address;
+
   loadingStatus: LoadingStatus;
   subinventorys: Omit<Subinventory, "locators">[];
   locatorsBySubinventory: LocatorMap;

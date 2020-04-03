@@ -6,7 +6,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
-from solo_rog_api.models import Status, SuppAdd, Locator, Document, Dic, SubInventory
+from solo_rog_api.models import Status, SuppAdd, Locator, Document, SubInventory
 
 
 User = get_user_model()
@@ -82,15 +82,12 @@ class SubmitD6TTestCase(APITestCase):
         self.locator = Locator.objects.create(
             code="testlocator", subinventorys=self.subinv
         )
-        dics = [Dic.objects.create(code=code) for code in ["AE1", "AS1", "AS2"]]
-        Dic.objects.bulk_create([Dic(code=code) for code in ["D6T", "COR"]])
+        dics = ["AE1", "AS1", "AS2", "D6T", "COR"]
         self.document = Document.objects.create(sdn="testsdn", suppadd=self.suppadd)
         Status.objects.bulk_create(
             [
-                Status(
-                    dic_id=dic.id, document_id=self.document.id, status_date=self.now
-                )
-                for dic in dics
+                Status(dic=dic, document_id=self.document.id, status_date=self.now)
+                for dic in dics[:3]
             ]
         )
         self.data = [
@@ -119,7 +116,7 @@ class SubmitD6TTestCase(APITestCase):
         self.assertTrue(
             Status.objects.filter(
                 document_id=self.document.id,
-                dic__code="D6T",
+                dic="D6T",
                 subinventory__code=self.subinv.code,
                 locator__code=self.locator.code,
             ).exists()
@@ -129,21 +126,19 @@ class SubmitD6TTestCase(APITestCase):
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = dict(response.data[0])
-        data["dic"] = dict(data["dic"])
         self.assertDictContainsSubset(
             {
                 "document": self.document.id,
                 "subinventory": self.subinv.id,
                 "received_qty": 1,
+                "dic": "D6T",
             },
             data,
         )
-        self.assertDictContainsSubset({"code": "D6T"}, data["dic"])
 
     def test_cannot_submit_d6t_when_document_was_already_d6t(self) -> None:
-        dic = Dic.objects.filter(code="D6T").first()
         Status.objects.create(
-            document_id=self.document.id, dic=dic, status_date=self.now
+            document_id=self.document.id, dic="D6T", status_date=self.now
         )
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -154,7 +149,7 @@ class SubmitD6TTestCase(APITestCase):
         )
 
     def test_status_cannot_submit_d6t_for_document_that_does_not_have_as2(self) -> None:
-        Status.objects.filter(dic__code="AS2", document_id=self.document.id).delete()
+        Status.objects.filter(dic="AS2", document_id=self.document.id).delete()
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", response.data[0])
@@ -201,15 +196,12 @@ class BulkCORTests(APITestCase):
         self.locator = Locator.objects.create(
             code="testlocator", subinventorys=self.subinv
         )
-        dics = [Dic.objects.create(code=code) for code in ["AE1", "AS1", "AS2"]]
-        Dic.objects.bulk_create([Dic(code=code) for code in ["D6T", "COR"]])
+        dics = ["AE1", "AS1", "AS2", "D6T", "COR"]
         self.document = Document.objects.create(sdn="testsdn", suppadd=self.suppadd)
         Status.objects.bulk_create(
             [
-                Status(
-                    dic_id=dic.id, document_id=self.document.id, status_date=self.now
-                )
-                for dic in dics
+                Status(dic=dic, document_id=self.document.id, status_date=self.now)
+                for dic in dics[:4]
             ]
         )
         self.data = [
@@ -240,21 +232,18 @@ class BulkCORTests(APITestCase):
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = dict(response.data[0])
-        data["dic"] = dict(data["dic"])
         self.assertDictContainsSubset(
             {
                 "document": self.document.id,
-                "received_qty": 1,
                 "received_by": "General Phansiri",
+                "dic": "COR",
             },
             data,
         )
-        self.assertDictContainsSubset({"code": "COR"}, data["dic"])
 
     def test_cannot_submit_cor_when_document_was_already_cor(self) -> None:
-        dic = Dic.objects.filter(code="COR").first()
         Status.objects.create(
-            document_id=self.document.id, dic=dic, status_date=self.now
+            document_id=self.document.id, dic="COR", status_date=self.now
         )
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -265,7 +254,7 @@ class BulkCORTests(APITestCase):
         )
 
     def test_status_cannot_submit_cor_for_document_that_does_not_have_d6t(self) -> None:
-        Status.objects.filter(dic__code="D6T", document_id=self.document.id).delete()
+        Status.objects.filter(dic="D6T", document_id=self.document.id).delete()
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", response.data[0])

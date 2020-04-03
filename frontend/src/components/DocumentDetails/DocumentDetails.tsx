@@ -19,14 +19,14 @@ const DocumentDetails: React.FC<DocumentDetailDataProps> = ({
     <div className="grid-row flex-justify flex-align-start padding-5">
       <div className="flex-col">
         <div className="text-bold">DIC</div>
-        {statuses.map(({ status_date, dic: { code } }) => {
+        {statuses.map(({ status_date, dic }) => {
           const formattedDate = formatDistanceToNow(parseISO(status_date));
           return (
             <div
               className="grid-row flex-nowrap flex-col flex-align-center"
-              key={code}
+              key={dic}
             >
-              <div className="width-5">{code}</div>
+              <div className="width-5">{dic}</div>
               <div>{`${formattedDate} ago`}</div>
             </div>
           );

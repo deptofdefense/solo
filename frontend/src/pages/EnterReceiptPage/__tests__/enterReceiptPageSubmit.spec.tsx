@@ -161,7 +161,7 @@ describe("EnterReceiptPage submit all process", () => {
     expect(quantityInp).toHaveValue(
       defaultDoc.statuses[
         defaultDoc.statuses.length - 1
-      ].projected_qty.toString()
+      ]?.projected_qty?.toString()
     );
     fireEvent.change(quantityInp, {
       target: { value: "30" }

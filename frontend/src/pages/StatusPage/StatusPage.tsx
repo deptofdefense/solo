@@ -23,13 +23,13 @@ const StatusPage: React.FC = () => {
   const tableColumns = useMemo(createColumns, []);
 
   const renderSubComponent = ({
-    original: { shipper, receiver, part, statuses }
+    original: { shipTo, holder, part, statuses }
   }: Row<Document>) => (
     <>
       <DocumentStepper statuses={statuses} />
       <DocumentDetails
-        shipper={shipper}
-        receiver={receiver}
+        shipper={holder}
+        receiver={shipTo}
         part={part}
         statuses={statuses}
       />

@@ -22,8 +22,8 @@ const createColumns: CreateColumns = () => [
   },
   {
     Header: "Service Request #",
-    accessor: "serviceRequest.service_request",
-    id: "service_request__service_request"
+    accessor: "serviceRequest",
+    id: "service_request"
   },
   {
     Header: "Commodity",
@@ -35,7 +35,7 @@ const createColumns: CreateColumns = () => [
     disableSortBy: true,
     id: "currentStatus",
     accessor: ({ mostRecentStatusIdx, statuses }) =>
-      statuses[mostRecentStatusIdx].dic.desc
+      statuses[mostRecentStatusIdx].dic
   },
   {
     Header: "Nomenclature",
