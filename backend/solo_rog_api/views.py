@@ -75,7 +75,7 @@ class WarehouseUsersList(ListAPIView):
     aacs = AAC.filter(user=user.id)
     queryset = User.builk_filter(aacs=aacs)    # permission_classes = [IsAdminUser]
 
-class WarehouseUSersList(ListAPIView):
+class WarehouseUsersList(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
