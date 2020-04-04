@@ -15,6 +15,15 @@ class AAC(models.Model):
         "User", related_name="aacs", on_delete=models.SET_NULL, null=True, blank=True
     )
 
+class AAC(models.Model):
+    aac = models.CharField(max_length=6, verbose_name="aac")
+    cor_permissions = models.BooleanField(default=False, verbose_name="cor permissions")
+    d6t_permissions = models.BooleanField(default=False, verbose_name="d6t permissions")
+    user = models.ForeignKey(
+        "User", related_name="aacs", on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+
 class AddressType(models.Model):
     type = models.CharField(max_length=25)
     desc = models.CharField(max_length=50, null=True, blank=True)

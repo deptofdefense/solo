@@ -61,21 +61,6 @@ class CORSubmissionView(CreateAPIView):
 
 
 class WarehouseUsersList(ListAPIView):
-    """
-    Find AAC's associated with a user, find all users associated with those AAC's
-    """
-
-
-    def list(self, request):
-        # Note the use of `get_queryset()` instead of `self.queryset`
-        queryset = self.get_queryset()
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
-    user = get_current_user_object_here
-    aacs = AAC.filter(user=user.id)
-    queryset = User.builk_filter(aacs=aacs)    # permission_classes = [IsAdminUser]
-
-class WarehouseUsersList(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
@@ -86,3 +71,4 @@ class WarehouseUsersList(ListAPIView):
         aacs = AAC.objects.filter(user=user.id)
         aac_ids = [aac.id for aac in aacs]
         return qs.objects.filter(aac__in=aac_ids)
+
