@@ -7,7 +7,6 @@ from django.utils.dateparse import parse_datetime
 class User(AbstractUser):
     pass
 
-
 class AAC(models.Model):
     aac = models.CharField(max_length=6, verbose_name="aac")
     cor_permissions = models.BooleanField(default=False, verbose_name="cor permissions")
@@ -16,17 +15,6 @@ class AAC(models.Model):
         "User", related_name="aacs", on_delete=models.SET_NULL, null=True, blank=True
     )
 
-
-<<<<<<< HEAD
-class User(AbstractUser):
-    pass
-    # AAC = models.ForeignKey(
-    #     "AAC", related_name="users", on_delete=models.SET_NULL, null=True, blank=True,
-    # )
-
-    class Meta:
-        db_table = "auth_user"
-=======
 class AddressType(models.Model):
     type = models.CharField(max_length=25)
     desc = models.CharField(max_length=50, null=True, blank=True)
@@ -41,7 +29,6 @@ class Dic(models.Model):
 
     def __str__(self) -> str:
         return self.code.upper()
->>>>>>> wip - working warehouse/user api endpoint but need to apply filter
 
 
 class Part(models.Model):
