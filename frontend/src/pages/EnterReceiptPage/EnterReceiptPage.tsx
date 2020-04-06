@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Title, Table, SdnInputForm } from "components";
 import { Document } from "solo-types";
 import { Button } from "solo-uswds";
 import createColumns from "./tableColumns";
 import EnterReceiptStatusIndicator from "./EnterReceiptStatusIndicator";
 import useEnterReceiptDocuments from "./useEnterReceiptDocuments";
+import DuplicateSdnIndicator from "./DuplicateSdnIndicator";
 
 const EnterReceiptPage: React.FC = () => {
   const {
@@ -15,10 +16,22 @@ const EnterReceiptPage: React.FC = () => {
     modifyDocument,
     removeDocument
   } = useEnterReceiptDocuments();
+
   const columns = useMemo(() => createColumns(modifyDocument, removeDocument), [
     modifyDocument,
     removeDocument
   ]);
+
+  const [duplicateSdn, setDuplicateSdn] = useState(false);
+  const onAddSdn = (sdn: string) => {
+    setDuplicateSdn(false);
+    const isDuplicate = docs.some(doc => doc.sdn === sdn);
+    if (isDuplicate) {
+      setDuplicateSdn(true);
+    } else if (sdn !== "") {
+      addSdn(sdn);
+    }
+  };
 
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
@@ -30,9 +43,10 @@ const EnterReceiptPage: React.FC = () => {
         manualPagination={false}
         manualSortBy={false}
       />
-      <div className="grid-row flex-align-start flex-justify">
+      <DuplicateSdnIndicator isDuplicate={duplicateSdn} />
+      <div className="grid-row flex-align-start flex-justify margin-bottom-1em">
         <SdnInputForm
-          onSubmit={addSdn}
+          onSubmit={onAddSdn}
           disabled={submitAllLoadingStatus.loading}
         />
         <Button

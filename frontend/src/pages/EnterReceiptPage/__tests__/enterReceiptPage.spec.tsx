@@ -13,7 +13,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("matches snapshot", async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { asFragment, queryByText, getByText } = render(
+    const { asFragment, queryByText, getByText, getByPlaceholderText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -22,6 +22,13 @@ describe("EnterReceiptPage Component", () => {
       }
     );
     const submitBtn = getByText("Search");
+    const inputField = getByPlaceholderText("SDN");
+    fireEvent.change(inputField, {
+      target: { value: "1234" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("1234");
+    });
     fireEvent.click(submitBtn);
     await wait(() => {
       // wait for some data to render before checking snapshot
@@ -85,6 +92,37 @@ describe("EnterReceiptPage Component", () => {
     });
   });
 
+  it("prevents duplicate sdn in table when selecting search for sdn", async () => {
+    const { getByPlaceholderText, getByText } = render(<EnterReceiptPage />, {
+      authContext: {
+        apiCall: fetchMock
+      }
+    });
+    const inputField = getByPlaceholderText("SDN");
+    const submit = getByText("Search");
+    fireEvent.change(inputField, {
+      target: { value: "samesdn" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("samesdn");
+    });
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getByText("samesdn")).toBeInTheDocument();
+    });
+    fireEvent.change(inputField, {
+      target: { value: "samesdn" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("samesdn");
+    });
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getByText("samesdn")).toBeInTheDocument();
+      expect(getByText("SDN already exists in table"));
+    });
+  });
+
   it("keeps sdn in table on fetch error", async () => {
     fetchMock.mockRejectedValue(new Error());
     const { queryByText, getByPlaceholderText, getByText } = render(
@@ -142,15 +180,24 @@ describe("EnterReceiptPage Component", () => {
       ...defaultApiResponse,
       results: [{ ...defaultDoc, sdn: "1234" }]
     });
-    const { queryByText, queryAllByText, getByText } = render(
-      <EnterReceiptPage />,
-      {
-        authContext: {
-          apiCall: fetchMock
-        }
+    const {
+      queryByText,
+      queryAllByText,
+      getByText,
+      getByPlaceholderText
+    } = render(<EnterReceiptPage />, {
+      authContext: {
+        apiCall: fetchMock
       }
-    );
+    });
     const submit = getByText("Search");
+    const inputField = getByPlaceholderText("SDN");
+    fireEvent.change(inputField, {
+      target: { value: "1234" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("1234");
+    });
     fireEvent.click(submit);
     await wait(() => {
       expect(queryByText("1234")).toBeInTheDocument();
@@ -165,6 +212,13 @@ describe("EnterReceiptPage Component", () => {
         }
       ]
     });
+    fireEvent.change(inputField, {
+      target: { value: "6789" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("6789");
+    });
+    fireEvent.click(submit);
     fireEvent.click(submit);
     await wait(() => {
       expect(queryByText("1234")).toBeInTheDocument();

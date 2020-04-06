@@ -406,7 +406,10 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
       </tbody>
     </table>
     <div
-      class="grid-row flex-align-start flex-justify"
+      class="margin-bottom-1em overflow-hidden"
+    />
+    <div
+      class="grid-row flex-align-start flex-justify margin-bottom-1em"
     >
       <form
         class="display-flex flex-row flex-justify-start flex-align-center flex-no-wrap flex-auto margin-1"
