@@ -24,12 +24,12 @@ const EnterReceiptPage: React.FC = () => {
 
   const [duplicateSdn, setDuplicateSdn] = useState(false);
   const onAddSdn = (sdn: string) => {
+    setDuplicateSdn(false);
     const isDuplicate = docs.some(doc => doc.sdn === sdn);
     if (isDuplicate) {
       setDuplicateSdn(true);
-    } else {
+    } else if (sdn !== "") {
       addSdn(sdn);
-      setDuplicateSdn(false);
     }
   };
 

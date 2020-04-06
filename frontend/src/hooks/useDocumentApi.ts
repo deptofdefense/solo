@@ -103,9 +103,7 @@ const useDocumentApi = () => {
       params.set("page", page.toString());
     }
     filters.forEach(({ id, value }) => {
-      if (id && value) {
-        params.set(id, value);
-      }
+      params.set(id, value);
     });
     const queryString = params.toString();
     return queryString ? `?${queryString}` : "";
