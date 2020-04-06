@@ -85,6 +85,43 @@ describe("EnterReceiptPage Component", () => {
     });
   });
 
+  it("prevents duplicate sdn in table when selecting search for sdn", async () => {
+    const { getByPlaceholderText, getByText, container } = render(
+      <EnterReceiptPage />,
+      {
+        authContext: {
+          apiCall: fetchMock
+        }
+      }
+    );
+    const inputField = getByPlaceholderText("SDN");
+    const submit = getByText("Search");
+    fireEvent.change(inputField, {
+      target: { value: "samesdn" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("samesdn");
+    });
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getByText("samesdn")).toBeInTheDocument();
+    });
+    fireEvent.change(inputField, {
+      target: { value: "samesdn" }
+    });
+    await wait(() => {
+      expect(inputField).toHaveValue("samesdn");
+    });
+    fireEvent.click(submit);
+    await wait(() => {
+      expect(getByText("samesdn")).toBeInTheDocument();
+      const errorMsg = container.querySelector(
+        "div.usa-alert--error"
+      ) as Element;
+      expect(errorMsg).toBeInTheDocument();
+    });
+  });
+
   it("keeps sdn in table on fetch error", async () => {
     fetchMock.mockRejectedValue(new Error());
     const { queryByText, getByPlaceholderText, getByText } = render(
