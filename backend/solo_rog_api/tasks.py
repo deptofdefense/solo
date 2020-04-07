@@ -198,12 +198,12 @@ def update_parts(self: UpdatePartsTask) -> None:
         )
 
 
-class SubmitD6TTask(SendDataTaskBase):
+class SubmitStatusTask(SendDataTaskBase):
     service_name = "I009ShipmentReceiptsIn"
 
 
-@shared_task(bind=True, base=SubmitD6TTask)
-def gcss_submit_status(self: SubmitD6TTask, document_id: int, dic: str) -> None:
+@shared_task(bind=True, base=SubmitStatusTask)
+def gcss_submit_status(self: SubmitStatusTask, document_id: int, dic: str) -> None:
     doc = Document.objects.get(id=document_id)
     status = Status.objects.get(document_id=doc.id, dic=dic)
     record = I009_TEMPLATE_MREC.format(doc=doc, status=status)
