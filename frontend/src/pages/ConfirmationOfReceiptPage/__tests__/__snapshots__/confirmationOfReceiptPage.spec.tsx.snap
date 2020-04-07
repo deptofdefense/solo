@@ -26,9 +26,9 @@ exports[`ConfirmationOfReceiptPage Component matches snapshot 1`] = `
             SDN
           </option>
           <option
-            value="nomen"
+            value="nsn"
           >
-            Nomenclature
+            NIIN
           </option>
           <option
             value="commod"

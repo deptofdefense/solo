@@ -13,7 +13,7 @@ import createColumns from "./tableColumns";
 
 const filterable = [
   { name: "SDN", value: "sdn" },
-  { name: "Nomenclature", value: "nomen" },
+  { name: "NIIN", value: "nsn" },
   { name: "Commodity", value: "commod" }
 ];
 
