@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
 from rest_framework.utils.serializer_helpers import ReturnDict
 from rest_framework_simplejwt.tokens import RefreshToken
+from .tasks import gcss_submit_status
 from .models import (
     Part,
     SuppAdd,
@@ -83,7 +84,10 @@ class DocumentSerializer(serializers.ModelSerializer):
 class UpdateStatusListSerializer(serializers.ListSerializer):
     def create(self, validated_data: Any) -> List[Status]:
         statuses = [Status(**data) for data in validated_data]
-        return Status.objects.bulk_create(statuses)
+        created = Status.objects.bulk_create(statuses)
+        for data in validated_data:
+            gcss_submit_status.delay(data["document_id"], data["dic"])
+        return created
 
 
 class UpdateStatusD6TSerializer(serializers.Serializer):
@@ -93,8 +97,8 @@ class UpdateStatusD6TSerializer(serializers.Serializer):
         default=timezone.now, required=False
     )
     received_quantity = serializers.IntegerField(min_value=1)
-    subinventory = serializers.CharField(required=True, max_length=100)
-    locator = serializers.CharField(required=True, max_length=100)
+    subinventory = serializers.CharField(required=False, default=None, max_length=100)
+    locator = serializers.CharField(required=False, default=None, max_length=100)
 
     class Meta:
         list_serializer_class = UpdateStatusListSerializer
@@ -103,27 +107,36 @@ class UpdateStatusD6TSerializer(serializers.Serializer):
         validated = super().validate(attrs)  # type: ignore
 
         try:
+            subinventory = None
+            locator = None
             document = (
                 Document.objects.exclude(statuses__dic="D6T")
                 .filter(statuses__dic="AS2")
                 .select_related("suppadd")
                 .get(sdn=validated["sdn"])
             )
-            if document.suppadd is not None:
-                subinventory = document.suppadd.subinventorys.filter(
-                    suppadd_id=document.suppadd.id
-                ).get(code=validated["subinventory"])
-            locator = subinventory.locators.get(code=validated["locator"])
-            received_quantity = document.statuses.get(dic="AS2")
+
+            # add subinventory/locator information if available
+            if (
+                document.suppadd is not None
+                and validated["subinventory"] is not None
+                and validated["locator"] is not None
+            ):
+                subinventory = document.suppadd.subinventorys.get(
+                    code=validated["subinventory"]
+                )
+                locator = subinventory.locators.get(code=validated["locator"])
+
+            previous_status = document.statuses.get(dic="AS2")
             return {
                 "status_date": validated["status_date"],
                 "key_and_transmit_date": validated["key_and_transmit_date"],
                 "received_qty": validated["received_quantity"],
-                "projected_qty": received_quantity.projected_qty,
+                "projected_qty": previous_status.projected_qty,
                 "document_id": document.id,
                 "dic": "D6T",
-                "subinventory_id": subinventory.id,
-                "locator_id": locator.id,
+                "subinventory": subinventory,
+                "locator": locator,
             }
         except Document.DoesNotExist:
             raise serializers.ValidationError(

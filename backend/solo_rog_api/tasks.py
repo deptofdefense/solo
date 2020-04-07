@@ -1,7 +1,8 @@
 import socket
+import html
 from datetime import datetime, timedelta
 from contextlib import contextmanager
-from typing import Any, Iterator, Union
+from typing import Any, Iterator, Union, Dict
 
 import urllib3
 from django.conf import settings
@@ -15,6 +16,7 @@ from zeep.wsse.signature import BinarySignature as Signature
 from zeep.wsse import utils
 from requests import Session
 
+from solo_rog_api.gcss_xml_templates import I009_TEMPLATE_MREC, I009_TEMPLATE_WRAPPER
 from solo_rog_api.models import Document, Status, Part, SuppAdd, Address
 
 
@@ -49,6 +51,17 @@ def patched_getaddrinfo(hostname: str, port: int, *args: Any) -> Any:
 socket.getaddrinfo = patched_getaddrinfo  # type: ignore
 
 
+class GCSSTransport(Transport):
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self.status_code = None
+
+    def post(self, address: str, message: str, headers: Dict[str, str]) -> Any:
+        response = super().post(address, message, headers)
+        self.status_code = response.status_code
+        return response
+
+
 class GCSSWsseSignature(Signature):
     def apply(self, envelope: str, headers: Any) -> Any:
         security = utils.get_security_header(envelope)
@@ -68,7 +81,7 @@ class GCSSWsseSignature(Signature):
         return envelope
 
 
-class RetrieveDataTaskBase(BaseTask):
+class GCSSTaskBase(BaseTask):
     service_name: Union[str, None] = None
 
     @contextmanager
@@ -79,12 +92,14 @@ class RetrieveDataTaskBase(BaseTask):
         # client constructor fetches wsdl
         client = Client(
             f"https://{settings.GCSS_HOST}/gateway/services/{self.service_name}?wsdl",
-            transport=Transport(session=session),
+            transport=GCSSTransport(session=session),
             wsse=GCSSWsseSignature(settings.GCSS_KEY_PATH, settings.GCSS_CERT_PATH),
         )
         yield client
         session.close()
 
+
+class RetrieveDataTaskBase(GCSSTaskBase):
     @staticmethod
     def should_next_page(response: Any) -> Any:
         return getattr(response, "remaining-records", 0) > 0
@@ -118,12 +133,27 @@ class RetrieveDataTaskBase(BaseTask):
                 yield item
 
 
-class DocHistoryTask(RetrieveDataTaskBase):
+class SendDataTaskBase(GCSSTaskBase):
+    @staticmethod
+    def xml_to_compressed_payload(xml: str) -> str:
+        # placeholder until EXML conversion service is complete
+        # response = requests.post(settings.EXML_CONVERTER_ENDPOINT, data=payload)
+        # return base64.b64decode(response.content)
+        return xml
+
+    @staticmethod
+    def xml_to_uncompressed_payload(xml: str) -> str:
+        # GCSS uncompressed payload requires '<', and '>' to be
+        # escaped with &lt; and &gt; respectively
+        return html.escape(xml, quote=False)
+
+
+class UpdateDocumentsTask(RetrieveDataTaskBase):
     service_name = "br2MerDocHistory"
 
 
-@shared_task(bind=True, base=DocHistoryTask)
-def update_documents(self: DocHistoryTask) -> None:
+@shared_task(bind=True, base=UpdateDocumentsTask)
+def update_documents(self: UpdateDocumentsTask) -> None:
     for item in self.items():
         defaults = {}
         if item.BD:
@@ -156,13 +186,30 @@ def update_documents(self: DocHistoryTask) -> None:
         doc.save()
 
 
-class ItemMasterTask(RetrieveDataTaskBase):
+class UpdatePartsTask(RetrieveDataTaskBase):
     service_name = "br2MerItemMaster"
 
 
-@shared_task(bind=True, base=ItemMasterTask)
-def update_parts(self: DocHistoryTask) -> None:
+@shared_task(bind=True, base=UpdatePartsTask)
+def update_parts(self: UpdatePartsTask) -> None:
     for item in self.items():
         Part.objects.update_or_create(
             nsn=item.A, uom=item.E, defaults={"nomen": item.D}
         )
+
+
+class SubmitD6TTask(SendDataTaskBase):
+    service_name = "I009ShipmentReceiptsIn"
+
+
+@shared_task(bind=True, base=SubmitD6TTask)
+def gcss_submit_status(self: SubmitD6TTask, document_id: int, dic: str) -> None:
+    doc = Document.objects.get(id=document_id)
+    status = Status.objects.get(document_id=doc.id, dic=dic)
+    record = I009_TEMPLATE_MREC.format(doc=doc, status=status)
+    wrapped = I009_TEMPLATE_WRAPPER.format(record)
+    quoted = self.xml_to_uncompressed_payload(wrapped)
+
+    with self.get_client() as client:
+        client.service.initiateUncompressed(input=quoted)
+        print(f"[*] Submit D6T - {doc.sdn}/{dic}/{client.transport.status_code}")

@@ -1,3 +1,4 @@
+# pylint: disable=unused-argument
 from typing import List
 from unittest.mock import patch, Mock
 from rest_framework import status
@@ -6,6 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
+from django.test import override_settings
 from solo_rog_api.models import Status, SuppAdd, Locator, Document, SubInventory
 
 
@@ -70,6 +72,8 @@ class DocumentTests(APITestCase):
         self.assertEqual(out_of_bounds_response.status_code, status.HTTP_404_NOT_FOUND)
 
 
+@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+@patch("solo_rog_api.serializers.gcss_submit_status")
 class SubmitD6TTestCase(APITestCase):
     base_url = reverse("bulk_d6t")
     now = timezone.now()
@@ -105,14 +109,15 @@ class SubmitD6TTestCase(APITestCase):
         SubInventory.objects.all().delete()
         SuppAdd.objects.all().delete()
 
-    def test_empty_bulk_post_d6t_submission(self) -> None:
+    def test_empty_bulk_post_d6t_submission(self, *args: Mock) -> None:
         test_data: List[str] = []
         base_response = self.client.post(self.base_url, test_data, format="json")
         self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_can_bulk_submit_d6t_one(self) -> None:
+    def test_can_bulk_submit_d6t_one(self, submit_mock: Mock) -> None:
         bulk_d6t_response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(bulk_d6t_response.status_code, status.HTTP_201_CREATED)
+        submit_mock.delay.assert_called_once_with(self.document.id, "D6T")
         self.assertTrue(
             Status.objects.filter(
                 document_id=self.document.id,
@@ -122,9 +127,10 @@ class SubmitD6TTestCase(APITestCase):
             ).exists()
         )
 
-    def test_can_bulk_submit_d6t_two(self) -> None:
+    def test_can_bulk_submit_d6t_two(self, submit_mock: Mock) -> None:
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        submit_mock.delay.assert_called_once_with(self.document.id, "D6T")
         data = dict(response.data[0])
         self.assertDictContainsSubset(
             {
@@ -136,7 +142,7 @@ class SubmitD6TTestCase(APITestCase):
             data,
         )
 
-    def test_cannot_submit_d6t_when_document_was_already_d6t(self) -> None:
+    def test_cannot_submit_d6t_when_document_was_already_d6t(self, *args: Mock) -> None:
         Status.objects.create(
             document_id=self.document.id, dic="D6T", status_date=self.now
         )
@@ -148,7 +154,9 @@ class SubmitD6TTestCase(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_status_cannot_submit_d6t_for_document_that_does_not_have_as2(self) -> None:
+    def test_status_cannot_submit_d6t_for_document_that_does_not_have_as2(
+        self, *args: Mock
+    ) -> None:
         Status.objects.filter(dic="AS2", document_id=self.document.id).delete()
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -158,7 +166,7 @@ class SubmitD6TTestCase(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_cannot_submit_d6t_using_invalid_subinventory(self) -> None:
+    def test_cannot_submit_d6t_using_invalid_subinventory(self, *args: Mock) -> None:
         response = self.client.post(
             self.base_url,
             [{**self.data[0], "subinventory": "invalidsubbinv"}],
@@ -171,7 +179,7 @@ class SubmitD6TTestCase(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_invalid_locator_for_d6t_submission(self) -> None:
+    def test_invalid_locator_for_d6t_submission(self, *args: Mock) -> None:
         response = self.client.post(
             self.base_url,
             [{**self.data[0], "locator": "invalidlocator"}],
@@ -184,6 +192,8 @@ class SubmitD6TTestCase(APITestCase):
         )
 
 
+@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+@patch("solo_rog_api.serializers.gcss_submit_status")
 class BulkCORTests(APITestCase):
     base_url = reverse("bulk_cor")
     now = timezone.now()
@@ -223,14 +233,15 @@ class BulkCORTests(APITestCase):
             }
         ]
 
-    def test_empty_bulk_post_cor_submission(self) -> None:
+    def test_empty_bulk_post_cor_submission(self, *args: Mock) -> None:
         test_data: List[str] = []
         base_response = self.client.post(self.base_url, test_data, format="json")
         self.assertEqual(base_response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_can_bulk_submit_cor(self) -> None:
+    def test_can_bulk_submit_cor(self, submit_mock: Mock) -> None:
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        submit_mock.delay.assert_called_once_with(self.document.id, "COR")
         data = dict(response.data[0])
         self.assertDictContainsSubset(
             {
@@ -241,7 +252,7 @@ class BulkCORTests(APITestCase):
             data,
         )
 
-    def test_cannot_submit_cor_when_document_was_already_cor(self) -> None:
+    def test_cannot_submit_cor_when_document_was_already_cor(self, *args: Mock) -> None:
         Status.objects.create(
             document_id=self.document.id, dic="COR", status_date=self.now
         )
@@ -253,7 +264,9 @@ class BulkCORTests(APITestCase):
             str(response.data[0]["non_field_errors"][0]),
         )
 
-    def test_status_cannot_submit_cor_for_document_that_does_not_have_d6t(self) -> None:
+    def test_status_cannot_submit_cor_for_document_that_does_not_have_d6t(
+        self, *args: Mock
+    ) -> None:
         Status.objects.filter(dic="D6T", document_id=self.document.id).delete()
         response = self.client.post(self.base_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -23,14 +23,15 @@ class Part(models.Model):
     class Meta:
         unique_together = ("nsn", "uom")
 
-    def get_niin(self) -> str:
+    @property
+    def niin(self) -> str:
         return self.nsn[4:]
 
     def get_fsc(self) -> Optional[str]:
         return self.nsn[:4]
 
     def __str__(self) -> str:
-        return "{} : {} : {}".format(self.nomen, self.get_fsc(), self.get_niin())
+        return "{} : {} : {}".format(self.nomen, self.get_fsc(), self.niin)
 
 
 class SuppAdd(models.Model):
@@ -90,7 +91,8 @@ class Document(models.Model):
         ordering = ["-sdn"]
         unique_together = ("service_request", "sdn")
 
-    def get_aac(self) -> Optional[str]:
+    @property
+    def aac(self) -> Optional[str]:
         return self.sdn[:6]
 
     def get_doc_num(self) -> Optional[str]:
@@ -118,7 +120,8 @@ class Status(models.Model):
         "Locator", related_name="statuses", on_delete=models.SET_NULL, null=True
     )
 
-    def status_converted_date(self) -> str:
+    @property
+    def gcss_txn_date(self) -> str:
         return parse_datetime(str(self.status_date)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
     def __str__(self) -> str:
