@@ -107,7 +107,7 @@ class PartStringTest(APITestCase):
                 "controlled_inv_item_code": "U",
             }
         )
-        self.assertEqual(created_object.get_niin(), "015061999")
+        self.assertEqual(created_object.niin, "015061999")
         self.assertEqual(created_object.get_fsc(), "5430")
         self.assertEqual(str(created_object), "TANK,LIQUID STORAGE : 5430 : 015061999")
 
@@ -154,9 +154,7 @@ class StatusStringTest(APITestCase):
                 "received_qty": None,
             }
         )
-        self.assertEqual(
-            created_object.status_converted_date(), "2020-03-01T21:47:13.000Z"
-        )
+        self.assertEqual(created_object.gcss_txn_date, "2020-03-01T21:47:13.000Z")
         self.assertEqual(str(created_object), "M3030012345678: D6T")
 
 
@@ -173,6 +171,6 @@ class DocumentStringTest(APITestCase):
                 "part": None,
             }
         )
-        self.assertEqual(created_object.get_aac(), "M30300")
+        self.assertEqual(created_object.aac, "M30300")
         self.assertEqual(created_object.get_doc_num(), "12345678")
         self.assertEqual(str(created_object), "M3030012345678")

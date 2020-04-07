@@ -160,7 +160,7 @@ class StatusSerializerTest(TestCase):
         self.assertTrue(serializer.is_valid())
         status = serializer.save()
         from_db = Status.objects.get(id=status.id)
-        self.assertEqual(from_db.status_converted_date(), "2020-03-02T02:47:13.000Z")
+        self.assertEqual(from_db.gcss_txn_date, "2020-03-02T02:47:13.000Z")
 
 
 class PartSerializerTest(TestCase):
