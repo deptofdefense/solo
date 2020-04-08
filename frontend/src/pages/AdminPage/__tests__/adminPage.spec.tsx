@@ -27,7 +27,7 @@ describe("AdminPage Component", () => {
       expect(fetchMock.mock.calls[0][1]).toMatchObject({
         method: "GET"
       });
-      expect(queryByText(defaultUser.username)).toBeInTheDocument();
+      expect(queryByText(defaultUser.dodID)).toBeInTheDocument();
     });
     return {
       queryByText,
@@ -189,7 +189,7 @@ describe("AdminPage Component", () => {
         },
         {
           ...user,
-          username: "someotheruser",
+          dodID: "5678567567",
           userId: 42
         }
       ]
