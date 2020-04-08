@@ -1,5 +1,6 @@
 from typing import Any
 from rest_framework.test import APITestCase
+from django.test import TestCase
 from solo_rog_api.models import (
     Part,
     SuppAdd,
@@ -8,6 +9,9 @@ from solo_rog_api.models import (
     Document,
     Status,
     Address,
+    User,
+    Warehouse,
+    UserInWarehouse,
 )
 
 
@@ -174,3 +178,23 @@ class DocumentStringTest(APITestCase):
         self.assertEqual(created_object.aac, "M30300")
         self.assertEqual(created_object.get_doc_num(), "12345678")
         self.assertEqual(str(created_object), "M3030012345678")
+
+
+class WarehouseTestCase(TestCase):
+    def test_repr(self) -> None:
+        warehouse = Warehouse.objects.create(aac="testaac")
+        self.assertEqual(repr(warehouse), "<Warehouse aac='testaac'>")
+
+    def test_str(self) -> None:
+        warehouse = Warehouse.objects.create(aac="testaac")
+        self.assertEqual(str(warehouse), "testaac")
+
+
+class UserInWarehouseTestCase(TestCase):
+    def test_repr(self) -> None:
+        warehouse = Warehouse.objects.create(aac="testaac")
+        user = User.objects.create(username="testuser")
+        membership = UserInWarehouse.objects.create(warehouse=warehouse, user=user)
+        self.assertEqual(
+            repr(membership), "<UserInWarehouse aac='testaac' username='testuser'>"
+        )
