@@ -8,6 +8,35 @@ class User(AbstractUser):
     pass
 
 
+class UserInWarehouse(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey("Warehouse", on_delete=models.CASCADE)
+    cor_permission = models.BooleanField(default=False)
+    d6t_permission = models.BooleanField(default=False)
+    manager = models.BooleanField(default=False)
+
+    class Meta:
+        default_related_name = "warehouse_membership"
+        unique_together = ("user", "warehouse")
+
+    def __repr__(self) -> str:
+        return "<UserInWarehouse aac=%r username=%r>" % (
+            self.warehouse.aac,
+            self.user.username,
+        )
+
+
+class Warehouse(models.Model):
+    aac = models.CharField(max_length=30, unique=True, db_index=True)
+    users = models.ManyToManyField(to=User)
+
+    def __repr__(self) -> str:
+        return "<Warehouse aac=%r>" % (self.aac,)
+
+    def __str__(self) -> str:
+        return self.aac
+
+
 class Part(models.Model):
     nsn = models.CharField(max_length=13, null=True)
     nomen = models.CharField(max_length=50, null=True)
