@@ -18,6 +18,7 @@ class UserInWarehouse(models.Model):
     class Meta:
         default_related_name = "warehouse_membership"
         unique_together = ("user", "warehouse")
+        ordering = ["user__username"]
 
     def __repr__(self) -> str:
         return "<UserInWarehouse aac=%r username=%r>" % (
