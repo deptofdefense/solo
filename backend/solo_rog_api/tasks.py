@@ -1,5 +1,6 @@
 import socket
 import html
+import base64
 from datetime import datetime, timedelta
 from contextlib import contextmanager
 from typing import Any, Iterator, Union, Dict
@@ -15,6 +16,7 @@ from zeep import Client
 from zeep.transports import Transport
 from zeep.wsse.signature import BinarySignature as Signature
 from zeep.wsse import utils
+from requests import Session
 
 from solo_rog_api.gcss_xml_templates import I009_TEMPLATE_MREC, I009_TEMPLATE_WRAPPER
 from solo_rog_api.models import Document, Status, Part, SuppAdd, Address
@@ -86,7 +88,7 @@ class GCSSTaskBase(BaseTask):
 
     @contextmanager
     def get_client(self) -> Iterator[Client]:
-        session = requests.Session()
+        session = Session()
         session.cert = (settings.GCSS_CERT_PATH, settings.GCSS_KEY_PATH)
         session.verify = False
         # client constructor fetches wsdl
@@ -135,11 +137,11 @@ class RetrieveDataTaskBase(GCSSTaskBase):
 
 class SendDataTaskBase(GCSSTaskBase):
     @staticmethod
-    def xml_to_compressed_payload(xml: str) -> str:
+    def xml_to_compressed_payload(xml: str) -> bytes:
         response = requests.post(
-            f"{settings.EXML_CONVERTER_ENDPOINT}/xml/compress",
+            f"http://{settings.EXML_CONVERTER_ENDPOINT}/xml/compress",
             data=xml,
-            headers={"Content-Type": "application/json", "Accept": "*"},
+            headers={"Content-Type": "application/xml", "Accept": "*"},
         )
         if response.status_code != 200:
             raise Exception()
@@ -215,5 +217,5 @@ def gcss_submit_status(self: SubmitStatusTask, document_id: int, dic: str) -> No
     compressed = self.xml_to_compressed_payload(wrapped)
 
     with self.get_client() as client:
-        client.service.initiateCompressed(input=quoted)
+        client.service.initiateCompressed(input=compressed)
         print(f"[*] Submit Status | {doc.sdn} | {dic} | {client.transport.status_code}")

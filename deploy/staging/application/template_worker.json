@@ -50,5 +50,21 @@
         "valueFrom": "${GCSS_HOST}"
       }
     ]
+  },
+  {
+    "name": "${worker_service_name}-compression",
+    "image": "${compression_image_url}@${compression_digest}",
+    "essential": true,
+    "dockerLabels": {
+      "Project": "${project}"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${worker_service_name}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${worker_service_name}-converter"
+      }
+    }
   }
 ]

@@ -12,3 +12,4 @@ scheduler_service_name   = "solo-stage-scheduler"
 
 backend_container_repo  = "solo-stage-backend"
 frontend_container_repo = "solo-stage-frontend"
+compression_container_repo = "solo-stage-compression-service"

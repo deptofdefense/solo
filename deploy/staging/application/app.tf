@@ -20,6 +20,7 @@ variable "remote_state_key" { description = "Remote State Key for s3" }
 
 variable "backend_container_repo" { description = "ECR backend repo name" }
 variable "frontend_container_repo" { description = "ECR backend repo name" }
+variable "compression_container_repo" { description = "ECR compression service repo name" }
 
 variable "application_service_name" { description = "ECS application service name" }
 variable "worker_service_name" { description = "ECS worker service name" }
@@ -48,14 +49,21 @@ data "aws_iam_role" "ecs_task_exe_role" { name = var.ecs_task_exe_role }
 
 data "aws_ecr_repository" "backend_repo" { name = var.backend_container_repo }
 data "aws_ecr_repository" "frontend_repo" { name = var.frontend_container_repo }
+data "aws_ecr_repository" "compression_repo" { name = var.compression_container_repo }
 
 
 data "aws_ecr_image" "frontend_digest" {
   repository_name = var.frontend_container_repo
   image_tag       = "latest"
 }
+
 data "aws_ecr_image" "backend_digest" {
   repository_name = var.backend_container_repo
+  image_tag       = "latest"
+}
+
+data "aws_ecr_image" "compression_digest" {
+  repository_name = var.compression_container_repo
   image_tag       = "latest"
 }
 
@@ -111,11 +119,13 @@ data "template_file" "app_task_def_template" {
 data "template_file" "worker_task_def_template" {
   template = "${file("template_worker.json")}"
   vars = {
-    region              = var.region
-    project             = var.project
-    worker_service_name = var.worker_service_name
-    backend_image_url   = data.aws_ecr_repository.backend_repo.repository_url
-    backend_digest      = data.aws_ecr_image.backend_digest.image_digest
+    region                = var.region
+    project               = var.project
+    worker_service_name   = var.worker_service_name
+    backend_image_url     = data.aws_ecr_repository.backend_repo.repository_url
+    backend_digest        = data.aws_ecr_image.backend_digest.image_digest
+    compression_image_url = data.aws_ecr_repository.compression_repo.repository_url
+    compression_digest    = data.aws_ecr_image.compression_digest.image_digest
 
     POSTGRES_DB       = data.aws_ssm_parameter.POSTGRES_DB.arn
     POSTGRES_USER     = data.aws_ssm_parameter.POSTGRES_USER.arn
