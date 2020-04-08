@@ -3,7 +3,6 @@ import jwt
 from jwt.exceptions import InvalidSignatureError
 from rest_framework.exceptions import AuthenticationFailed
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.conf import settings
 from solo_rog_api.models import (
     Part,
@@ -13,6 +12,9 @@ from solo_rog_api.models import (
     Document,
     Status,
     Address,
+    User,
+    UserInWarehouse,
+    Warehouse,
 )
 from solo_rog_api.serializers import (
     TokenObtainSerializer,
@@ -23,9 +25,8 @@ from solo_rog_api.serializers import (
     DocumentSerializer,
     StatusSerializer,
     AddressSerializer,
+    UserInWarehouseSerializer,
 )
-
-User = get_user_model()
 
 
 @patch("solo_rog_api.serializers.authenticate", autospec=True)
@@ -258,3 +259,125 @@ class AddressSerializerTest(TestCase):
                 "country": "United States",
             },
         )
+
+
+class UserInWarehouseSerializerTestCase(TestCase):
+    def setUp(self) -> None:
+        self.manager = User.objects.create(username="testmanager")
+        self.user = User.objects.create(username="testuser")
+        self.warehouse = Warehouse.objects.create(aac="TESTAAC")
+        UserInWarehouse.objects.create(
+            user=self.manager, warehouse=self.warehouse, manager=True
+        )
+        self.ctx = {"user": self.manager}
+
+    def tearDown(self) -> None:
+        User.objects.all().delete()
+        Warehouse.objects.all().delete()
+        UserInWarehouse.objects.all().delete()
+
+    def test_can_serialize_user_in_warehouse(self) -> None:
+        instance = UserInWarehouse.objects.create(
+            user=self.user, warehouse=self.warehouse, d6t_permission=True
+        )
+        serializer = UserInWarehouseSerializer(instance)
+        serialized = serializer.data
+        self.assertDictContainsSubset(
+            {
+                "warehouse": "TESTAAC",
+                "user": {"id": self.user.id, "username": self.user.username,},
+                "d6t_permission": True,
+                "cor_permission": False,
+                "manager": False,
+            },
+            serialized,
+        )
+
+    def test_can_add_user_to_warehouse(self) -> None:
+        data = {
+            "user_id": self.user.id,
+            "warehouse_id": self.warehouse.id,
+            "cor_permission": True,
+        }
+        serializer = UserInWarehouseSerializer(data=data, context=self.ctx)
+
+        self.assertTrue(serializer.is_valid())
+        serializer.save()
+        # 2: manager and new user membership
+        self.assertEqual(UserInWarehouse.objects.count(), 2)
+        membership = UserInWarehouse.objects.get(user_id=self.user.id)
+        self.assertEqual(membership.user.username, self.user.username)
+        self.assertEqual(membership.warehouse.aac, self.warehouse.aac)
+        self.assertEqual(membership.cor_permission, True)
+        self.assertEqual(membership.d6t_permission, False)
+        self.assertEqual(membership.manager, False)
+
+    def test_can_only_add_users_to_managed_warehouses(self) -> None:
+        not_manager = User.objects.create(username="not_manager")
+        data = {
+            "user_id": self.user.id,
+            "warehouse_id": self.warehouse.id,
+            "cor_permission": True,
+            "d6t_permission": True,
+        }
+        serializer = UserInWarehouseSerializer(data=data, context={"user": not_manager})
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("warehouse_id", serializer.errors)
+        self.assertEqual(serializer.errors["warehouse_id"][0].code, "does_not_exist")
+
+    def test_cannot_duplicate_user_in_warehouse(self) -> None:
+        UserInWarehouse.objects.create(
+            user=self.user, warehouse=self.warehouse, cor_permission=True
+        )
+        data = {
+            "user_id": self.user.id,
+            "warehouse_id": self.warehouse.id,
+            "cor_permission": False,
+        }
+        serializer = UserInWarehouseSerializer(data=data, context=self.ctx)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("non_field_errors", serializer.errors)
+        self.assertEqual(serializer.errors["non_field_errors"][0].code, "unique")
+
+    def test_can_update_permissions_for_user_in_warehouse(self) -> None:
+        existing = UserInWarehouse.objects.create(
+            user=self.user, warehouse=self.warehouse, d6t_permission=True
+        )
+        data = {
+            "cor_permission": True,
+            "d6t_permission": False,
+        }
+        serializer = UserInWarehouseSerializer(
+            instance=existing, data=data, context=self.ctx, partial=True
+        )
+        self.assertTrue(serializer.is_valid())
+        serializer.save()
+        refreshed = UserInWarehouse.objects.get(id=existing.id)
+        self.assertEqual(refreshed.user.username, self.user.username)
+        self.assertEqual(refreshed.warehouse.aac, self.warehouse.aac)
+        self.assertTrue(refreshed.cor_permission)
+        self.assertFalse(refreshed.d6t_permission)
+
+    def test_cannot_update_warehouse_or_user_on_existing_instance(self) -> None:
+        other_user = User.objects.create(username="otheruser")
+        other_warehouse = Warehouse.objects.create(aac="otherwarehouse")
+        UserInWarehouse.objects.create(
+            user=self.manager, warehouse=other_warehouse, manager=True
+        )
+        existing = UserInWarehouse.objects.create(
+            user=self.user, warehouse=self.warehouse, cor_permission=False
+        )
+        data = {
+            "warehouse_id": other_warehouse.id,
+            "user_id": other_user.id,
+            "cor_permission": True,
+        }
+        serializer = UserInWarehouseSerializer(
+            instance=existing, data=data, context=self.ctx, partial=True
+        )
+        self.assertTrue(serializer.is_valid())
+        serializer.save()
+        refreshed = UserInWarehouse.objects.get(id=existing.id)
+        self.assertEqual(refreshed.user.id, self.user.id)
+        self.assertEqual(refreshed.warehouse.id, self.warehouse.id)
+        self.assertTrue(refreshed.cor_permission)

@@ -4,14 +4,19 @@ from unittest.mock import patch, Mock
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 from django.test import override_settings
-from solo_rog_api.models import Status, SuppAdd, Locator, Document, SubInventory
-
-
-User = get_user_model()
+from solo_rog_api.models import (
+    Status,
+    SuppAdd,
+    Locator,
+    Document,
+    SubInventory,
+    Warehouse,
+    User,
+    UserInWarehouse,
+)
 
 
 @patch("solo_rog_api.serializers.authenticate", autospec=True)
@@ -274,4 +279,166 @@ class BulkCORTests(APITestCase):
         self.assertIn(
             "Document does not exist or is not eligible",
             str(response.data[0]["non_field_errors"][0]),
+        )
+
+
+class RetrieveWarehouseUsersTestCase(APITestCase):
+    url = reverse("warehouse-users-list")
+
+    def setUp(self) -> None:
+        self.jim = User.objects.create(username="jim")
+        self.bob = User.objects.create(username="bob")
+        self.manager = User.objects.create(username="manager")
+        self.warehouse = Warehouse.objects.create(aac="testaac")
+        UserInWarehouse.objects.create(
+            user=self.manager, warehouse=self.warehouse, manager=True
+        )
+
+    def test_can_list_users_by_warehouse(self) -> None:
+        self.client.force_authenticate(user=self.manager)
+        UserInWarehouse.objects.create(user=self.jim, warehouse=self.warehouse)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("results", response.data)
+        self.assertIn("next", response.data)
+        self.assertIn("previous", response.data)
+        self.assertIn("count", response.data)
+        results = response.data["results"]
+        self.assertEqual(len(results), 1)
+        self.assertDictEqual(
+            results[0]["user"], {"id": self.jim.id, "username": self.jim.username}
+        )
+
+    def test_users_from_all_managed_warehouses_returned(self) -> None:
+        self.client.force_authenticate(user=self.manager)
+        other_warehouse = Warehouse.objects.create(aac="differentaac")
+        UserInWarehouse.objects.create(
+            user=self.manager, warehouse=other_warehouse, manager=True
+        )
+        UserInWarehouse.objects.create(user=self.jim, warehouse=self.warehouse)
+        UserInWarehouse.objects.create(user=self.bob, warehouse=other_warehouse)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("results", response.data)
+        results = response.data["results"]
+        self.assertEqual(len(results), 2)
+        self.assertCountEqual(
+            [r["user"]["username"] for r in results],
+            [self.jim.username, self.bob.username],
+        )
+        self.assertCountEqual(
+            [r["warehouse"] for r in results], [self.warehouse.aac, other_warehouse.aac]
+        )
+
+    def test_only_users_from_managed_warehouses_returned(self) -> None:
+        self.client.force_authenticate(user=self.manager)
+        other_warehouse = Warehouse.objects.create(aac="differentaac")
+        UserInWarehouse.objects.create(user=self.jim, warehouse=self.warehouse)
+        UserInWarehouse.objects.create(user=self.bob, warehouse=other_warehouse)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn("results", response.data)
+        results = response.data["results"]
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]["user"]["username"], self.jim.username)
+        self.assertEqual(results[0]["warehouse"], self.warehouse.aac)
+
+    def test_get_permissions_for_single_user_in_warehouse(self) -> None:
+        instance = UserInWarehouse.objects.create(
+            user=self.jim, warehouse=self.warehouse
+        )
+        self.client.force_authenticate(user=self.manager)
+        response = self.client.get(
+            reverse("warehouse-users-detail", args=[instance.id])
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictContainsSubset(
+            {
+                "id": instance.id,
+                "user": {"username": self.jim.username, "id": self.jim.id},
+                "warehouse": self.warehouse.aac,
+                "manager": False,
+                "d6t_permission": False,
+                "cor_permission": False,
+            },
+            response.data,
+        )
+
+
+class WriteWarehouseUsersTestCase(APITestCase):
+    def setUp(self) -> None:
+        self.jim = User.objects.create(username="jim")
+        self.bob = User.objects.create(username="bob")
+        self.manager = User.objects.create(username="manager")
+        self.warehouse = Warehouse.objects.create(aac="testaac")
+        UserInWarehouse.objects.create(
+            user=self.manager, warehouse=self.warehouse, manager=True
+        )
+
+    def test_can_create_user_in_warehouse(self) -> None:
+        self.client.force_authenticate(user=self.manager)
+        data = {
+            "warehouse_id": self.warehouse.id,
+            "user_id": self.jim.id,
+            "d6t_permission": True,
+            "cor_permission": False,
+        }
+        response = self.client.post(reverse("warehouse-users-list"), data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertDictContainsSubset(
+            {
+                "user": {"id": self.jim.id, "username": self.jim.username},
+                "warehouse": self.warehouse.aac,
+                "d6t_permission": True,
+                "cor_permission": False,
+                "manager": False,
+            },
+            response.data,
+        )
+        self.assertTrue(
+            UserInWarehouse.objects.filter(
+                user_id=self.jim.id,
+                warehouse_id=self.warehouse.id,
+                d6t_permission=True,
+                cor_permission=False,
+                manager=False,
+            ).exists()
+        )
+
+    def test_can_patch_user_in_warehouse(self) -> None:
+        self.client.force_authenticate(user=self.manager)
+        instance = UserInWarehouse.objects.create(
+            user=self.jim,
+            warehouse=self.warehouse,
+            d6t_permission=True,
+            cor_permission=False,
+        )
+        data = {"d6t_permission": False, "cor_permission": True}
+        response = self.client.patch(
+            reverse("warehouse-users-detail", args=[instance.id]), data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(
+            UserInWarehouse.objects.filter(
+                user_id=self.jim.id,
+                warehouse_id=self.warehouse.id,
+                d6t_permission=False,
+                cor_permission=True,
+                manager=False,
+            ).exists()
+        )
+
+    def test_can_delete_user_from_warehouse(self) -> None:
+        self.client.force_authenticate(user=self.manager)
+        instance = UserInWarehouse.objects.create(
+            user=self.jim, warehouse=self.warehouse
+        )
+        response = self.client.delete(
+            reverse("warehouse-users-detail", args=[instance.id])
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(
+            UserInWarehouse.objects.filter(
+                user_id=self.jim.id, warehouse_id=self.warehouse.id
+            ).exists()
         )

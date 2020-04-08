@@ -1,5 +1,6 @@
 from typing import Dict, Any, Optional, cast, Union, List
 from django.utils import timezone
+from django.db.models import QuerySet, Model  # pylint: disable=unused-import
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import AbstractUser
 from rest_framework import serializers, exceptions
@@ -14,6 +15,9 @@ from .models import (
     Document,
     Status,
     Address,
+    UserInWarehouse,
+    Warehouse,
+    User,
 )
 
 
@@ -78,6 +82,44 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
+        fields = "__all__"
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username", "id"]
+
+
+class ManagedWarehouseField(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self) -> "QuerySet[Warehouse]":
+        return Warehouse.objects.filter(
+            warehouse_membership__user_id=self.context["user"].id,
+            warehouse_membership__manager=True,
+        ).all()
+
+
+class UserInWarehouseSerializer(serializers.ModelSerializer):
+    warehouse = serializers.StringRelatedField()
+    user = UserSerializer(read_only=True)
+
+    warehouse_id = ManagedWarehouseField(source="warehouse", write_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        source="user", write_only=True, queryset=User.objects.all()
+    )
+
+    def validate(self, attrs: Any) -> Any:
+        if "user" not in self.context:
+            raise serializers.ValidationError()
+        return super().validate(attrs)  # type: ignore
+
+    def update(self, instance: Model, validated_data: Dict[str, Any]) -> Any:
+        validated_data.pop("warehouse", None)
+        validated_data.pop("user", None)
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = UserInWarehouse
         fields = "__all__"
 
 
