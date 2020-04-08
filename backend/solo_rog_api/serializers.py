@@ -88,7 +88,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "id"]
+        fields = ["username", "id", "first_name", "last_name"]
 
 
 class ManagedWarehouseField(serializers.PrimaryKeyRelatedField):

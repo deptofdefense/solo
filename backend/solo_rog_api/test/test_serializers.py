@@ -264,7 +264,9 @@ class AddressSerializerTest(TestCase):
 class UserInWarehouseSerializerTestCase(TestCase):
     def setUp(self) -> None:
         self.manager = User.objects.create(username="testmanager")
-        self.user = User.objects.create(username="testuser")
+        self.user = User.objects.create(
+            username="testuser", first_name="micheal", last_name="scott"
+        )
         self.warehouse = Warehouse.objects.create(aac="TESTAAC")
         UserInWarehouse.objects.create(
             user=self.manager, warehouse=self.warehouse, manager=True
@@ -285,7 +287,12 @@ class UserInWarehouseSerializerTestCase(TestCase):
         self.assertDictContainsSubset(
             {
                 "warehouse": "TESTAAC",
-                "user": {"id": self.user.id, "username": self.user.username,},
+                "user": {
+                    "id": self.user.id,
+                    "username": self.user.username,
+                    "first_name": self.user.first_name,
+                    "last_name": self.user.last_name,
+                },
                 "d6t_permission": True,
                 "cor_permission": False,
                 "manager": False,

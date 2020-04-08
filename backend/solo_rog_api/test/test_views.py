@@ -286,10 +286,14 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
     url = reverse("warehouse-users-list")
 
     def setUp(self) -> None:
-        self.jim = User.objects.create(username="jim")
-        self.bob = User.objects.create(username="bob")
+        self.jim = User.objects.create(
+            username="jim", first_name="jimothy", last_name="halpert"
+        )
+        self.micheal = User.objects.create(
+            username="mike", first_name="micheal", last_name="scott"
+        )
         self.manager = User.objects.create(username="manager")
-        self.warehouse = Warehouse.objects.create(aac="testaac")
+        self.warehouse = Warehouse.objects.create(aac="dunder")
         UserInWarehouse.objects.create(
             user=self.manager, warehouse=self.warehouse, manager=True
         )
@@ -306,7 +310,13 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
         results = response.data["results"]
         self.assertEqual(len(results), 1)
         self.assertDictEqual(
-            results[0]["user"], {"id": self.jim.id, "username": self.jim.username}
+            results[0]["user"],
+            {
+                "id": self.jim.id,
+                "username": self.jim.username,
+                "first_name": self.jim.first_name,
+                "last_name": self.jim.last_name,
+            },
         )
 
     def test_users_from_all_managed_warehouses_returned(self) -> None:
@@ -316,7 +326,7 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
             user=self.manager, warehouse=other_warehouse, manager=True
         )
         UserInWarehouse.objects.create(user=self.jim, warehouse=self.warehouse)
-        UserInWarehouse.objects.create(user=self.bob, warehouse=other_warehouse)
+        UserInWarehouse.objects.create(user=self.micheal, warehouse=other_warehouse)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("results", response.data)
@@ -324,7 +334,7 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
         self.assertEqual(len(results), 2)
         self.assertCountEqual(
             [r["user"]["username"] for r in results],
-            [self.jim.username, self.bob.username],
+            [self.jim.username, self.micheal.username],
         )
         self.assertCountEqual(
             [r["warehouse"] for r in results], [self.warehouse.aac, other_warehouse.aac]
@@ -334,7 +344,7 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
         self.client.force_authenticate(user=self.manager)
         other_warehouse = Warehouse.objects.create(aac="differentaac")
         UserInWarehouse.objects.create(user=self.jim, warehouse=self.warehouse)
-        UserInWarehouse.objects.create(user=self.bob, warehouse=other_warehouse)
+        UserInWarehouse.objects.create(user=self.micheal, warehouse=other_warehouse)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("results", response.data)
@@ -355,7 +365,12 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
         self.assertDictContainsSubset(
             {
                 "id": instance.id,
-                "user": {"username": self.jim.username, "id": self.jim.id},
+                "user": {
+                    "username": self.jim.username,
+                    "id": self.jim.id,
+                    "first_name": self.jim.first_name,
+                    "last_name": self.jim.last_name,
+                },
                 "warehouse": self.warehouse.aac,
                 "manager": False,
                 "d6t_permission": False,
@@ -367,10 +382,11 @@ class RetrieveWarehouseUsersTestCase(APITestCase):
 
 class WriteWarehouseUsersTestCase(APITestCase):
     def setUp(self) -> None:
-        self.jim = User.objects.create(username="jim")
-        self.bob = User.objects.create(username="bob")
+        self.jim = User.objects.create(
+            username="jim", first_name="jimothy", last_name="halpert"
+        )
         self.manager = User.objects.create(username="manager")
-        self.warehouse = Warehouse.objects.create(aac="testaac")
+        self.warehouse = Warehouse.objects.create(aac="dunder")
         UserInWarehouse.objects.create(
             user=self.manager, warehouse=self.warehouse, manager=True
         )
@@ -387,7 +403,12 @@ class WriteWarehouseUsersTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertDictContainsSubset(
             {
-                "user": {"id": self.jim.id, "username": self.jim.username},
+                "user": {
+                    "id": self.jim.id,
+                    "username": self.jim.username,
+                    "first_name": self.jim.first_name,
+                    "last_name": self.jim.last_name,
+                },
                 "warehouse": self.warehouse.aac,
                 "d6t_permission": True,
                 "cor_permission": False,

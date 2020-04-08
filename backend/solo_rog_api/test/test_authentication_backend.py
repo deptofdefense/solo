@@ -16,37 +16,41 @@ class CACAuthenticationBackendDNParserTestCase(TestCase):
     request_factory = APIRequestFactory()
 
     def test_parses_dod_id_for_standard_dn(self) -> None:
-        result = self.auth_backend.get_dodid_from_dn(
-            "CN=fmame.mname.lname.0123456789,OU=USMC,OU=GOV"
+        result = self.auth_backend.parse_dn(
+            "CN=lname.fname.mname.0123456789,OU=USMC,OU=GOV"
         )
-        self.assertEqual(result, "0123456789")
+        self.assertDictContainsSubset(
+            {"username": "0123456789", "first_name": "fname", "last_name": "lname"},
+            result,
+        )
 
     def test_parses_dod_id_for_no_middle_name(self) -> None:
-        result = self.auth_backend.get_dodid_from_dn(
-            "OU=USMC,CN=fname.lname.0123456789,OU=GOV"
+        result = self.auth_backend.parse_dn("OU=USMC,CN=lname.fname.0123456789,OU=GOV")
+        self.assertDictContainsSubset(
+            {"username": "0123456789", "first_name": "fname", "last_name": "lname"},
+            result,
         )
-        self.assertEqual(result, "0123456789")
 
     def test_auth_fails_for_no_dod_id_found(self) -> None:
         self.assertRaises(
             AuthenticationFailed,
-            self.auth_backend.get_dodid_from_dn,
-            "OU=USMC,CN=fname.mname.lname,OU=GOV",
+            self.auth_backend.parse_dn,
+            "OU=USMC,CN=lname.fname.mname,OU=GOV",
         )
 
     def test_auth_fails_for_too_short_dod_id(self) -> None:
         self.assertRaises(
             AuthenticationFailed,
-            self.auth_backend.get_dodid_from_dn,
-            "CN=fname.lname.012345678",
+            self.auth_backend.parse_dn,
+            "CN=lname.fname.012345678",
         )
 
     def test_auth_fails_for_empty_dn(self) -> None:
-        self.assertRaises(AuthenticationFailed, self.auth_backend.get_dodid_from_dn, "")
+        self.assertRaises(AuthenticationFailed, self.auth_backend.parse_dn, "")
 
     def test_auth_fails_for_empty_cn(self) -> None:
         self.assertRaises(
-            AuthenticationFailed, self.auth_backend.get_dodid_from_dn, "OU=USMC,CN="
+            AuthenticationFailed, self.auth_backend.parse_dn, "OU=USMC,CN="
         )
 
 
@@ -59,7 +63,7 @@ class CACAuthenticationBackendTestCase(TestCase):
         self.request.META["HTTP_X_SSL_CLIENT_VERIFY"] = "SUCCESS"
         self.request.META[
             "HTTP_X_SSL_CLIENT_S_DN"
-        ] = "CN=fmame.mname.lname.0123456789,OU=USMC,OU=GOV"
+        ] = "CN=lname.fname.mname.0123456789,OU=USMC,OU=GOV"
 
     def tearDown(self) -> None:
         User.objects.all().delete()
@@ -73,14 +77,20 @@ class CACAuthenticationBackendTestCase(TestCase):
     def test_creates_user_for_dodid(self) -> None:
         self.request.META[
             "HTTP_X_SSL_CLIENT_S_DN"
-        ] = "CN=fmame.mname.lname.0123456789,OU=USMC,OU=GOV"
+        ] = "CN=lname.fname.mname.0123456789,OU=USMC,OU=GOV"
         self.assertEqual(User.objects.count(), 0)
         self.auth_backend.authenticate(self.request)
         self.assertEqual(User.objects.count(), 1)
-        self.assertIsNotNone(User.objects.filter(username="0123456789").first())
+        self.assertTrue(
+            User.objects.filter(
+                username="0123456789", first_name="fname", last_name="lname"
+            ).exists()
+        )
 
     def test_returns_exisiting_user_with_dodid(self) -> None:
-        user = User.objects.create(username="0123456789")
+        user = User.objects.create(
+            username="0123456789", last_name="lname", first_name="fname"
+        )
         result = self.auth_backend.authenticate(self.request)
         self.assertEqual(user, result)
 
@@ -118,7 +128,7 @@ class CorrectAuthenticationBackendForEnvironmentTestCase(TestCase):
         self.request.META["HTTP_X_SSL_CLIENT_VERIFY"] = "SUCCESS"
         self.request.META[
             "HTTP_X_SSL_CLIENT_S_DN"
-        ] = "CN=fmame.mname.lname.0123456789,OU=USMC,OU=GOV"
+        ] = "CN=lname.fname.mname.0123456789,OU=USMC,OU=GOV"
         user = authenticate(self.request)
         assert isinstance(user, User)
         self.assertEqual(user.username, "0123456789")
