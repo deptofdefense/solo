@@ -24,6 +24,19 @@ class CACAuthenticationBackendDNParserTestCase(TestCase):
             result,
         )
 
+    def test_parses_dod_id_for_hyphenated_name(self) -> None:
+        result = self.auth_backend.parse_dn(
+            "CN=lname-other.fname-hyphen.mname.0123456789,OU=USMC,OU=GOV"
+        )
+        self.assertDictContainsSubset(
+            {
+                "username": "0123456789",
+                "first_name": "fname-hyphen",
+                "last_name": "lname-other",
+            },
+            result,
+        )
+
     def test_parses_dod_id_for_no_middle_name(self) -> None:
         result = self.auth_backend.parse_dn("OU=USMC,CN=lname.fname.0123456789,OU=GOV")
         self.assertDictContainsSubset(

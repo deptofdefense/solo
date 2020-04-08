@@ -11,7 +11,7 @@ User = get_user_model()
 
 class CACAuthenticationBackend(BaseBackend):
     CAC_DN_RE = re.compile(
-        r"CN=(?P<last_name>\w+)\.(?P<first_name>\w+)\.(\w+\.)?(?P<username>\d{10})"
+        r"CN=(?P<last_name>[\w\-]+)\.(?P<first_name>[\w\-]+)\.([\w\-]+\.)?(?P<username>\d{10})"
     )
 
     def parse_dn(self, dn: Optional[str]) -> Dict[str, Any]:
