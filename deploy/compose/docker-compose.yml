@@ -37,6 +37,14 @@ services:
     environment:
       - DEBUG=
 
+  converter:
+    build: ../../compression-service
+    env_file:
+      - ./.env
+    hostname: HOST.local
+    ports:
+      - "8080:8080"
+
   frontend:
     build:
       context: ../../frontend

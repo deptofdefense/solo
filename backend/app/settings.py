@@ -132,6 +132,7 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 # GCSS connection
+EXML_CONVERTER_ENDPOINT = os.environ.get("EXML_CONVERTER_ENDPOINT", "localhost:8080")
 GCSS_HOST = os.environ.get("GCSS_HOST", "gcssmc-dv-int.dev.gcssmc.sde")
 GCSS_IP = os.environ.get("GCSS_IP", "216.14.17.186")
 GCSS_CERT = os.environ.get("GCSS_PUBLIC_CERT")

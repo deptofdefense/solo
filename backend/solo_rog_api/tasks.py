@@ -10,11 +10,11 @@ from django.utils import timezone
 from celery import shared_task
 from celery.task import BaseTask
 
+import requests
 from zeep import Client
 from zeep.transports import Transport
 from zeep.wsse.signature import BinarySignature as Signature
 from zeep.wsse import utils
-from requests import Session
 
 from solo_rog_api.gcss_xml_templates import I009_TEMPLATE_MREC, I009_TEMPLATE_WRAPPER
 from solo_rog_api.models import Document, Status, Part, SuppAdd, Address
@@ -86,7 +86,7 @@ class GCSSTaskBase(BaseTask):
 
     @contextmanager
     def get_client(self) -> Iterator[Client]:
-        session = Session()
+        session = requests.Session()
         session.cert = (settings.GCSS_CERT_PATH, settings.GCSS_KEY_PATH)
         session.verify = False
         # client constructor fetches wsdl
@@ -136,10 +136,14 @@ class RetrieveDataTaskBase(GCSSTaskBase):
 class SendDataTaskBase(GCSSTaskBase):
     @staticmethod
     def xml_to_compressed_payload(xml: str) -> str:
-        # placeholder until EXML conversion service is complete
-        # response = requests.post(settings.EXML_CONVERTER_ENDPOINT, data=payload)
-        # return base64.b64decode(response.content)
-        return xml
+        response = requests.post(
+            f"{settings.EXML_CONVERTER_ENDPOINT}/xml/compress",
+            data=xml,
+            headers={"Content-Type": "application/json", "Accept": "*"},
+        )
+        if response.status_code != 200:
+            raise Exception()
+        return base64.b64decode(response.content)
 
     @staticmethod
     def xml_to_uncompressed_payload(xml: str) -> str:
@@ -208,8 +212,8 @@ def gcss_submit_status(self: SubmitStatusTask, document_id: int, dic: str) -> No
     status = Status.objects.get(document_id=doc.id, dic=dic)
     record = I009_TEMPLATE_MREC.format(doc=doc, status=status)
     wrapped = I009_TEMPLATE_WRAPPER.format(record)
-    quoted = self.xml_to_uncompressed_payload(wrapped)
+    compressed = self.xml_to_compressed_payload(wrapped)
 
     with self.get_client() as client:
-        client.service.initiateUncompressed(input=quoted)
-        print(f"[*] Submit D6T - {doc.sdn}/{dic}/{client.transport.status_code}")
+        client.service.initiateCompressed(input=quoted)
+        print(f"[*] Submit Status | {doc.sdn} | {dic} | {client.transport.status_code}")
