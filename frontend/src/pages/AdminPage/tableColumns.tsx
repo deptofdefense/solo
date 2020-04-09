@@ -29,15 +29,15 @@ const createColumns: CreateColumns = (
   },
   {
     Header: "First Name",
-    accessor: "firstName"
+    accessor: "first_name"
   },
   {
     Header: "Last Name",
-    accessor: "lastName"
+    accessor: "last_name"
   },
   {
     Header: "DODID",
-    accessor: "dodID"
+    accessor: "username"
   },
   {
     Header: "D6T",
