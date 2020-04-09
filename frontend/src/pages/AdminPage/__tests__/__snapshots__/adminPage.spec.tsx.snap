@@ -10,44 +10,6 @@ exports[`AdminPage Component matches snapshot 1`] = `
     >
       User Administration
     </h1>
-    <form
-      class="grid-row flex-row flex-justify-center flex-align-center"
-    >
-      <div
-        class="grid-col-full tablet:grid-col-2 margin-x-2"
-      >
-        <select
-          class="usa-select"
-          placeholder="Field"
-        >
-          <option
-            value="M30300"
-          >
-            M30300
-          </option>
-          <option
-            value="M30305"
-          >
-            M30305
-          </option>
-        </select>
-      </div>
-      <div
-        class="grid-col-10 tablet:grid-col-3"
-      >
-        <input
-          class="usa-input noOutline"
-          placeholder="Add New User"
-          type="text"
-          value=""
-        />
-      </div>
-      <div
-        class="grid-col-full margin-x-2"
-      >
-        <p />
-      </div>
-    </form>
     <table
       class="usa-table grid-col-12 usa-table--borderless"
       role="table"

@@ -1,17 +1,8 @@
 import React, { useMemo } from "react";
-import {
-  Title,
-  Table
-  //  SelectFilterControls
-} from "components";
+import { Title, Table } from "components";
 import createColumns from "./tableColumns";
 import useWarehouseUsers from "./useWarehouseUsers";
 import { WarehouseUser } from "solo-types";
-
-// const filterable = [
-//   {name: "AAC", value: "aac"},
-//   {name: "User", value: "user"},
-// ];
 
 const AdminPage: React.FC = () => {
   const {
@@ -27,20 +18,10 @@ const AdminPage: React.FC = () => {
     [modifyWarehouseUser, updateUserPermissons]
   );
 
-  // const renderFilterControls = ({
-  //   setGlobalFilter
-  // }: TableInstance<Document>) => (
-  //   <SelectFilterControls options={filterable} onSubmit={setGlobalFilter} />
-  // );
-
   return (
     <div className="tablet:margin-x-8 overflow-x-auto">
       <Title>User Administration</Title>
-      <Table<WarehouseUser>
-        columns={tableColumns}
-        data={users}
-        // renderFilterControls={renderFilterControls}
-      />
+      <Table<WarehouseUser> columns={tableColumns} data={users} />
     </div>
   );
 };
