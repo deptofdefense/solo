@@ -189,7 +189,7 @@ describe("AdminPage Component", () => {
         },
         {
           ...user,
-          username: "someotheruser",
+          username: "5678567567",
           userId: 42
         }
       ]

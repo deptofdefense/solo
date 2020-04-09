@@ -120,6 +120,8 @@ export interface PaginatedApiResponse<T> {
 export interface WarehouseUser extends LoadingStatus {
   userId: number;
   username: string;
+  first_name: string;
+  last_name: string;
   canD6T: boolean;
   canCOR: boolean;
   aac: string;

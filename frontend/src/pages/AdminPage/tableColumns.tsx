@@ -28,7 +28,15 @@ const createColumns: CreateColumns = (
     accessor: "aac"
   },
   {
-    Header: "User",
+    Header: "First Name",
+    accessor: "first_name"
+  },
+  {
+    Header: "Last Name",
+    accessor: "last_name"
+  },
+  {
+    Header: "DODID",
     accessor: "username"
   },
   {
