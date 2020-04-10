@@ -38,10 +38,10 @@ exports[`Navbar component matches snapshot 1`] = `
       </div>
       <nav
         aria-label="Primary navigation"
-        class="usa-nav"
+        class="usa-nav navContainer"
       >
         <ul
-          class="usa-nav__primary usa-accordion"
+          class="usa-nav__primary usa-accordion navList"
         >
           <button
             class="usa-nav__close"
