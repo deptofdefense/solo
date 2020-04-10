@@ -73,7 +73,7 @@ exports[`ConfirmationOfReceiptPage Component matches snapshot 1`] = `
       </div>
     </form>
     <table
-      class="usa-table grid-col-12 usa-table--borderless"
+      class="usa-table grid-col-12 usa-table--borderless tableBorders"
       role="table"
     >
       <thead>

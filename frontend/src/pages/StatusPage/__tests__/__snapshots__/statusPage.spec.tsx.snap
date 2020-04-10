@@ -14,7 +14,7 @@ exports[`StatusPage component matches snapshot 1`] = `
       filtercontrols
     </div>
     <table
-      class="usa-table grid-col-12 usa-table--borderless"
+      class="usa-table grid-col-12 usa-table--borderless tableBorders"
       role="table"
     >
       <thead>

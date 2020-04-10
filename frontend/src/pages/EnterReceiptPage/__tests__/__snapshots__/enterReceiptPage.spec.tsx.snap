@@ -14,7 +14,7 @@ exports[`EnterReceiptPage Component matches snapshot 1`] = `
       class="grid-row flex-justify-center flex-12 tablet:flex-10"
     />
     <table
-      class="usa-table grid-col-12 usa-table--borderless"
+      class="usa-table grid-col-12 usa-table--borderless tableBorders"
       role="table"
     >
       <thead>
