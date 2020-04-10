@@ -13,7 +13,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("matches snapshot", async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { asFragment, queryByText, getByText, getByPlaceholderText } = render(
+    const { asFragment, queryByText, container, getByPlaceholderText } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -21,7 +21,9 @@ describe("EnterReceiptPage Component", () => {
         }
       }
     );
-    const submitBtn = getByText("Search");
+    const submitBtn = container.querySelector(
+      "button[type='submit']"
+    ) as Element;
     const inputField = getByPlaceholderText("SDN");
     fireEvent.change(inputField, {
       target: { value: "1234" }
@@ -40,7 +42,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("calls api and adds result to table when adding an sdn", async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { queryByText, getByPlaceholderText, getByText } = render(
+    const { queryByText, getByPlaceholderText, container } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -49,7 +51,7 @@ describe("EnterReceiptPage Component", () => {
       }
     );
     const inputField = getByPlaceholderText("SDN");
-    const submit = getByText("Search");
+    const submit = container.querySelector("button[type='submit']") as Element;
     fireEvent.change(inputField, {
       target: { value: "somesdn" }
     });
@@ -73,7 +75,7 @@ describe("EnterReceiptPage Component", () => {
       }
     );
     const inputField = getByPlaceholderText("SDN");
-    const submit = getByText("Search");
+    const submit = container.querySelector("button[type='submit']") as Element;
     fireEvent.change(inputField, {
       target: { value: "wrongsdn" }
     });
@@ -93,13 +95,16 @@ describe("EnterReceiptPage Component", () => {
   });
 
   it("prevents duplicate sdn in table when selecting search for sdn", async () => {
-    const { getByPlaceholderText, getByText } = render(<EnterReceiptPage />, {
-      authContext: {
-        apiCall: fetchMock
+    const { getByPlaceholderText, getByText, container } = render(
+      <EnterReceiptPage />,
+      {
+        authContext: {
+          apiCall: fetchMock
+        }
       }
-    });
+    );
     const inputField = getByPlaceholderText("SDN");
-    const submit = getByText("Search");
+    const submit = container.querySelector("button[type='submit']") as Element;
     fireEvent.change(inputField, {
       target: { value: "samesdn" }
     });
@@ -125,7 +130,7 @@ describe("EnterReceiptPage Component", () => {
 
   it("keeps sdn in table on fetch error", async () => {
     fetchMock.mockRejectedValue(new Error());
-    const { queryByText, getByPlaceholderText, getByText } = render(
+    const { queryByText, getByPlaceholderText, container } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -134,7 +139,7 @@ describe("EnterReceiptPage Component", () => {
       }
     );
     const inputField = getByPlaceholderText("SDN");
-    const submit = getByText("Search");
+    const submit = container.querySelector("button[type='submit']") as Element;
     fireEvent.change(inputField, {
       target: { value: "badsdn" }
     });
@@ -150,7 +155,7 @@ describe("EnterReceiptPage Component", () => {
       ...defaultApiResponse,
       results: []
     });
-    const { getByText, getByPlaceholderText, queryByText, container } = render(
+    const { getByPlaceholderText, queryByText, container } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -165,7 +170,7 @@ describe("EnterReceiptPage Component", () => {
     await wait(() => {
       expect(inputField).toHaveValue("badsdn");
     });
-    const submit = getByText("Search");
+    const submit = container.querySelector("button[type='submit']") as Element;
     fireEvent.click(submit);
     await wait(() => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -183,14 +188,14 @@ describe("EnterReceiptPage Component", () => {
     const {
       queryByText,
       queryAllByText,
-      getByText,
+      container,
       getByPlaceholderText
     } = render(<EnterReceiptPage />, {
       authContext: {
         apiCall: fetchMock
       }
     });
-    const submit = getByText("Search");
+    const submit = container.querySelector("button[type='submit']") as Element;
     const inputField = getByPlaceholderText("SDN");
     fireEvent.change(inputField, {
       target: { value: "1234" }
