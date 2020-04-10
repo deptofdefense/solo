@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Button, Input } from "solo-uswds";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface SdnInputFormProps {
   disabled?: boolean;
@@ -31,13 +33,8 @@ const SdnInputForm: React.FC<SdnInputFormProps> = ({
         onChange={e => setValue(e.currentTarget.value)}
         placeholder="SDN"
       />
-      <Button
-        className="margin-left-1"
-        type="submit"
-        disabled={disabled}
-        square
-      >
-        Search
+      <Button type="submit" disabled={disabled} square>
+        <FontAwesomeIcon icon={faSearch} />
       </Button>
     </form>
   );

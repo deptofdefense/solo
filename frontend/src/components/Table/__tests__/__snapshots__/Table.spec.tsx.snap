@@ -3,7 +3,7 @@
 exports[`Table component matches snapshot 1`] = `
 <DocumentFragment>
   <table
-    class="usa-table grid-col-12 usa-table--borderless"
+    class="usa-table grid-col-12 usa-table--borderless tableBorders"
     role="table"
   >
     <thead>

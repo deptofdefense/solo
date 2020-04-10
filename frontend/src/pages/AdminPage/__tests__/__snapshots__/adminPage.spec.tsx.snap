@@ -11,7 +11,7 @@ exports[`AdminPage Component matches snapshot 1`] = `
       User Administration
     </h1>
     <table
-      class="usa-table grid-col-12 usa-table--borderless"
+      class="usa-table grid-col-12 usa-table--borderless tableBorders"
       role="table"
     >
       <thead>

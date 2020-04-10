@@ -14,16 +14,21 @@ describe("EnterReceiptPage submit all process", () => {
 
   const renderAndSearchForDocument = async () => {
     fetchMock.mockResolvedValue(defaultApiResponse);
-    const { getByPlaceholderText, getByText, queryByText, ...rest } = render(
-      <EnterReceiptPage />,
-      {
-        authContext: {
-          apiCall: fetchMock
-        }
+    const {
+      getByPlaceholderText,
+      container,
+      getByText,
+      queryByText,
+      ...rest
+    } = render(<EnterReceiptPage />, {
+      authContext: {
+        apiCall: fetchMock
       }
-    );
+    });
     const inpField = getByPlaceholderText("SDN");
-    const searchBtn = getByText("Search");
+    const searchBtn = container.querySelector(
+      "button[type='submit']"
+    ) as Element;
     const submitBtn = getByText("Submit All");
     fireEvent.change(inpField, {
       target: { value: defaultDoc.sdn }
@@ -95,7 +100,7 @@ describe("EnterReceiptPage submit all process", () => {
       await sleep(500);
       return defaultApiResponse;
     });
-    const { getByPlaceholderText, getByText, queryByText } = render(
+    const { getByPlaceholderText, getByText, queryByText, container } = render(
       <EnterReceiptPage />,
       {
         authContext: {
@@ -104,7 +109,9 @@ describe("EnterReceiptPage submit all process", () => {
       }
     );
     const inpField = getByPlaceholderText("SDN");
-    const searchBtn = getByText("Search");
+    const searchBtn = container.querySelector(
+      "button[type='submit']"
+    ) as Element;
     const submitBtn = getByText("Submit All");
     fireEvent.change(inpField, {
       target: { value: "asdf" }
