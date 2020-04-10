@@ -100,6 +100,14 @@ class CACAuthenticationBackendTestCase(TestCase):
             ).exists()
         )
 
+    def test_updates_existing_user_with_first_and_lname(self) -> None:
+        User.objects.create(username="0123456789")
+        self.auth_backend.authenticate(self.request)
+        self.assertEqual(User.objects.count(), 1)
+        user = User.objects.get(username="0123456789")
+        self.assertEqual(user.first_name, "fname")
+        self.assertEqual(user.last_name, "lname")
+
     def test_returns_exisiting_user_with_dodid(self) -> None:
         user = User.objects.create(
             username="0123456789", last_name="lname", first_name="fname"

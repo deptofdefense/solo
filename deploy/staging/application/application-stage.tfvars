@@ -9,6 +9,7 @@ ecs_task_exe_role = "soloStageTaskExeRole"
 application_service_name = "solo-stage-app"
 worker_service_name      = "solo-stage-worker"
 scheduler_service_name   = "solo-stage-scheduler"
+compression_service_name  = "solo-stage-compression"
 
 backend_container_repo  = "solo-stage-backend"
 frontend_container_repo = "solo-stage-frontend"

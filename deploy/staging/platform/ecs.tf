@@ -54,7 +54,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   }
 }
 
-// 2. Network Load Balancer reside in the public subnet
+// 2. app nlb
 resource "aws_lb" "nlb" {
   name               = "solo-stage-tf-nlb"
   internal           = false
@@ -71,7 +71,7 @@ resource "aws_lb" "nlb" {
   }
 }
 
-// 3. NLB Target Group
+// 3. app target group
 resource "aws_lb_target_group" "nlb_target_group" {
   name        = "solo-stage-tf-nlb-target-group"
   protocol    = "TCP"
@@ -163,4 +163,95 @@ resource "aws_security_group_rule" "app_sg_ingress_rule_443" {
   cidr_blocks = ["0.0.0.0/0"]
   from_port   = 443
   to_port     = 443
+}
+
+
+/////////////////////////////////////////////////////////
+//
+//                  COMPRESSION
+//
+/////////////////////////////////////////////////////////
+resource "aws_lb" "compression_nlb" {
+  name               = "solo-stage-compression-nlb"
+  internal           = true
+  load_balancer_type = "network"
+
+  subnet_mapping {
+    subnet_id = data.terraform_remote_state.infrastructure_stage.outputs.public_subnet_id
+  }
+
+  tags = {
+    Name    = "solo-stage-compression-nlb"
+    Project = var.project
+  }
+}
+
+resource "aws_lb_target_group" "compression_tg" {
+  name     = "solo-stage-compression-tg"
+  protocol = "TCP"
+  vpc_id   = data.terraform_remote_state.infrastructure_stage.outputs.vpc_id
+  port     = 8080
+
+  health_check {
+    enabled  = true
+    interval = 30
+    protocol = "TCP"
+  }
+
+  tags = {
+    Name    = "solo-stage-compression-tg"
+    Project = var.project
+  }
+}
+
+resource "aws_lb_listener" "compression_nlb_listener" {
+  load_balancer_arn = aws_lb.compression_nlb.arn
+  protocol          = "TCP"
+  port              = 80
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.compression_tg.arn
+  }
+}
+
+resource "aws_security_group" "compression_nlb_sg" {
+  name   = "solo-stage-compression-nlb-sg"
+  vpc_id = data.terraform_remote_state.infrastructure_stage.outputs.vpc_id
+
+  ingress {
+    from_port   = 80
+    protocol    = "TCP"
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name    = "solo-stage-compression-nlb-sg"
+    Project = var.project
+  }
+}
+
+resource "aws_security_group" "compression_instance_sg" {
+  name   = "solo-stage-compression-intance-sg"
+  vpc_id = data.terraform_remote_state.infrastructure_stage.outputs.vpc_id
+
+  ingress {
+    from_port   = 8080
+    protocol    = "TCP"
+    to_port     = 8080
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name    = "solo-stage-compression-instance-sg"
+    Project = var.project
+  }
 }

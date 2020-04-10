@@ -143,6 +143,7 @@ class SendDataTaskBase(GCSSTaskBase):
             data=xml,
             headers={"Content-Type": "application/xml", "Accept": "*"},
         )
+        print(f"[*] compression request complete {response.status_code}", flush=True)
         if response.status_code != 200:
             raise Exception()
         return base64.b64decode(response.content)
