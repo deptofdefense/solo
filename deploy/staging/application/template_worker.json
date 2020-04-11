@@ -16,6 +16,12 @@
     },
     "command": ["celery", "-A", "app", "worker", "-l", "info"],
     "workingDirectory": "/backend",
+    "environment": [
+      {
+        "name": "EXML_CONVERTER_ENDPOINT",
+        "value": "${EXML_CONVERTER_ENDPOINT}"
+      }
+    ],
     "secrets": [
       {
         "name": "POSTGRES_DB",

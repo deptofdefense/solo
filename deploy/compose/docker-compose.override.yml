@@ -16,6 +16,10 @@ services:
     environment:
       - DEBUG=True
 
+  converter:
+    ports:
+      - "8080:8080"
+
   frontend:
     build:
       target: build_stage

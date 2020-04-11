@@ -1,0 +1,26 @@
+[
+  {
+    "name": "${compression_service_name}",
+    "image": "${compression_image_url}@${compression_digest}",
+    "essential": true,
+    "dockerLabels": {
+      "Project": "${project}"
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${compression_service_name}",
+        "awslogs-region": "${region}",
+        "awslogs-stream-prefix": "${compression_service_name}"
+      }
+    },
+    "hostname": "HOST.local",
+    "portMappings": [
+      {
+        "hostPort": 8080,
+        "protocol": "tcp",
+        "containerPort": 8080
+      }
+    ]
+  }
+]

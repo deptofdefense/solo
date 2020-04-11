@@ -29,7 +29,13 @@ class CACAuthenticationBackend(BaseBackend):
         # TODO: implement CRL check using client_cert (see issues #93 and #79)
         fields = self.parse_dn(client_dn)
 
-        user, _ = User.objects.get_or_create(**fields)
+        user, _ = User.objects.update_or_create(
+            username=fields["username"],
+            defaults={
+                "first_name": fields["first_name"],
+                "last_name": fields["last_name"],
+            },
+        )
         return user
 
 

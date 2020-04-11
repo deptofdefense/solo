@@ -37,6 +37,12 @@ services:
     environment:
       - DEBUG=
 
+  converter:
+    build: ../../compression-service
+    env_file:
+      - ./.env
+    hostname: HOST.local
+
   frontend:
     build:
       context: ../../frontend

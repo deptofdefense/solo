@@ -1,5 +1,6 @@
 import socket
 import html
+import base64
 from datetime import datetime, timedelta
 from contextlib import contextmanager
 from typing import Any, Iterator, Union, Dict
@@ -10,6 +11,7 @@ from django.utils import timezone
 from celery import shared_task
 from celery.task import BaseTask
 
+import requests
 from zeep import Client
 from zeep.transports import Transport
 from zeep.wsse.signature import BinarySignature as Signature
@@ -135,11 +137,16 @@ class RetrieveDataTaskBase(GCSSTaskBase):
 
 class SendDataTaskBase(GCSSTaskBase):
     @staticmethod
-    def xml_to_compressed_payload(xml: str) -> str:
-        # placeholder until EXML conversion service is complete
-        # response = requests.post(settings.EXML_CONVERTER_ENDPOINT, data=payload)
-        # return base64.b64decode(response.content)
-        return xml
+    def xml_to_compressed_payload(xml: str) -> bytes:
+        response = requests.post(
+            f"http://{settings.EXML_CONVERTER_ENDPOINT}/xml/compress",
+            data=xml,
+            headers={"Content-Type": "application/xml", "Accept": "*"},
+        )
+        print(f"[*] compression request complete {response.status_code}", flush=True)
+        if response.status_code != 200:
+            raise Exception()
+        return base64.b64decode(response.content)
 
     @staticmethod
     def xml_to_uncompressed_payload(xml: str) -> str:
@@ -208,8 +215,8 @@ def gcss_submit_status(self: SubmitStatusTask, document_id: int, dic: str) -> No
     status = Status.objects.get(document_id=doc.id, dic=dic)
     record = I009_TEMPLATE_MREC.format(doc=doc, status=status)
     wrapped = I009_TEMPLATE_WRAPPER.format(record)
-    quoted = self.xml_to_uncompressed_payload(wrapped)
+    compressed = self.xml_to_compressed_payload(wrapped)
 
     with self.get_client() as client:
-        client.service.initiateUncompressed(input=quoted)
-        print(f"[*] Submit D6T - {doc.sdn}/{dic}/{client.transport.status_code}")
+        client.service.initiateCompressed(input=compressed)
+        print(f"[*] Submit Status | {doc.sdn} | {dic} | {client.transport.status_code}")
