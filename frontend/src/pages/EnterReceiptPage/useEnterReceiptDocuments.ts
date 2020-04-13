@@ -91,9 +91,7 @@ const useDocuments = () => {
     const data = docs.map(doc => ({
       sdn: doc.sdn,
       status: "D6T",
-      received_quantity: doc.enteredReceivedQty,
-      subinventory: doc.enteredSubinventoryCode,
-      locator: doc.enteredLocatorCode
+      received_quantity: doc.enteredReceivedQty
     }));
 
     try {

@@ -72,9 +72,7 @@ describe("EnterReceiptPage submit all process", () => {
             sdn: defaultDoc.sdn,
             status: "D6T",
             received_quantity:
-              defaultDoc.statuses[defaultDoc.statuses.length - 1].projected_qty,
-            subinventory: defaultDoc.suppadd.subinventorys[0].code,
-            locator: defaultDoc.suppadd.subinventorys[0].locators[0].code
+              defaultDoc.statuses[defaultDoc.statuses.length - 1].projected_qty
           }
         ])
       });
