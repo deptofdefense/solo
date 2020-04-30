@@ -25,7 +25,6 @@ class CACAuthenticationBackend(BaseBackend):
 
         client_dn = request.META.get("HTTP_X_SSL_CLIENT_S_DN")
 
-        # client_cert = request.META.get('HTTP_X_SSL_CLIENT_CERT')
         # TODO: implement CRL check using client_cert (see issues #93 and #79)
         fields = self.parse_dn(client_dn)
 

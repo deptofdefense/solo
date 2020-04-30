@@ -2,6 +2,7 @@ import os
 import sys
 import string
 from urllib.parse import quote
+from datetime import timedelta
 from django.utils.crypto import get_random_string
 from celery.schedules import crontab
 
@@ -50,6 +51,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=30),
 }
 
 # setup the domain to serve from based on environment

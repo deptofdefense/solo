@@ -21,7 +21,7 @@ describe("Login page component", () => {
 
   it("calls login on button click", async () => {
     const { getByText } = render(<LoginPage />, renderOpts);
-    const loginBtn = getByText("CAC Login");
+    const loginBtn = getByText("Agree and CAC Login");
     fireEvent.click(loginBtn);
     expect(fakeLogin).toHaveBeenCalled();
   });
@@ -29,7 +29,7 @@ describe("Login page component", () => {
   it("displays login information on failed login", async () => {
     fakeLogin.mockRejectedValue(new Error("test error message"));
     const { getByText, queryByText } = render(<LoginPage />, renderOpts);
-    const loginBtn = getByText("CAC Login");
+    const loginBtn = getByText("Agree and CAC Login");
     fireEvent.click(loginBtn);
     await wait(() => {
       expect(fakeLogin).toHaveBeenCalled();
