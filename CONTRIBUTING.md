@@ -192,3 +192,19 @@ It ensures that any changes to be committed comply with the acceptance criteria 
 In order to prevent the pre-commit verification from running, add the --no-verify flag.
 
 `git commit --no-verify -m "..."`
+
+
+#### Updating Server Certificates
+
+Due to system requirements and infrastructure implementation, SSL certificates require manual renewal. The following steps are required to renew a certificate from letsencrypt and update the statging environment:
+
+1. [Install certbot-auto](https://certbot.eff.org/docs/install.html#certbot-auto)
+2. Request certificates for *.stage.solo.code.mil
+
+    ```./certbot-auto certonly --manual --preferred-challenges=dns --email battle-for-mc@dds.mil --agree-tos -d *.stage.solo.code.mil,stage.solo.code.mil```
+
+3. Add dns entries according to the prompts
+4. Copy the contents of the generated files below to the corresponding AWS Parameter Store entry
+   - `/etc/letsencrypt/live/stage.solo.code.mil/fullchain.pem`
+   - `/etc/letsencrypt/live/stage.solo.code.mil/privkey.pem`
+
