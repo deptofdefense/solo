@@ -8,7 +8,9 @@ disable=
     abstract-method,
     no-member,
     bad-continuation,
-    too-few-public-methods
+    too-few-public-methods,
+    import-error,
+    no-name-in-module
 
 load-plugins=
     pylint_django
