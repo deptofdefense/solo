@@ -182,7 +182,7 @@ class UpdateStatusD6TSerializer(serializers.Serializer):
             }
         except Document.DoesNotExist:
             raise serializers.ValidationError(
-                f"Document does not exist or is not eligible for D6T"
+                "Document does not exist or is not eligible for D6T"
             )
         except SubInventory.DoesNotExist:
             raise serializers.ValidationError(
@@ -232,7 +232,7 @@ class UpdateStatusCORSerializer(serializers.Serializer):
             }
         except Document.DoesNotExist:
             raise serializers.ValidationError(
-                f"Document does not exist or is not eligible for COR"
+                "Document does not exist or is not eligible for COR"
             )
 
     def to_representation(
