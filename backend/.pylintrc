@@ -7,7 +7,8 @@ disable=
     fixme,
     abstract-method,
     no-member,
-    bad-continuation
+    bad-continuation,
+    too-few-public-methods
 
 load-plugins=
     pylint_django
