@@ -1,7 +1,11 @@
+# This project is no longer being maintained:
+
+SOLO served as a proof-of-concept project and as of 8/4/20 is no longer being maintained. It will remain open-source to serve as an example of secure, scalable, and repeatable software development practices.
+
+
 # solo
 System for Operational Logistics Orders (SOLO)
 
-[![CircleCI](https://circleci.com/gh/deptofdefense/solo.svg?style=svg)](https://circleci.com/gh/deptofdefense/solo)
 [![Code style: open issue](https://img.shields.io/github/issues-raw/deptofdefense/solo)](https://img.shields.io/github/issues-raw/deptofdefense/solo)
 [![Code style: open pull request](https://img.shields.io/github/issues-pr-raw/deptofdefense/solo)](https://img.shields.io/github/issues-pr-raw/deptofdefense/solo)
 [![Code style: languages ](https://img.shields.io/github/languages/count/deptofdefense/solo)](https://img.shields.io/github/languages/count/deptofdefense/solo)
@@ -15,6 +19,3 @@ System for Operational Logistics Orders (SOLO)
 The DoD VDP leverages the experience and knowledge of ethical hackers
 from around the world to improve network defenses and enhance mission
 assurance. For contribution, please follow the DoD VDP at [dc3.mil](https://www.dc3.mil/vulnerability-disclosure/)
-
-
-[![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)
